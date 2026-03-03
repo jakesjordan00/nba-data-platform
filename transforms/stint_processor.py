@@ -449,9 +449,12 @@ class StintProcessor:
                 try:
                     self.team_stats['Lineup'][PlayerID]['F'] += 1
                 except KeyError as e:
-                    log_str = ' Probably due to a technical incurred by a Coach/Player not on court' if action['subType'] == 'technical' else ''
-                    self.stint_errors.append(StintError(action=action, stint_processor=self, error_msg=f'KeyError({e})', type='foul'))
-                    self.logger.error(f'KeyError on foul!{log_str}')
+                    if action['subType'] != 'technical':
+                        self.stint_errors.append(StintError(action=action, stint_processor=self, error_msg=f'KeyError({e})', type='foul'))
+                        self.logger.error(f'KeyError on foul!')
+                    else:
+                        log_str = ' Probably due to a technical incurred by a Coach/Player not on court'
+                        self.logger.warning(f'KeyError on foul!{log_str}')
             PlayerIDFoulDrawn = action.get('foulDrawnPersonId')
             if PlayerIDFoulDrawn:
                 self.op_stats['FDrwn'] += 1
