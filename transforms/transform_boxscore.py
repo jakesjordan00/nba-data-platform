@@ -253,7 +253,7 @@ Function Calls
         'Win': Win
     }
 
-    conf_div = config.data_map.team_map[teamBox['teamId']]
+    conf_div = config.data_map.team_map.get(teamBox['teamId'])
     prepared_team = {
         'TeamID': teamBox['teamId'],
         'Team': {
@@ -265,8 +265,8 @@ Function Calls
             'Wins': teamScoreboard['wins'],
             'Losses': teamScoreboard['losses'],
             'FullName': f'({tri}) {city} {name}',
-            'Conference': conf_div['Conference'],
-            'Division': conf_div['Division'],
+            'Conference': conf_div['Conference'] if conf_div else None,
+            'Division': conf_div['Division'] if conf_div else None,
         },
         'TeamBox': FormatTeamBox(team_data=teamBox, team_scoreboard_data=teamScoreboard, game_data_payload=game_data_payload),
         'Players': PreparePlayer(players=teamBox['players'], team_data=teamBox, game_data_payload=game_data_payload)

@@ -6,7 +6,7 @@ load_dotenv()
 
 
 DATABASES = {
-    'JJsNBA3':{
+    'JJsNBA':{
         'server': os.getenv('ServerIP'),
         'database': os.getenv('Database'),
         'username': 'jjAdmin',
@@ -631,7 +631,6 @@ PlayerID		int,
 Unit			varchar(30),
 Position		varchar(10),
 Primary Key(SeasonID, GameID, TeamID, MatchupID, PlayerID),
-Foreign Key (SeasonID) references Season(SeasonID),
 Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
 Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
 Foreign Key (SeasonID, PlayerID) references Player(SeasonID, PlayerID),
@@ -692,7 +691,7 @@ end
 , max(ActionNumber) LastActionNumber
 , s.Status
 from PlayByPlay p
-left join jjs.StintStatus s on p.SeasonID = s.SeasonID and p.GameID = s.GameID
+left join StintStatus s on p.SeasonID = s.SeasonID and p.GameID = s.GameID
 where p.SeasonID = season_id and p.GameID = game_id
 group by s.Status''',
         'create': '''
@@ -748,7 +747,7 @@ Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID))
 end
 '''
     },
-    'jjs.StintStatus':{
+    'StintStatus':{
         'keys': ['SeasonID', 'GameID'],
         'columns': [
             'SeasonID',
@@ -767,7 +766,7 @@ primary key(SeasonID, GameID))
 end
 '''
     },
-    'jjs.Stint':{
+    'Stint':{
         'keys': ['SeasonID', 'GameID', 'TeamID', 'StintID'],
         'columns': [
             'SeasonID',
@@ -835,7 +834,7 @@ end
 with TeamsOnCourt as(
 select s.*
 , dense_rank() over(partition by TeamID order by StintID desc) OnCourt
-from jjs.Stint s
+from Stint s
 where s.SeasonID = season_id and s.GameID = game_id
 )
 select *
@@ -883,7 +882,7 @@ primary key(SeasonID, GameID, TeamID, StintID))
 end
 '''
     },
-    'jjs.StintPlayer':{
+    'StintPlayer':{
         'keys': ['SeasonID', 'GameID', 'TeamID', 'StintID', 'PlayerID'],
         'columns': [
             'SeasonID',
@@ -940,7 +939,7 @@ end
 with PlayersOnCourt as(
 select sp.*
 , dense_rank() over(partition by TeamID order by StintID desc) OnCourt
-from jjs.StintPlayer sp
+from StintPlayer sp
 where sp.SeasonID = season_id and sp.GameID = game_id
 )
 select *
@@ -980,7 +979,7 @@ BLKd int,
 F int,
 FDrwn int,
 primary key(SeasonID, GameID, TeamID, StintID, PlayerID),
-foreign key(SeasonID, GameID, TeamID, StintID) references jjs.Stint(SeasonID, GameID, TeamID, StintID))
+foreign key(SeasonID, GameID, TeamID, StintID) references Stint(SeasonID, GameID, TeamID, StintID))
 end
 '''
     },

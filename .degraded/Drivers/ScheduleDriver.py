@@ -76,10 +76,10 @@ def MainFunction():
 
 def DeleteGames(deleteCmd: str):
     deleteCmd = f'''
-delete from jjs.StintPlayer 
+delete from StintPlayer 
 where SeasonID = 2025 and GameID in({deleteCmd})
 
-delete from jjs.Stint 
+delete from Stint 
 where SeasonID = 2025 and GameID in({deleteCmd})
 
 delete from PlayByPlay 

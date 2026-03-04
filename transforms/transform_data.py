@@ -107,7 +107,7 @@ class Transform:
                 i+=1
                 gameType = int(game['gameId'][2])
                 game_counts[gameType] += 1
-                if gameType != 3:
+                if gameType not in[1, 3]:
                     schedule_unformatted.append(game)
                 bp = 'here'
         self.logger.info(f'Excluded games scheduled after {right_now}... {i} games total')
@@ -142,7 +142,7 @@ class Transform:
 
 
 
-        self.logger.info(f'Preseason Games: {game_counts[1]}')
+        self.logger.info(f'Preseason Games: {game_counts[1]} (Excluded)')
         self.logger.info(f'Regular Season Games: {game_counts[2]}')
         self.logger.info(f'Postseason Games: {game_counts[4]}')
         self.logger.info(f'Play-In Games: {game_counts[5]}')

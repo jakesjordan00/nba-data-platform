@@ -53,15 +53,15 @@ class SQLConnector:
                 self.checked_upsert(table_name, data)
             elif type(data) == StintResult:
                 if data.Stint:
-                    self.checked_upsert('jjs.Stint', data.Stint)
+                    self.checked_upsert('Stint', data.Stint)
                 else:
                     self.logger.warning('No Stint records to upsert.')
                 if data.StintPlayer:
-                    self.checked_upsert('jjs.StintPlayer', data.StintPlayer)
+                    self.checked_upsert('StintPlayer', data.StintPlayer)
                 else:
                     self.logger.warning('No StintPlayer records to upsert.')
                 if data.status:
-                    self.checked_upsert('jjs.StintStatus', [data.status])
+                    self.checked_upsert('StintStatus', [data.status])
             elif table_name == 'PlayByPlay':
                 if len(data) == 0:
                     self.logger.info(f'No new PlayByPlay actions to insert. Skipping...')
@@ -197,8 +197,8 @@ end
 
     def stint_cursor(self, stint_keys: dict):  
         cursor = self.pyodbc_connection.cursor()
-        stint = self.tables['jjs.Stint'].copy()
-        stint_player = self.tables['jjs.StintPlayer'].copy()
+        stint = self.tables['Stint'].copy()
+        stint_player = self.tables['StintPlayer'].copy()
         for table in [stint, stint_player]:
             table['check_query'] = table['check_query'].replace('season_id', stint_keys['season_id']).replace('game_id', stint_keys['game_id'])
             

@@ -2,10 +2,9 @@ from airflow.sdk import dag, task, BaseHook
 from datetime import datetime, timedelta
 from dataclasses import asdict
 
-from run import stint_status
-
 @dag(
     dag_id = 'nba_live_pipeline',
+    dag_display_name='Live NBA Pipeline', 
     start_date = datetime(2025, 1, 1),
     schedule = '*/5 * * * *',
     catchup = False,
