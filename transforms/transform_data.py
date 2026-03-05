@@ -111,7 +111,6 @@ class Transform:
                     schedule_unformatted.append(game)
                 bp = 'here'
         self.logger.info(f'Excluded games scheduled after {right_now}... {i} games total')
-
         schedule = [
             {
                 'SeasonID': SeasonID,
@@ -120,7 +119,11 @@ class Transform:
                 'GameCode': g['gameCode'],
                 'GameStatus': g['gameStatus'],
                 'GameStatusText': g['gameStatusText'],
-                # 'Period': g['period'],
+                'Period': 4 if g['gameStatusText'] == 'Final' 
+                            else 5 if g['gameStatusText'] == 'Final/OT'
+                            else 4 + int(g['gameStatusText'][-1]) if 'Final/OT' in g['gameStatusText']
+                            else int(g['gameStatusText'][1]) if g['gameStatus'] == 2 and g['gameStatusText'][0] == 'Q'
+                            else 0,
                 # 'GameClock': g['gameClock'],
                 'GameTimeUTC': g['gameTimeUTC'],
                 # 'GameEt': g['gameEt'],

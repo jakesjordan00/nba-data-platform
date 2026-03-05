@@ -163,6 +163,41 @@ end
             })
 
     def cursor_query(self, table_name: str, keys: dict) -> dict :
+        '''cursor_query
+    ===
+    Given a a SQL table name and a dictionary of keys, this function will execute that table's check_query value and output the results.    
+
+    :param str table_name: Name of table to lookup in config/settings.py
+    :param dict keys: These values will replace the placeholder key values in the table's check_query
+
+    table_name = PlayByPlay
+    ------
+    *   **When PlayByPlay is passed as table_name, a dictionary containing the *count of rows*, *last_action_number*, and the *stint_status* are returned.**
+
+    *Returns*
+    ....
+    
+    * *{'actions': actions, 'last_action_number': last_action_number, 'stint_status': stint_status}*
+
+
+    table_name = Schedule
+    ------
+    *   **When Schedule is passed, a dictionary containing a list of all *Schedule* games is returned**
+
+    *Returns*
+    ....
+    
+    * *{'schedule': schedule_list}*
+
+    Other
+    ------
+    *   **Similar to Schedule, a dictionary containg a list of all rows fetched by the query is returned**
+
+    *Returns*
+    ....
+    
+    * *{'data': data_list}*
+        '''
         sql_table = self.tables[table_name]
         query = sql_table['check_query'].replace('season_id', keys['season_id']).replace('game_id', keys['game_id'])
         cursor = self.pyodbc_connection.cursor()
@@ -192,10 +227,20 @@ end
             schedule = {'schedule': schedule_list}
             return schedule
         else:
-            return {}
+            cursor.execute(query)
+            results = cursor.fetchall()
+            columns = [col[0] for col in cursor.description]
+            data_list = []
+            for row in results:
+                data_list.append(dict(zip(columns, row)))
+            
+            return {'data': data_list}
                 
 
-    def stint_cursor(self, stint_keys: dict):  
+    def stint_cursor(self, stint_keys: dict):
+        '''stint_cursor
+    ===
+        '''
         cursor = self.pyodbc_connection.cursor()
         stint = self.tables['Stint'].copy()
         stint_player = self.tables['StintPlayer'].copy()

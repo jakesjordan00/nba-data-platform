@@ -29,7 +29,7 @@ def nba_pipeline():
         GameID = game['GameID']
         boxscore_pipeline = BoxscorePipeline(
             pipeline_name=f'boxscore.{GameID}',
-            scoreboard_data=game, 
+            sc_data=game, 
             environment='Production'
             )
         completed_boxscore_pipeline = boxscore_pipeline.run()

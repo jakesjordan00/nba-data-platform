@@ -8,11 +8,11 @@ from transforms.transform_boxscore import Transform
 
 class BoxscorePipeline(Pipeline[dict]):
 
-    def __init__(self, pipeline_name: str, scoreboard_data: dict, environment: str):
+    def __init__(self, pipeline_name: str, sc_data: dict, environment: str):
         super().__init__(pipeline_name=pipeline_name, pipeline_tag='boxscore', source_tag='NBA static data feed')
-        self.GameID = scoreboard_data['GameID']
-        self.GameIDStr = scoreboard_data['GameIDStr']
-        self.Data = scoreboard_data
+        self.GameID = sc_data['GameID']
+        self.GameIDStr = sc_data['GameIDStr']
+        self.Data = sc_data
         self.url = f'https://cdn.nba.com/static/json/liveData/boxscore/boxscore_{self.GameIDStr}.json'
         self.source = StaticDataConnector(self)
         self.transformer = Transform(self)
@@ -38,7 +38,7 @@ class BoxscorePipeline(Pipeline[dict]):
     def transform(self, data_extract: dict) -> dict:
         '''Summary
         -------------
-        Transforms extracted Boxscore and Scoreboard data into 9 dicts formatted for SQL.
+        Transforms extracted Boxscore and Scoreboard/Schedule data into 9 dicts formatted for SQL.
 
         Also creates start_action_keys and lineup_keys, neccessary for PlayByPlay
 
