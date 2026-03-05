@@ -240,6 +240,19 @@ end
     def stint_cursor(self, stint_keys: dict):
         '''stint_cursor
     ===
+    Given keys for a game (SeasonID, GameID, HomeID, AwayID), queries the latest Stint/StintPlayer entries for each team
+
+    :param dict stint_keys: These values will replace the placeholder key values in the Stint and StintPlayer check_query variables
+
+    Returns
+    ===    
+    * home_stats, away_stats
+        * From query results, formatted stat dictionaries to match home_stats and away_stats used in StintProcessor
+            >>> {'SeasonID': 2025, 'GameID': 22500857, 'TeamID': 1610612746, 'StintID': 19, 'QtrStart': 4, 'QtrEnd': 4, 'ClockStart': '00:42.90', 'ClockEnd': '00:00.00', 'MinElapsedStart': 47.285, 'MinElapsedEnd': 48.0, 'MinutesPlayed': 0.72, 'Possessions': 1, 'PtsScored': 0, 'PtsAllowed': 2, 'FG2M': 0, 'FG2A': 0, 'FG3M': 0, 'FG3A': 0, 'FGM': 0, 'FGA': 0, 'FTM': 0, 'FTA': 0, 'OREB': 0, 'DREB': 0, 'REB': 0, 'AST': 0, 'TOV': 2, 'STL': 0, 'BLK': 0, 'BLKd': 0, 'F': 2, 'FDrwn': 0, 
+        'Lineup': {201572: {...}, 201587: {...}, 1627739: {...}, 1627884: {...}, 1631097: {...}}}
+    * *None, None*
+        * Return None, None tuple if error
+
         '''
         cursor = self.pyodbc_connection.cursor()
         stint = self.tables['Stint'].copy()
