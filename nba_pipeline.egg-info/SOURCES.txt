@@ -16,6 +16,7 @@ pipelines/__init__.py
 pipelines/base.py
 pipelines/boxscore.py
 pipelines/playbyplay.py
+pipelines/schedule.py
 pipelines/scoreboard.py
 transforms/__init__.py
 transforms/stint_processor.py

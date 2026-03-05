@@ -9,18 +9,12 @@ schedule_data = completed_schedule_pipeline['loaded']
 
 
 
-scoreboard_pipeline = ScoreboardPipeline('Production')
-completed_scoreboard_pipeline = scoreboard_pipeline.run()
-scoreboard_data = completed_scoreboard_pipeline['loaded']
-gameIDs_in_progress = [game['GameID'] for game in scoreboard_data]
-print(f'\nGames in Progress: {', '.join(str(game) for game in gameIDs_in_progress)}\n------------------------------------')
 
-
-for scoreboard in scoreboard_data:
-    GameID = scoreboard['GameID']
+for schedule in schedule_data:
+    GameID = schedule['GameID']
     print(f'\n                                                 {GameID}\n                                   -------------------------------------')
     
-    boxscore_pipeline = BoxscorePipeline(f'boxscore.{GameID}', scoreboard, 'Production')
+    boxscore_pipeline = BoxscorePipeline(f'boxscore.{GameID}', schedule, 'Production')
     completed_boxscore_pipeline = boxscore_pipeline.run()
     boxscore_data = completed_boxscore_pipeline['loaded']
     

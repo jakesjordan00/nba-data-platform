@@ -2,7 +2,7 @@
 with TeamsOnCourt as(
 select s.*
          , dense_rank() over(partition by TeamID order by StintID desc) OnCourt
-from jjs.Stint s
+from Stint s
 where s.SeasonID = 2025 and s.GameID in(22500825)
 )
 select c.SeasonID, c.GameID, c.TeamID, t.Name , c.StintID, c.QtrStart, c.ClockStart, c.MinutesPlayed, c.Possessions, c.PtsScored, c.PtsAllowed
@@ -17,7 +17,7 @@ go
 with PlayersOnCourt as(
 select sp.*
          , dense_rank() over(partition by TeamID order by StintID desc) OnCourt
-from jjs.StintPlayer sp
+from StintPlayer sp
 where sp.SeasonID = 2025 and sp.GameID in(22500825)
 )
 select poc.SeasonID, poc.GameID, poc.TeamID, poc.StintID
@@ -28,7 +28,7 @@ select poc.SeasonID, poc.GameID, poc.TeamID, poc.StintID
 , poc.OREB, poc.DREB, poc.TOV, poc.stl, poc.BLK, poc.BLKd, poc.F, poc.FDrwn
 from PlayersOnCourt poc
 inner join Player p on poc.SeasonID = p.SeasonID and poc.PlayerID = p.PlayerID
-inner join jjs.Stint s on poc.SeasonID = s.SeasonID and poc.GameID = s.GameID and poc.TeamID = s.TeamID and poc.StintID = s.StintID
+inner join Stint s on poc.SeasonID = s.SeasonID and poc.GameID = s.GameID and poc.TeamID = s.TeamID and poc.StintID = s.StintID
 where OnCourt = 1
 order by OnCourt asc, GameID, TeamID, PlayerID
 go

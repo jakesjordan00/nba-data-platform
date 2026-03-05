@@ -32,8 +32,8 @@ class Transform:
         
         if self.pipeline.stint_status == 'failure':
             self.logger.warning(f"stint_status is failure. Deleting Stint and StintPlayer rows for game.")
-            query = f'''delete from JJs.StintPlayer where SeasonID = {self.pipeline.boxscore_data['SeasonID']} and GameID = {self.pipeline.GameID}
-delete from JJs.Stint where SeasonID = {self.pipeline.boxscore_data['SeasonID']} and GameID = {self.pipeline.GameID}'''
+            query = f'''delete from StintPlayer where SeasonID = {self.pipeline.boxscore_data['SeasonID']} and GameID = {self.pipeline.GameID}
+delete from Stint where SeasonID = {self.pipeline.boxscore_data['SeasonID']} and GameID = {self.pipeline.GameID}'''
             self.pipeline.destination.delete_rows(query)
             bp = 'here'
 

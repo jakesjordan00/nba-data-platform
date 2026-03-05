@@ -3,3 +3,4 @@
 /Drivers/.env
 __pycache__
 .env
+.degraded/Drivers/.env_old
