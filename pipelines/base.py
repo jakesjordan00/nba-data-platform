@@ -31,22 +31,7 @@ class Pipeline(ABC, Generic[T]):
         self.pipeline_name = pipeline_name
         self.pipeline_tag = pipeline_tag
         self.source_tag = source_tag
-        self.logger = logging.getLogger(pipeline_name)
-        if not logging.root.handlers:
-            handler = colorlog.StreamHandler()
-            handler.setFormatter(MillisecondFormatter(
-                fmt='%(log_color)s%(asctime)s:  %(name)s ╍ %(levelname)s ╍ %(message)s',
-                datefmt='%m/%d/%Y %H:%M:%S.%f',
-                log_colors={
-                    'DEBUG': 'cyan',
-                    'INFO': 'white',
-                    'WARNING': 'yellow',
-                    'ERROR': 'red',
-                    'CRITICAL': 'bold_red'
-                }
-            ))
-            logging.root.setLevel(logging.INFO)
-            logging.root.addHandler(handler)
+        self.logger = get_logger(pipeline_name)
         self.destination = SQLConnector(self.pipeline_name, 'JJsNBA')
         self.run_timestamp = None
 
@@ -87,3 +72,24 @@ class Pipeline(ABC, Generic[T]):
             'loaded': data,
             'timestamp': self.run_timestamp.isoformat()
         }
+    
+
+
+def get_logger(pipeline_name):
+    logger = logging.getLogger(pipeline_name)
+    if not logging.root.handlers:
+        handler = colorlog.StreamHandler()
+        handler.setFormatter(MillisecondFormatter(
+            fmt='%(log_color)s%(asctime)s:  %(name)s ╍ %(levelname)s ╍ %(message)s',
+            datefmt='%m/%d/%Y %H:%M:%S.%f',
+            log_colors={
+                'DEBUG': 'cyan',
+                'INFO': 'white',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'bold_red'
+            }
+        ))
+        logger.root.setLevel(logging.INFO)
+        logger.root.addHandler(handler)
+    return logger

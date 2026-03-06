@@ -6,7 +6,7 @@ from dataclasses import asdict
     dag_id = 'nba_schedule_pipeline',
     dag_display_name= 'NBA Schedule Games Pipeline',
     start_date = datetime(year=2026, month = 1, day = 1),
-    schedule = '0 12 1 * *', #Fire at noon on the first of each month
+    schedule = '0 16 1 * *', #Fire at noon EDT on the first of each month (UTC-4)
     catchup = False,
     max_active_runs = 1,
     default_args= {

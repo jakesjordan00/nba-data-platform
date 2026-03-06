@@ -334,7 +334,16 @@ end
             bp = 'here'
 
 
+    def raw_execute(self, query):
+        '''raw_execute
+    ===
+    Given an Insert, Update or Delete command, will return number of rows affected
 
+    '''
+        cursor = self.pyodbc_connection.cursor()
+        db_msg = cursor.execute(query)
+        cursor.commit()
+        return db_msg.rowcount
 
 
     def _dict_to_params(self, d: dict, keys: list) -> tuple:
