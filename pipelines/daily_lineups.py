@@ -34,6 +34,3 @@ class DailyLineupsPipeline(Pipeline):
 
 
 
-test = DailyLineupsPipeline('lineups')
-a = test.run()
-bp = 'here'
