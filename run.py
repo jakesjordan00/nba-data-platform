@@ -9,10 +9,6 @@ scoreboard_data = completed_scoreboard_pipeline['loaded']
 gameIDs_in_progress = [game['GameID'] for game in scoreboard_data]
 print(f'\nGames in Progress: {', '.join(str(game) for game in gameIDs_in_progress)}\n------------------------------------')
 
-schedule_pipeline = SchedulePipeline()
-completed_schedule_pipeline = schedule_pipeline.run()
-schedule_data = completed_schedule_pipeline['loaded']
-
 
 
 

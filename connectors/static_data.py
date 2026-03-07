@@ -59,8 +59,10 @@ Used to extract data from NBA static data feeds
         '''
         try:
             start = datetime.now()
-            response = requests.get(url=self.pipeline.url,
-                                    headers=self.headers)
+            if 'daily_lineups' in self.pipeline.url:
+                response = requests.get(url=self.pipeline.url,headers=self.headers)
+            else:
+                response = requests.get(self.pipeline.url)
             stop = datetime.now()
             data = response.json()
             duration = stop - start
