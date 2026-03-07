@@ -2,7 +2,7 @@ import logging
 import requests
 import os
 import json
-
+from datetime import datetime, timedelta
 class StaticDataConnector:
     '''StaticDataConnector
 ===
@@ -36,6 +36,7 @@ Used to extract data from NBA static data feeds
         self.logger = logging.getLogger(f'{pipeline.pipeline_name}.extract')
         self._set_base_data_feeds()
         self._set_variable_data_feeds()
+        self._set_headers()
         pass
     
     def fetch(self) -> dict:
@@ -57,12 +58,19 @@ Used to extract data from NBA static data feeds
         >>> {"meta": {}, "game":{}}
         '''
         try:
-            response = requests.get(self.pipeline.url)
+            start = datetime.now()
+            response = requests.get(url=self.pipeline.url,
+                                    headers=self.headers)
+            stop = datetime.now()
             data = response.json()
+            duration = stop - start
+            self.logger.info(f'Read and decoded JSON in {str(duration)[6:11]}s')
+            bp = 'here'
         except Exception as e:
             data = {}
             self.logger.error(f'No data available. Error msg: {e}')
         self.logger.info(f'Extracted {', '.join(key.replace("'", "") for key in list(data.keys()))} dicts')
+        
         return data
     
     def fetch_file(self):
@@ -85,3 +93,23 @@ Used to extract data from NBA static data feeds
         self.daily_lineups = 'https://stats.nba.com/js/data/leaders/00_daily_lineups_YYYYmmdd.json'
         self.boxscore = 'https://cdn.nba.com/static/json/liveData/boxscore/boxscore_GameIDStr.json'
         self.playbyplay = 'https://cdn.nba.com/static/json/liveData/playbyplay/playbyplay_GameIDStr.json'
+
+
+    def _set_headers(self):
+        self.headers = {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'en-US,en;q=0.9',
+            'cache-control': 'no-cache',
+            'pragma': 'no-cache',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '\'Windows\'',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0',
+            'Priority': 'u=0, i',
+            'Host': 'stats.nba.com',
+        }
+        

@@ -1,6 +1,7 @@
 from airflow.sdk import dag, task, BaseHook
 from datetime import datetime, timedelta
 from dataclasses import asdict
+import textwrap
 
 @dag(
     dag_id = 'nba_live_pipeline',
@@ -12,7 +13,16 @@ from dataclasses import asdict
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds = 30)
-    }
+    },
+    description="""Uses **ScoreboardPipeline** to check today's games.
+    
+    For each game that's *in progress* or *completed*, uses **BoxscorePipeline** to upsert real-time data to the following tables in db:
+        Game, GameExt,
+        Team, TeamBox
+        Player, PlayerBox, StartingLineups
+        Arena, Official
+    
+    """
 )
 def nba_pipeline():
     @task
@@ -51,7 +61,14 @@ def nba_pipeline():
         }
         return boxscore_data
     
-    @task
+    
+    @task(
+        task_id = 'playbyplay',
+        doc_md = '''PlayByPlay
+        ===
+        
+        '''
+    )
     def run_playbyplay(boxscore_result):
         from pipelines import PlayByPlayPipeline
         box_data = boxscore_result['boxscore_data']
@@ -74,13 +91,14 @@ def nba_pipeline():
             )
         completed_playbyplay_pipeline = playbyplay_pipeline.run()
         loaded_playbyplay_data = completed_playbyplay_pipeline['loaded']
-
+        
 
         print('PlayByPlay')
         return {
             'playbyplay_actions': len(loaded_playbyplay_data['PlayByPlay']),
             'stint_errors': [asdict(err) for err in loaded_playbyplay_data['Stints'].errors]
         }
+        
     
 
     games = run_scoreboard()
