@@ -21,11 +21,15 @@ Used to extract data from NBA static data feeds
         - Used for **Scoreboard**, **Schedule**, **Boxscore** and **PlayByPlay** (and more)
 
     Attributes: 
-        schedule: **NBA static data feed for a season's Schedule**<br>&emsp;- https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_2.json
-        scoreboard: **NBA static data feed for today's scoreboard**<br>&emsp;- https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json
-        a
-        playbyplay: **NBA static data feed for PlayByPlay** <br> Must use ***.replace('GameIDStr', self.GameIDStr)***<br>&emsp;- Example: https://cdn.nba.com/static/json/liveData/playbyplay/playbyplay_0022500356.json
-        boxscore: **NBA static data feed for Boxscore** <br> Must use ***.replace('GameIDStr', self.GameIDStr)***<br>&emsp;- Example: https://cdn.nba.com/static/json/liveData/boxscore/boxscore_0022500356.json
+        schedule: *NBA static data feed for a season's Schedule*<br>&emsp;- https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_2.json
+        
+        scoreboard: *NBA static data feed for today's scoreboard*<br>&emsp;-  https://cdn.nba.com/static/json/liveData/scoreboard/todaysScoreboard_00.json
+        
+        playbyplay: *NBA static data feed for PlayByPlay*<br>&emsp;- Must use ***.replace('GameIDStr', self.GameIDStr)***<br>&emsp;- Example: https://cdn.nba.com/static/json/liveData/playbyplay/playbyplay_0022500356.json
+        
+        boxscore: *NBA static data feed for Boxscore* <br>&emsp;- Must use ***.replace('GameIDStr', self.GameIDStr)*** <br>&emsp;- Example: https://cdn.nba.com/static/json/liveData/boxscore/boxscore_0022500356.json
+        
+        daily_lineups: *NBA static data feed for Team Lineups on a given day*<br>&emsp;- Must use ***.replace('YYYYmmdd', date)***<br>&emsp;- Example: https://stats.nba.com/js/data/leaders/00_daily_lineups_20260306.json
     '''
     def __init__(self, pipeline):
         self.pipeline = pipeline
