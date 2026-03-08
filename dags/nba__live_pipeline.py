@@ -6,7 +6,7 @@ import textwrap
 @dag(
     dag_id = 'nba_live_pipeline',
     dag_display_name='Live NBA Pipeline', 
-    start_date = datetime(2025, 1, 1),
+    start_date = datetime(year=2025, month=10, day=19),
     schedule = '*/5 * * * *',
     catchup = False,
     max_active_runs = 1,
@@ -14,7 +14,7 @@ import textwrap
         'retries': 2,
         'retry_delay': timedelta(seconds = 30)
     },
-    description="""Uses **ScoreboardPipeline** to check today's games.
+    doc_md = """Uses **ScoreboardPipeline** to check today's games.
     
     For each game that's *in progress* or *completed*, uses **BoxscorePipeline** to upsert real-time data to the following tables in db:
         Game, GameExt,
@@ -22,6 +22,8 @@ import textwrap
         Player, PlayerBox, StartingLineups
         Arena, Official
     
+"""
+    description="""test
     """
 )
 def nba_pipeline():
