@@ -9,16 +9,22 @@ class Transform:
 
 
     def daily_lineups(self, data_extract: list):
-        data_transformed = self.transform_daily_lineups(data_extract)
+        self.data_extract = data_extract
+        self.logger.info(f'{len(self.data_extract)} Games')
+        # self.data_filtered = self.filter_started_and_completed_games()
+        # self.logger.info(f'{len(self.data_filtered)} Games yet to start or in Q1')
+        data_transformed = self.transform_daily_lineups()
         bp = 'here'
         return data_transformed
 
+    def filter_started_and_completed_games(self):
+        
+        return [game for game in self.data_extract if game['gameStatus'] == 1 or (game['gameStatus'] == 2 and '1st Qtr' in game['gameStatusText'])]
 
 
-    def transform_daily_lineups(self, data_extract: list):
-        self.logger.info(f'{len(data_extract)} Games')
+    def transform_daily_lineups(self):
         player_rows = []
-        for game in data_extract:
+        for game in self.data_extract:
             short_season = int(game['gameId'][3:5])
             SeasonID = f'20{short_season}' if short_season < 90 else f'19{short_season}'
             GameID = int(game['gameId'])
@@ -33,8 +39,10 @@ class Transform:
                     player['matchupId'] = MatchupID
                     player_rows.append(format(player))
                 self.logger.info(f'{team['teamAbbreviation']}: {len(team['players'])} players')
-        # self.logger.info(f'Transformed to {len(player_rows)} rows, one for each player.')
         return player_rows
+
+
+
 
 
 def format(player: dict):

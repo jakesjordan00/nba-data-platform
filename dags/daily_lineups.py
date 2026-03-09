@@ -1,7 +1,7 @@
 
 from airflow.sdk import dag, task, BaseHook
 from datetime import datetime, timedelta
-
+import textwrap
 
 
 @dag(
@@ -14,5 +14,15 @@ from datetime import datetime, timedelta
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds = 30)
-    }
+    },
+    doc_md = textwrap.dedent("""
+
+""")
 )
+def daily_lineups_pipeline():
+    @task()
+    def daily_lineups():
+        from pipelines import DailyLineupsPipeline
+        daily_lineups_pipeline = DailyLineupsPipeline('daily_lineups')
+        completed_daily_lineups_pipeline = daily_lineups_pipeline.run()
+        
