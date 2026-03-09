@@ -50,8 +50,8 @@ nba_advanced_stats_endpoints: dict[str, Endpoint] = {
             'College':          '',                 # 
             'Conference':       '',                 # 
             'Country':          '',                 # 
-            'DateFrom':         '',                 # 03/05/2026
-            'DateTo':           '',                 # 03/05/2026
+            'DateFrom':         '03/05/2026',                 # 03/05/2026
+            'DateTo':           '03/05/2026',                 # 03/05/2026
             'Division':         '',                 # 
             'DraftPick':        '',                 # 
             'DraftYear':        '',                 # 
