@@ -28,3 +28,4 @@ def daily_lineups_pipeline():
         return completed_daily_lineups_pipeline['data']
         
     daily_lineups()
+daily_lineups_pipeline()
