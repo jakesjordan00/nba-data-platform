@@ -25,7 +25,7 @@ def daily_lineups_pipeline():
         from pipelines import DailyLineupsPipeline
         daily_lineups_pipeline = DailyLineupsPipeline('daily_lineups')
         completed_daily_lineups_pipeline = daily_lineups_pipeline.run()
-        return completed_daily_lineups_pipeline['data']
+        return completed_daily_lineups_pipeline['data_loaded']
         
     daily_lineups()
 daily_lineups_pipeline()
