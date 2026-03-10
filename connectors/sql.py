@@ -5,8 +5,24 @@ from transforms.stint_processor import StintResult
 import pyodbc
 import logging
 import datetime
+import polars as pl
+from typing import TypedDict
+import types
+from dataclasses import dataclass
 
 class SQLConnector:
+    @dataclass
+    class Queries:
+        schedule_for_api_usage = '''
+select *
+from Schedule s
+where s.SeasonID = 2025 and s.GameType != 'PRE' and s.GameTimeEST <= getdate()
+order by s.GameTimeEst, s.GameID
+        '''
+        placeholder = '''
+select *
+from Game g
+'''
 
     def __init__(self, pipeline_name, database_name: str):
         if database_name not in DATABASES:
@@ -19,8 +35,7 @@ class SQLConnector:
         self.pyodbc_connection = pyodbc.connect(self._get_pyodbc_connection())
         self.logger = logging.getLogger(f'{pipeline_name}.load')
         self.tag = 'sql'
-        
-
+        self.queries = self.Queries()
 
     def _create_engine(self):
         password = quote_plus(self.config['password'])
@@ -347,6 +362,9 @@ end
         cursor.commit()
         return db_msg.rowcount
 
+    def query_to_dataframe(self, query):
+        data = pl.read_database(query, self.engine)
+        return data
 
     def _dict_to_params(self, d: dict, keys: list) -> tuple:
         return tuple(d[k.replace('[', '').replace(']', '')] for k in keys)
@@ -367,3 +385,5 @@ end
                 query = f'{query[:index]}{value}{query[index + 1:]}'
             # pyperclip.copy(query)
             queries.append(query)
+
+        
