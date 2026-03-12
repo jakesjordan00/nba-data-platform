@@ -13,7 +13,8 @@ class Transform:
     def start_transform(self, data_extract):
         self.data_extract = data_extract
         if data_extract['parameters']['MeasureType'] == 'Advanced':
-            self.measure_advanced()
+            data_transformed = self.measure_advanced()
+        return data_transformed
 
 
     def measure_advanced(self):
@@ -26,10 +27,22 @@ class Transform:
             print(f"                '{column}': player[{i}],")
         result_dicts = []
         for player in results['rowSet']:
-            matching_game = next((game for game in games_on_date if player[3] in[game['HomeID'], game['AwayID']]), {})
+            # for game in games_on_date:
+            #     if player[3] in [game['HomeID'], game['AwayID']]:
+
+            matching_game = next((
+                game for game in games_on_date 
+                    if player[3] in[game['HomeID'], game['AwayID']] 
+                    or player[0] in game['home_players']
+                    or player[0] in game['away_players']), {})
             SeasonID = matching_game.get('SeasonID')
             GameID = matching_game.get('GameID')
-            MatchupID = matching_game.get('HomeID') if player[3] == matching_game.get('AwayID') else matching_game.get('AwayID') if player[3] == matching_game.get('HomeID') else 0
+            if player[3] == matching_game.get('AwayID') or player[0] in matching_game['away_players']:
+                MatchupID = matching_game['HomeID']
+            elif player[3] == matching_game.get('HomeID') or player[0] in matching_game['home_players']:
+                MatchupID = matching_game['AwayID']
+            else:
+                MatchupID = 0
             player = {
                 'SeasonID': SeasonID,
                 'GameID': GameID,
@@ -40,23 +53,23 @@ class Transform:
                 'OffRTG': player[12],
                 'DefRTG': player[15],
                 'NetRTG': player[18],
-                'AstPct': player[20],
+                '[Ast%]': player[20],
                 'ATR': player[21],
-                'AstRtio': player[22],
-                'ORebPct': player[23],
-                'DRebPct': player[24],
-                'RebPct': player[25],
-                'TeamTOPct': player[26],
-                'EFGPct': player[28],
-                'TSPct': player[29],
-                'UsagePct': player[30],
+                'AstRatio': player[22],
+                '[OReb%]': player[23],
+                '[DReb%]': player[24],
+                '[Reb%]': player[25],
+                '[TeamTO%]': player[26],
+                '[EFG%]': player[28],
+                '[TS%]': player[29],
+                '[Usage%]': player[30],
                 'Pace': player[33],
                 'PacePer40': player[34],
                 'PIE': player[36],
                 'POSS': player[37],
                 'FGM': player[38],
                 'FGA': player[39],
-                'FGPct': player[42],
+                '[FG%]': player[42],
             }
             result_dicts.append(player)
-        bp = 'here'
+        return(result_dicts)

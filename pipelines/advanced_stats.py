@@ -17,16 +17,19 @@ class AdvancedStatsPipeline(Pipeline):
         # self.destination.check_tables()
 
     def extract(self):
-        schedule_extract = self.destination.queries.schedule_for_api_usage
         data_extract = self.source.fetch(self.source.player_stats)
         return data_extract
     
 
     def transform(self, data_extract):
         data_transformed = self.transformer.start_transform(data_extract)
+        return data_transformed
 
     def load(self, data_transformed):
         data_loaded = data_transformed
+        for item in data_transformed[0].keys():
+            print(f"            '{item}',")
+        bp = 'here'
 
 
 

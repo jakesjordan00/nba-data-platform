@@ -24,7 +24,17 @@ class ScheduleForAPI(Pipeline):
             (pl.col('GameTimeEST').dt.strftime('%m/%d/%Y')).alias('Date')
         ])
         #TODO
-        test = db_schedule.group_by()
+        db_schedule = db_schedule.group_by([
+            'SeasonID',
+            'GameID',
+            'GameTimeEST',
+            'Date',
+            'HomeID',
+            'AwayID'
+        ]).agg([
+            pl.col('PlayerID').filter(pl.col('HomeAway') == 'Home').alias('home_players'),
+            pl.col('PlayerID').filter(pl.col('HomeAway') == 'Away').alias('away_players')  
+        ]).sort(['GameTimeEST', 'GameID'])
         distinct_dates = db_schedule.sql('select distinct Date from self').to_series().to_list()
 
         dates_with_game_data = []
