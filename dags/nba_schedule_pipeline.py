@@ -65,11 +65,11 @@ def nba_pipeline():
         playbyplay_pipeline = PlayByPlayPipeline(
             pipeline_name = f'playbyplay.{GameID}',
             boxscore_data = box_data,
-            db_actions = box_data['db_actions'],
-            db_last_action_number = box_data['db_last_action_number'],
-            home_stats = box_data['home_stats'],
-            away_stats = box_data['away_stats'],
-            stint_status = box_data['stint_status'],
+            db_actions = boxscore_result['db_actions'],
+            db_last_action_number = boxscore_result['db_last_action_number'],
+            home_stats = boxscore_result['home_stats'],
+            away_stats = boxscore_result['away_stats'],
+            stint_status = boxscore_result['stint_status'],
             environment = 'Production'
         )
         completed_playbyplay_pipeline = playbyplay_pipeline.run()
