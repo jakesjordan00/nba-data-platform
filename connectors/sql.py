@@ -9,7 +9,7 @@ import polars as pl
 from typing import TypedDict, ClassVar
 import types
 from dataclasses import dataclass
-
+from sql import query
 @dataclass(frozen=True)
 class Query:
     name: str
@@ -19,29 +19,15 @@ class SQLConnector:
     class Queries:
         schedule_for_api_usage: ClassVar[Query] = Query(
             name= 'schedule_for_api_usage',
-            query='''
-select s.*
-	 , pb.PlayerID
-	 , case when pb.TeamID = s.HomeID then 'Home' else 'Away' end HomeAway
-from Schedule s
-left join PlayerBox pb on s.SeasonID = pb.SeasonID and s.GameID = pb.GameID
-where s.SeasonID = 2025 and s.GameType != 'PRE' and s.GameTimeEST <= getdate()
-order by s.GameTimeEst, s.GameID
-        '''
+            query= query('schedule_for_api_usage')
         )
         schedule_backfill: ClassVar[Query] = Query(
             name = 'schedule_backfill',
-            query = '''select s.SeasonID
-	 , s.GameID
-	 , e.Status
-from Schedule s
-left join Game g on s.SeasonID = g.SeasonID and s.GameID = g.GameID and s.HomeID = g.HomeID and s.AwayID = g.AwayID
-left join GameExt e on s.SeasonID = e.SeasonID and s.GameID = e.GameID
-where s.SeasonID = 2025 
-and s.GameTimeEST < cast(getdate() as date)
-and (g.GameID is null or e.Status not like '%final%') 
-and left(s.GameID, 1) in(2, 4, 5) --Only get Regular Season, Playoffs and Play-in
-'''
+            query = query('schedule_backfill')
+        )
+        pbp_backfill: ClassVar[Query] = Query(
+            name = 'pbp_backfill',
+            query= query('pbp_backfill')
         )
 
         placeholder: ClassVar[Query] = Query(
@@ -371,7 +357,6 @@ end
         cursor = self.pyodbc_connection.cursor()
         for table, config in self.tables.items():
             query = config['create']
-            print(query)
             result = cursor.execute(query)
             cursor.commit()
             bp = 'here'
