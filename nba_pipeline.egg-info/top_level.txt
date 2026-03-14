@@ -1,4 +1,5 @@
 config
 connectors
 pipelines
+sql
 transforms
