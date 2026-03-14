@@ -29,24 +29,7 @@ TABLES = {
             'Division'
         ],
         'update_columns': ['Wins', 'Losses'],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Team'
-) begin
-create table Team(
-SeasonID			int,
-TeamID				int,
-City				varchar(255),
-Name				varchar(255),
-Tricode				varchar(255),
-Wins				int,
-Losses				int,
-FullName			varchar(255),
-Conference          varchar(255),
-Division            varchar(255),
-Primary Key(SeasonID, TeamID))
-end
-'''
+        'create': table(name='Team')
     },
     'Arena':{
         'keys': ['SeasonID', 'ArenaID'],
@@ -63,25 +46,7 @@ end
             'Timezone'
         ],
         'update_columns': [],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Arena'
-) begin
-create table Arena(
-SeasonID			int,
-ArenaID				int,
-TeamID				int,
-City				varchar(255),
-Country				varchar(255),
-Name				varchar(255),
-PostalCode			varchar(255),
-State				varchar(255),
-StreetAddress		varchar(255),
-Timezone			varchar(255),
-Primary Key (SeasonID, ArenaID),
-Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID))
-end
-'''
+        'create': table(name='Arena')
     },
     'Official':{
         'keys': ['SeasonID', 'OfficialID'],
@@ -92,18 +57,7 @@ end
             'Number'
         ],
         'update_columns': [],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Official'
-) begin
-create table Official(
-SeasonID			int,
-OfficialID			int,
-Name				varchar(255),
-Number				varchar(3)
-Primary Key(SeasonID, OfficialID))
-end
-'''
+        'create': table(name='Official')
     },
     'Player':{
         'keys': ['SeasonID', 'PlayerID'],
@@ -118,22 +72,7 @@ end
             'NameFirst'
         ],
         'update_columns': [],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Player'
-) begin
-create table Player(
-SeasonID			int,
-PlayerID			int,
-Name				varchar(255),
-Number				varchar(3),
-Position			varchar(100),
-NameInitial			varchar(100),
-NameLast			varchar(100),
-NameFirst			varchar(100),
-Primary Key(SeasonID, PlayerID))
-end
-'''
+        'create': table(name='Player')
     },
     'Game':{
         'keys': ['SeasonID', 'GameID'],
@@ -161,32 +100,7 @@ end
             'LoserID', 
             'LScore'
         ],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Game'
-) begin
-create table Game(
-SeasonID			int,
-GameID				int,
-Date				date,
-GameType			varchar(10),
-HomeID				int,
-HScore				int,
-AwayID				int,
-AScore				int,
-WinnerID			int,
-WScore				int,
-LoserID				int,
-LScore				int,
-SeriesID			varchar(20),
-Datetime			datetime,
-Primary Key (SeasonID, GameID),
-Foreign Key (SeasonID, HomeID) references Team(SeasonID, TeamID),
-Foreign Key (SeasonID, AwayID) references Team(SeasonID, TeamID),
-Foreign Key (SeasonID, WinnerID) references Team(SeasonID, TeamID),
-Foreign Key (SeasonID, LoserID) references Team(SeasonID, TeamID))
-end
-'''
+        'create': table(name='game')
     },
     'GameExt':{
         'keys': ['SeasonID', 'GameID'],
@@ -213,32 +127,7 @@ end
             'Status', 
             'Periods'
         ],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'GameExt'
-) begin
-create table GameExt(
-SeasonID			int,
-GameID				int,
-ArenaID             int,
-Attendance			int,
-Sellout				int,
-Label				varchar(100),
-LabelDetail			varchar(100),
-OfficialID			int,
-Official2ID			int,
-Official3ID			int,
-OfficialAlternateID int,
-Status				varchar(50),
-Periods				int,
-Primary Key(SeasonID, GameID),
-Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
-Foreign Key (SeasonID, ArenaID) references Arena(SeasonID, ArenaID),
-Foreign Key (SeasonID, OfficialID) references Official(SeasonID, OfficialID),
-Foreign Key (SeasonID, Official2ID) references Official(SeasonID, OfficialID),
-Foreign Key (SeasonID, Official3ID) references Official(SeasonID, OfficialID))
-end
-'''
+        'create': table(name='GameExt')
     },
     'TeamBox':{
         'keys':['SeasonID', 'GameID', 'TeamID', 'MatchupID'],
@@ -376,88 +265,7 @@ end
             'Win',
             'Seed'
         ],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'TeamBox'
-) begin
-create table TeamBox(
-SeasonID					int,
-GameID						int,
-TeamID						int,
-MatchupID					int,
---Points
-Points int,
-PointsAgainst int,
---Field Goals			
-FG2M int,
-FG2A int,	
-[FG2%] float,
-FG3M int,
-FG3A int,
-[FG3%] float,
-FGM int,
-FGA int,
-[FG%] float,
-FieldGoalsEffectiveAdjusted float,
-FTM int,
-FTA int,
-[FT%]				float,
-SecondChanceFGM int,
-SecondChanceFGA int,
-[SecondChanceFG%] float,
-TrueShootingAttempts float,
-TrueShootingPercentage float,
-PtsFromTurnovers int,
-PtsSecondChance int,
-PtsInThePaint int,
-PaintFGM int,
-PaintFGA int,
-[PaintFG%] float,
-PtsFastBreak int,
-FastBreakFGM int,
-FastBreakFGA int,
-[FastBreakFG%] float,
-BenchPoints int,
---Rebounds
-ReboundsDefensive int,
-ReboundsOffensive int,
-ReboundsPersonal int,
-ReboundsTeam int,
-ReboundsTeamDefensive int,
-ReboundsTeamOffensive int,
-ReboundsTotal int,
-Assists int,
-AssistsTurnoverRatio float,
-BiggestLead int,
-BiggestLeadScore varchar(30),
-BiggestScoringRun int,
-BiggestScoringRunScore varchar(30),
-TimeLeading varchar(30),			
-TimesTied int,
-LeadChanges int,
-Steals int,
---Turnovers
-Turnovers int,
-TurnoversTeam int,
-TurnoversTotal int,
-Blocks int,
-BlocksReceived int,
-FoulsDrawn int,
-FoulsOffensive int,
-FoulsPersonal int,
-FoulsTeam int,
-FoulsTeamTechnical int,
-FoulsTechnical int,
-Wins int,
-Losses int,
-Win	int,
-Seed int,
-Primary Key (SeasonID, GameID, TeamID, MatchupID),
-Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
-Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
-Foreign Key (SeasonID, MatchupID) references Team(SeasonID, TeamID))
-end
-'''
+        'create': table(name='TeamBox')
     },
     'PlayerBox':{
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
@@ -549,65 +357,7 @@ end
             'StatusReason',
             'StatusDescription'
         ],
-        'create': '''
-if not exists(
-select 1 
-from sys.tables t 
-inner join sys.schemas s on t.schema_id = s.schema_id
-where t.name = 'PlayerBox' and s.name = 'dbo'
-) begin
-create table PlayerBox(
-SeasonID					int,
-GameID						int,
-TeamID						int,
-MatchupID					int,
-PlayerID					int,
-Status						varchar(20),
-Starter						int,
-Position					varchar(2),
-Minutes						varchar(30),
-MinutesCalculated			float,
-Points						int,
-Assists						int,
-ReboundsTotal				int,
-FG2M						int,
-FG2A						int,
-[FG2%]						float,
-FG3M						int,
-FG3A						int,
-[FG3%]						float,
-FGM							int,
-FGA							int,
-[FG%]						float,
-FTM							int,
-FTA							int,
-[FT%]						float,
-ReboundsDefensive			int,
-ReboundsOffensive			int,
-Blocks						int,
-BlocksReceived				int,
-Steals						int,
-Turnovers					int,
-AssistsTurnoverRatio		float,
-Plus						float,
-Minus						float,
-PlusMinusPoints				float,
-PtsFastBreak				int,
-PtsInThePaint			int,
-PtsSecondChance			int,
-FoulsOffensive				int,
-FoulsDrawn					int,
-FoulsPersonal				int,
-FoulsTechnical				int,
-StatusReason				varchar(100),
-StatusDescription			varchar(200),
-Primary Key(SeasonID, GameID, TeamID, MatchupID, PlayerID),
-Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
-Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
-Foreign Key (SeasonID, PlayerID) references Player(SeasonID, PlayerID),
-Foreign Key (SeasonID, GameID, TeamID, MatchupID) references TeamBox(SeasonID, GameID, TeamID, MatchupID))
-end
-'''
+        'create': table(name='PlayerBox')
     },    
     'StartingLineups':{
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
@@ -621,28 +371,9 @@ end
             'Position'
         ],
         'update_columns': [],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'StartingLineups'
-) begin
-create table StartingLineups(
-SeasonID		int,
-GameID			int,
-TeamID			int,
-MatchupID		int,
-PlayerID		int,
-Unit			varchar(30),
-Position		varchar(10),
-Primary Key(SeasonID, GameID, TeamID, MatchupID, PlayerID),
-Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
-Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
-Foreign Key (SeasonID, PlayerID) references Player(SeasonID, PlayerID),
-Foreign Key (SeasonID, GameID, TeamID, MatchupID, PlayerID) references PlayerBox(SeasonID, GameID, TeamID, MatchupID, PlayerID))
-end
-'''
+        'create': table(name='StartingLineups')
     },
     'PlayByPlay':{
-        # 'keys': ['SeasonID', 'GameID', 'ActionID', 'ActionNumber'],
         'keys': [],
         'columns': [
             'SeasonID',
@@ -697,58 +428,7 @@ from PlayByPlay p
 left join StintStatus s on p.SeasonID = s.SeasonID and p.GameID = s.GameID
 where p.SeasonID = season_id and p.GameID = game_id
 group by s.Status''',
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'PlayByPlay'
-) begin
-create table PlayByPlay(
-SeasonID			int,
-GameID				int,
-ActionID			int,
-ActionNumber		int,
-Qtr					int,
-Clock				varchar(20),
-TimeActual			datetime,
-ScoreHome			int,
-ScoreAway			int,
-Possession			int,
-TeamID				int,
-Tricode				varchar(3),
-PlayerID			int,
-Description			varchar(999),
-SubType				varchar(999),
-IsFieldGoal			int,
-ShotResult			varchar(999),
-ShotValue			int,
-ActionType			varchar(999),
-ShotDistance		float,
-Xlegacy				float,
-Ylegacy				float,
-X					float,
-Y					float,
-Location			varchar(35),
-Area				varchar(50),
-AreaDetail			varchar(50),
-Side				varchar(30),
-ShotType			varchar(4),
-PtsGenerated		int,
-Descriptor			varchar(30),
-Qual1				varchar(30),
-Qual2				varchar(30),
-Qual3				varchar(30),
-ShotActionNbr		int,
-PlayerIDAst			int,
-PlayerIDBlk			int,
-PlayerIDStl			int,
-PlayerIDFoulDrawn	int,
-PlayerIDJumpW		int,
-PlayerIDJumpL		int,
-OfficialID			int,
-QtrType				varchar(20),
-Primary Key(SeasonID, GameID, ActionNumber, ActionID),
-Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID))
-end
-'''
+        'create': table(name='PlayByPlay')
     },
     'StintStatus':{
         'keys': ['SeasonID', 'GameID'],
@@ -757,17 +437,7 @@ end
             'GameID'
         ],
         'update_columns': ['status'],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'StintStatus'
-) begin
-create table StintStatus(
-SeasonID int not null,
-GameID int not null,
-Status varchar(20),
-primary key(SeasonID, GameID))
-end
-'''
+        'create': table(name='StintStatus')
     },
     'Stint':{
         'keys': ['SeasonID', 'GameID', 'TeamID', 'StintID'],
@@ -843,46 +513,7 @@ select *
 from TeamsOnCourt
 where OnCourt = 1
 order by OnCourt asc,TeamID''',
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Stint'
-) begin
-create table Stint(
-SeasonID int not null,
-GameID int not null,
-TeamID int not null,
-StintID int not null,
-QtrStart int,
-QtrEnd int,
-ClockStart varchar(10),
-ClockEnd varchar(10),
-MinElapsedStart float,
-MinElapsedEnd float,
-MinutesPlayed float,
-Possessions int,
-PtsScored int,
-PtsAllowed int,
-FG2M int,
-FG2A int,
-FG3M int,
-FG3A int,
-FGM int,
-FGA int,
-FTM int,
-FTA int,
-OREB int,
-DREB int,
-REB int,
-AST int,
-TOV int,
-STL int,
-BLK int,
-BLKd int,
-F int,
-FDrwn int,
-primary key(SeasonID, GameID, TeamID, StintID))
-end
-'''
+        'create': table(name='Stint')
     },
     'StintPlayer':{
         'keys': ['SeasonID', 'GameID', 'TeamID', 'StintID', 'PlayerID'],
@@ -949,41 +580,7 @@ from PlayersOnCourt
 where OnCourt = 1
 order by OnCourt asc,TeamID, PlayerID
 ''',
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'StintPlayer'
-) begin
-create table StintPlayer(
-SeasonID int not null,
-GameID int not null,
-TeamID int not null,
-StintID int not null,
-PlayerID int not null,
-MinutesPlayed float,
-PlusMinus int,
-PTS int,
-AST int,
-REB int,
-FG2M int,
-FG2A int,
-FG3M int,
-FG3A int,
-FGM int,
-FGA int,
-FTM int,
-FTA int,
-OREB int,
-DREB int,
-TOV int,
-STL int,
-BLK int,
-BLKd int,
-F int,
-FDrwn int,
-primary key(SeasonID, GameID, TeamID, StintID, PlayerID),
-foreign key(SeasonID, GameID, TeamID, StintID) references Stint(SeasonID, GameID, TeamID, StintID))
-end
-'''
+        'create': table(name='StintPlayer')
     },
     'Schedule': {
         'check_query': '''
@@ -1013,40 +610,7 @@ left join Team h on s.SeasonID = h.SeasonID and s.HomeID = h.TeamID
 left join Team a on s.SeasonID = a.SeasonID and s.AwayID = a.TeamID
 where s.SeasonID = season_id and s.GameID in(game_id)
 ''',
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'Schedule'
-) begin
-create table Schedule(
-SeasonID		int,
-GameID			int,
-GameType		varchar(10),
-Status			varchar(255),
-Sequence		int,
-GameTimeEST		datetime,
-GameTimeUTC		datetime,
-GameTimeHome	datetime,
-GameTimeAway	datetime,
-Day				varchar(255),
-Week			int,
-Label			varchar(255),
-LabelDetail		varchar(255),
-IsNeutral		int,
-HomeID			int,
-HomeWins		int,
-HomeLosses		int,
-HomeScore		int,
-HomeSeed		int,
-AwayID			int,
-AwayWins		int,
-AwayLosses		int,
-AwayScore		int,
-AwaySeed		int,
-IfNecessary		int,
-SeriesText		varchar(255),
-Primary Key (SeasonID, GameID))
-end
-'''
+        'create': table(name='Schedule')
     },
     'DailyLineups': {
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
@@ -1067,27 +631,7 @@ end
             'RosterStatus',
             'Timestamp'
         ],
-        'create': '''
-if not exists(
-select 1 from sys.tables t where t.name = 'DailyLineups'
-) 
-begin
-create table DailyLineups(
-SeasonID        int,
-GameID          int,
-TeamID          int,
-MatchupID       int,
-PlayerID        int,
-Position        varchar(10),
-LineupStatus    varchar(20),
-RosterStatus    varchar(20),
-Timestamp       datetime,
-Primary key (SeasonID, GameID, TeamID, MatchupID, PlayerID),
-Foreign key(SeasonID, TeamID) references Team(SeasonID, TeamID),
-Foreign key(SeasonID, MatchupID) references Team(SeasonID, TeamID),
-Foreign key(SeasonID, PlayerID) references Player(SeasonID, PlayerID))
-end
-'''
+        'create': table('DailyLineups')
     },
     'adv.PlayerBox': {
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],

@@ -1,0 +1,58 @@
+
+if not exists(
+select 1 
+from sys.tables t 
+inner join sys.schemas s on t.schema_id = s.schema_id
+where t.name = 'PlayerBox' and s.name = 'dbo'
+) begin
+create table PlayerBox(
+SeasonID					int,
+GameID						int,
+TeamID						int,
+MatchupID					int,
+PlayerID					int,
+Status						varchar(20),
+Starter						int,
+Position					varchar(2),
+Minutes						varchar(30),
+MinutesCalculated			float,
+Points						int,
+Assists						int,
+ReboundsTotal				int,
+FG2M						int,
+FG2A						int,
+[FG2%]						float,
+FG3M						int,
+FG3A						int,
+[FG3%]						float,
+FGM							int,
+FGA							int,
+[FG%]						float,
+FTM							int,
+FTA							int,
+[FT%]						float,
+ReboundsDefensive			int,
+ReboundsOffensive			int,
+Blocks						int,
+BlocksReceived				int,
+Steals						int,
+Turnovers					int,
+AssistsTurnoverRatio		float,
+Plus						float,
+Minus						float,
+PlusMinusPoints				float,
+PtsFastBreak				int,
+PtsInThePaint			int,
+PtsSecondChance			int,
+FoulsOffensive				int,
+FoulsDrawn					int,
+FoulsPersonal				int,
+FoulsTechnical				int,
+StatusReason				varchar(100),
+StatusDescription			varchar(200),
+Primary Key(SeasonID, GameID, TeamID, MatchupID, PlayerID),
+Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
+Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
+Foreign Key (SeasonID, PlayerID) references Player(SeasonID, PlayerID),
+Foreign Key (SeasonID, GameID, TeamID, MatchupID) references TeamBox(SeasonID, GameID, TeamID, MatchupID))
+end
