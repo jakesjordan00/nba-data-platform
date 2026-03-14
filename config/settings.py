@@ -100,7 +100,7 @@ TABLES = {
             'LoserID', 
             'LScore'
         ],
-        'create': table(name='game')
+        'create': table(name='Game')
     },
     'GameExt':{
         'keys': ['SeasonID', 'GameID'],
