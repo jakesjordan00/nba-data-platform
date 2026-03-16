@@ -337,8 +337,8 @@ end
             return home_stats, away_stats
         except Exception as e:
             self.logger.error(f'Error getting OnCourt Lineups!')
-            self.logger.error(f'\nStintPlayer: {stint_player['check_query']}')
-            self.logger.error(f'\nStint: {stint['check_query']}')
+            # self.logger.error(f'\nStintPlayer: {stint_player['check_query']}')
+            # self.logger.error(f'\nStint: {stint['check_query']}')
             return None, None
 
 
