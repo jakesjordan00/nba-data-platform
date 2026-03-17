@@ -22,7 +22,74 @@ class Transform:
             data_transformed = self.measure_misc()
         elif self.pipeline.schema == 'usage':
             data_transformed = self.measure_usage()
+        elif self.pipeline.schema == 'def':
+            data_transformed = self.measure_defensive()
+        elif self.pipeline.schema == 'violations':
+            data_transformed = self.measure_violations()
         return data_transformed
+
+    def measure_defensive(self):
+        '''measure_defensive(self)
+    ===
+    When MeasureType == 'Defensive', format results
+        '''
+        for i, column in enumerate(self.results['headers']):
+            print(f"                '{column}': player[{i}],")
+        result_dicts = []
+        for player in self.results['rowSet']:
+            self._match_game(player=player)
+            player = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+                'PlayerID':     player[0],
+            }
+            result_dicts.append(player)
+            
+            print(f'create table {self.pipeline.schema}.PlayerBox(')
+            print('SeasonID          int,')
+            print('GameID            int,')
+            print('TeamID            int,')
+            print('MatchupID         int,')
+            print('PlayerID          int,')
+            for column in player.keys():
+                print(f'{column}          decimal(18,3),')
+        return result_dicts
+    
+    def measure_violations(self):
+        '''measure_violations(self)
+    ===
+    When MeasureType == 'Violations', format results
+        '''
+        result_dicts = []
+        for player in self.results['rowSet']:
+            self._match_game(player=player)
+            player = {
+                'SeasonID':             self.SeasonID,
+                'GameID':               self.GameID,
+                'TeamID':               self.TeamID,
+                'MatchupID':            self.MatchupID,
+                'PlayerID':             player[0],
+                'Travel':               player[10],
+                'DblDribble':           player[11],
+                'Inbound':              player[14],
+                'Backcourt':            player[15],
+                'Palming':              player[17],
+                'OffFoul':              player[18],
+                'Off3':                 player[13],
+                'OffGoaltend':          player[16],
+                'Def3':                 player[19],
+                'DefGoaltend':          player[21],
+                'Charge':               player[20],
+                'Lane':                 player[22],
+                'JumpBall':             player[23],
+                'KickedBall':           player[24],
+                'DiscDribble':          player[12],
+            }
+            result_dicts.append(player)
+        return result_dicts
+
 
     def measure_advanced(self):
         '''measure_advanced(self)
@@ -33,8 +100,6 @@ class Transform:
         #     print(f"                '{column}': player[{i}],")
         result_dicts = []
         for player in self.results['rowSet']:
-            if player[0] == 201145:
-                bp = 'here'
             self._match_game(player=player)
             player = {
                 'SeasonID':     self.SeasonID,

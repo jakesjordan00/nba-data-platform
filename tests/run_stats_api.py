@@ -15,7 +15,9 @@ from pipelines import ScheduleForAPI
 for schema in [
     # 'adv', 
     # 'misc', 
-    'usage'
+    # 'usage',
+    'def',
+    # 'violations',
     ]:
     schedule_pipeline = ScheduleForAPI(schema=schema)
     completed_schedule_pipeline = schedule_pipeline.run()

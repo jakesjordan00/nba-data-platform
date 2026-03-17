@@ -753,8 +753,32 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             '[%TeamPFDrwn]',
             '[%TeamPTS]'
         ],
-        'create': table('usage.PlayerBox')
-}
+        'create': table(name='usage.PlayerBox')
+    },
+    'violations.PlayerBox': {
+        'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
+        'columns': [
+            'SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID',
+            ],
+            'update_columns': [
+                'Travel',
+                'DblDribble',
+                'Inbound',
+                'Backcourt',
+                'Palming',
+                'OffFoul',
+                'Off3',
+                'OffGoaltend',
+                'Def3',
+                'DefGoaltend',
+                'Charge',
+                'Lane',
+                'JumpBall',
+                'KickedBall',
+                'DiscDribble',
+            ],
+            'create': table('violations.PlayerBox')
+    }
 
 
 # 'placeholder': {
