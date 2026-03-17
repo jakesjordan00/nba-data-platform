@@ -4,6 +4,7 @@ import requests
 import json
 import time
 import logging
+from datetime import datetime
 
 
 class APIDataConnector:   
@@ -27,6 +28,7 @@ class APIDataConnector:
 
     def fetch(self, endpoint: Endpoint, retries=5, backoff=5):
         for attempt in range(retries):
+            self.logger.info('')
             response = requests.get(url=endpoint.url, params=endpoint.params, headers=endpoint.headers)
             if response.status_code == 500:
                 if attempt < retries:
