@@ -49,4 +49,3 @@ QtrType				varchar(20),
 Primary Key(SeasonID, GameID, ActionNumber, ActionID),
 Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID))
 end
-go

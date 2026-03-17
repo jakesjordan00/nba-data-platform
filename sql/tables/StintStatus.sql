@@ -8,4 +8,3 @@ GameID int not null,
 Status varchar(20),
 primary key(SeasonID, GameID))
 end
-go

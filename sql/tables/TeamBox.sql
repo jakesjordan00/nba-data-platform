@@ -79,4 +79,3 @@ Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
 Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
 Foreign Key (SeasonID, MatchupID) references Team(SeasonID, TeamID))
 end
-go

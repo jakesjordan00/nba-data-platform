@@ -13,11 +13,11 @@ from connectors import APIDataConnector, SQLConnector, StaticDataConnector
 
 from pipelines import ScheduleForAPI
 for schema in [
-    # 'adv', 
-    # 'misc', 
-    # 'usage',
-    'def',
-    # 'violations',
+    'adv', 
+    'misc', 
+    'usage',
+    # 'def',
+    'violations',
     ]:
     schedule_pipeline = ScheduleForAPI(schema=schema)
     completed_schedule_pipeline = schedule_pipeline.run()

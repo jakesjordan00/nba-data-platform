@@ -23,4 +23,3 @@ Foreign Key (SeasonID, OfficialID) references Official(SeasonID, OfficialID),
 Foreign Key (SeasonID, Official2ID) references Official(SeasonID, OfficialID),
 Foreign Key (SeasonID, Official3ID) references Official(SeasonID, OfficialID))
 end
-go

@@ -15,4 +15,3 @@ Timezone			varchar(255),
 Primary Key (SeasonID, ArenaID),
 Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID))
 end
-go

@@ -37,4 +37,3 @@ F int,
 FDrwn int,
 primary key(SeasonID, GameID, TeamID, StintID))
 end
-go

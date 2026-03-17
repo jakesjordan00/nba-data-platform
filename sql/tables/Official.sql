@@ -9,4 +9,3 @@ Name				varchar(255),
 Number				varchar(3)
 Primary Key(SeasonID, OfficialID))
 end
-go

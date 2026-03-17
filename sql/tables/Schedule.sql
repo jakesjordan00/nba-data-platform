@@ -31,4 +31,3 @@ IfNecessary		int,
 SeriesText		varchar(255),
 Primary Key (SeasonID, GameID))
 end
-go

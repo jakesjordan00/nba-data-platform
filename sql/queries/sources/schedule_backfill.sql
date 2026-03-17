@@ -53,4 +53,3 @@ union
 select f.SeasonID
 	 , f.GameID
 from FirstAction f
-go

@@ -13,4 +13,3 @@ NameLast			varchar(100),
 NameFirst			varchar(100),
 Primary Key(SeasonID, PlayerID))
 end
-go

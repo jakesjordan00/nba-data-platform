@@ -18,4 +18,3 @@ Foreign key(SeasonID, TeamID) references Team(SeasonID, TeamID),
 Foreign key(SeasonID, MatchupID) references Team(SeasonID, TeamID),
 Foreign key(SeasonID, PlayerID) references Player(SeasonID, PlayerID))
 end
-go
