@@ -41,3 +41,4 @@ union
 select p.SeasonID
 	 , p.GameID
 from NotDoneInGame p
+go

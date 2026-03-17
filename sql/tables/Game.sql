@@ -23,3 +23,4 @@ Foreign Key (SeasonID, AwayID) references Team(SeasonID, TeamID),
 Foreign Key (SeasonID, WinnerID) references Team(SeasonID, TeamID),
 Foreign Key (SeasonID, LoserID) references Team(SeasonID, TeamID))
 end
+go

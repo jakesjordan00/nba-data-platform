@@ -14,3 +14,4 @@ Conference          varchar(255),
 Division            varchar(255),
 Primary Key(SeasonID, TeamID))
 end
+go

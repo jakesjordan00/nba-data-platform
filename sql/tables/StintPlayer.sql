@@ -32,3 +32,4 @@ FDrwn int,
 primary key(SeasonID, GameID, TeamID, StintID, PlayerID),
 foreign key(SeasonID, GameID, TeamID, StintID) references Stint(SeasonID, GameID, TeamID, StintID))
 end
+go

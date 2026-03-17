@@ -56,3 +56,4 @@ Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
 Foreign Key (SeasonID, PlayerID) references Player(SeasonID, PlayerID),
 Foreign Key (SeasonID, GameID, TeamID, MatchupID) references TeamBox(SeasonID, GameID, TeamID, MatchupID))
 end
+go

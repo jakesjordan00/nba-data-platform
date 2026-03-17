@@ -16,3 +16,4 @@ left join PlayerBox pb on s.SeasonID = pb.SeasonID and s.GameID = pb.GameID
 where s.SeasonID = 2025 and s.GameType not in('PRE', 'CUP', 'AS') and s.GameTimeEST <= getdate()
 and cast(s.GameTimeEST as date) in (select Date from DatesToDo)
 order by s.GameTimeEst, s.GameID
+go
