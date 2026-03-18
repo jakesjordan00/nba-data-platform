@@ -7,15 +7,19 @@ from connectors.sql import SQLConnector, Query
 import polars as pl
 
 class ScheduleForAPI(Pipeline):
-    def __init__(self, schema: str):
+    def __init__(self, schema: str | None = None, tracking_measure: str | None = None):
         self.pipeline_name = 'schedule_for_api'
         self.pipeline_tag = 'schedule'
         self.schema = schema
+        self.tracking_measure = tracking_measure
         super().__init__(self.pipeline_name, self.pipeline_tag, 'SQL')
         self.source = self.destination
         
     def extract(self):
-        schema_query = self.source.queries.schedule_api_playerbox.query.format(schema=self.schema)
+        if not self.tracking_measure:
+            schema_query = self.source.queries.schedule_api_playerbox.query.format(schema=self.schema)
+        else:
+            schema_query = self.source.queries.schedule_api_playerbox.query.format(schema = 'dbo')
         query = Query(name=f'{self.pipeline_name}_{self.schema}', query = schema_query)
         data_extract = self.source.query_to_dataframe(query=query)
         return {'data_extract': data_extract}

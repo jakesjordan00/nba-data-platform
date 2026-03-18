@@ -12,21 +12,62 @@ from connectors import APIDataConnector, SQLConnector, StaticDataConnector
 
 
 from pipelines import ScheduleForAPI
-for schema in [
-    'adv', 
-    'misc', 
-    'usage',
-    'def',
-    'violations',
-    ]:
-    schedule_pipeline = ScheduleForAPI(schema=schema)
+from pipelines import AdvancedStatsPipeline
+
+for tracking_measure in[
+    'Drives',
+    'Defense',
+    'CatchShoot',
+    'Passing',
+    'Possessions',
+    'PullUpShot',
+    'Rebounding',
+    'Efficiency',
+    'SpeedDistance',
+    'ElbowTouch',
+    'PostTouch',
+    'PaintTouch'
+]:
+    schedule_pipeline = ScheduleForAPI(tracking_measure=tracking_measure)
+    completed_schedule_pipeline = schedule_pipeline.run()
+    schedule_data = completed_schedule_pipeline['loaded']
+    for date in schedule_data:
+        for pt in ['Player', 'Team']:
+            adv_stats_pipeline = AdvancedStatsPipeline(
+                schema='tracking',
+                params = {
+                    'PlayerOrTeam': pt,
+                    'PtMeasureType': tracking_measure,
+                },
+                tracking_table = f'{pt}{tracking_measure}'
+            )
+            completed_adv_stats_pipeline = adv_stats_pipeline.run(date_data=date)
+            stats_data = completed_adv_stats_pipeline['loaded']
+
+     
+    
+
+schema_config = {
+    'adv': 'Advanced',
+    'misc': 'Misc',
+    'scoring': 'Scoring',
+    'usage': 'Usage',
+    'def': 'Defense',
+    'violations': 'Violations'
+}
+for schema, measure_type in schema_config.items():
+    schedule_pipeline = ScheduleForAPI(schema=schema_config['schema'])
     completed_schedule_pipeline = schedule_pipeline.run()
     schedule_data = completed_schedule_pipeline['loaded']
 
     for date in schedule_data:
-        from pipelines import AdvancedStatsPipeline
-        adv_stats_pipeline = AdvancedStatsPipeline(date_data=date, schema=schema)
-        completed_adv_stats_pipeline = adv_stats_pipeline.run()
+        adv_stats_pipeline = AdvancedStatsPipeline(
+            schema=schema,
+            params = {
+                'MeasureType': measure_type,
+            }
+        )
+        completed_adv_stats_pipeline = adv_stats_pipeline.run(date_data=date)
         stats_data = completed_adv_stats_pipeline['loaded']
     # adv_stats_pipeline = AdvancedStatsPipeline(data=date['games'], schema=schema)
 

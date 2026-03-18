@@ -13,8 +13,9 @@ class APIDataConnector:
             self.name = friendly_name
             config = map.nba_advanced_stats_endpoints[endpoint_name]
             self.url = config['url']
-            self.headers = config['headers']
+            self.headers = config['headers']                
             self.params = config['params']
+            
             
             pass
 
@@ -26,9 +27,10 @@ class APIDataConnector:
 
 
 
-    def fetch(self, endpoint: Endpoint, retries=5, backoff=5):
+    def fetch(self, endpoint: Endpoint, params: dict = None, retries=2, backoff=5):
+        if params:
+            endpoint.params = params
         for attempt in range(retries):
-            self.logger.info('')
             response = requests.get(url=endpoint.url, params=endpoint.params, headers=endpoint.headers)
             if response.status_code == 500:
                 if attempt < retries:
