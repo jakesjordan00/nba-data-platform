@@ -50,3 +50,5 @@ class APIDataConnector:
     def _set_endpoints(self):
         self.player_stats = self.Endpoint('player_stats', 'leaguedashplayerstats')
         self.player_tracking = self.Endpoint('player_tracking_stats', 'leaguedashptstats')
+        self.player_hustle = self.Endpoint('player_hustle', 'leaguehustlestatsplayer')
+        self.team_hustle = self.Endpoint('team_hustle', 'leaguehustlestatsteam')

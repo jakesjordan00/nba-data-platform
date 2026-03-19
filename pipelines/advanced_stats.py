@@ -28,8 +28,13 @@ class AdvancedStatsPipeline(Pipeline):
         if not tracking_table:
             self._endpoint = self.source.player_stats
             self.full_table_name = 'PlayerBox'
-        elif tracking_table:
+        elif tracking_table and tracking_table not in['PlayerHustle', 'TeamHustle']:
             self._endpoint = self.source.player_tracking
+        elif tracking_table and tracking_table == 'PlayerHustle':
+            self._endpoint = self.source.player_hustle
+        elif tracking_table and tracking_table == 'TeamHustle':
+            self._endpoint = self.source.team_hustle
+
         self._params = {
             **self._endpoint.params,
             **params

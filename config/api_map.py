@@ -124,9 +124,93 @@ nba_advanced_stats_endpoints: dict[str, Endpoint] = {
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
             'Weight':           '',                 # 
-            
+        }
+    },
+    'leaguehustlestatsplayer': {
+        'url': 'https://stats.nba.com/stats/leaguehustlestatsplayer',
+        'headers': stats_headers,
+        'params': {
+            'College':          '',                 # 
+            'Conference':       '',                 # 
+            'Country':          '',                 # 
+            'DateFrom':         '',                 # 03/05/2026
+            'DateTo':           '',                 # 03/05/2026
+            'Division':         '',                 # 
+            'DraftPick':        '',                 # 
+            'DraftYear':        '',                 # 
+            'GameScope':        '',                 # 
+            'Height':           '',                 # 
+            'ISTRound':         '',                 # 
+            'LastNGames':       0,                  # 0-15
+            'LeagueID':         '00',               # 
+            'Location':         '',                 # 
+            'Month':            0,                  # 1-12 (Starting October), 0 = null
+            'OpponentTeamID':   0,                  
+            'Outcome':          '',                 # 
+            'PORound':          0,                  # 
+            'PaceAdjust':       'N',                # 
+            'PerMode':          'PerGame',          # 'Pergame', 'Totals', 'Per100Possessions', 'Per100Plays', 'Per48', 'Per40', 'Per36' 
+            'PlayerExperience': '',                 # 
+            'PlayerPosition':   '',                 # 'F', 'C', 'G'
+            'PlusMinus':        'N',                # 
+            'Rank':             'N',                # 
+            'Season':           '2025-26',          # '2025-26', '2024-25', cont..., 1996-97
+            'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
+            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'TeamID':           0,                  # 
+            'VsConference':     '',                 # 
+            'VsDivision':       '',                 # 
+            'Weight':           '',                 # 
+
+        }
+    },
+    'leaguehustlestatsteam': {
+        'url': 'https://stats.nba.com/stats/leaguehustlestatsteam',
+        'headers': stats_headers,
+        'params': {
+            'College':          '',                 # 
+            'Conference':       '',                 # 
+            'Country':          '',                 # 
+            'DateFrom':         '',                 # 03/05/2026
+            'DateTo':           '',                 # 03/05/2026
+            'Division':         '',                 # 
+            'DraftPick':        '',                 # 
+            'DraftYear':        '',                 # 
+            'GameScope':        '',                 # 
+            'Height':           '',                 # 
+            'ISTRound':         '',                 # 
+            'LastNGames':       0,                  # 0-15
+            'LeagueID':         '00',               # 
+            'Location':         '',                 # 
+            'Month':            0,                  # 1-12 (Starting October), 0 = null
+            'OpponentTeamID':   0,                  
+            'Outcome':          '',                 # 
+            'PORound':          0,                  # 
+            'PaceAdjust':       'N',                # 
+            'PerMode':          'PerGame',          # 'Pergame', 'Totals', 'Per100Possessions', 'Per100Plays', 'Per48', 'Per40', 'Per36' 
+            'PlayerExperience': '',                 # 
+            'PlayerPosition':   '',                 # 'F', 'C', 'G'
+            'PlusMinus':        'N',                # 
+            'Rank':             'N',                # 
+            'Season':           '2025-26',          # '2025-26', '2024-25', cont..., 1996-97
+            'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
+            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'ShotClockRange':   '',                 #
+            'TeamID':           0,                  # 
+            'VsConference':     '',                 # 
+            'VsDivision':       '',                 # 
+            'Weight':           '',                 # 
+
         }
     }
+
+    # ,'placeholder': {
+    #     'url': 'https://stats.nba.com/stats/leaguedashptstats',
+    #     'headers': stats_headers,
+    #     'params': {
+
+    #     }
+    # }
 }
 
 nba_advanced_stats_endpoints['leaguedashplayerstats']['params']
