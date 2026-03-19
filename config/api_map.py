@@ -19,7 +19,9 @@ stats_headers = {
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'cross-site',
     'x-nba-stats-origin': 'stats',
-    'x-nba-stats-token': 'true'
+    'x-nba-stats-token': 'true',
+    'x-please-note': 'Github repo: https://github.com/jakesjordan00/nba-data-platform',
+    'From': 'jakesjordan00@gmail.com'
 }
 
 common_box_params = {    
