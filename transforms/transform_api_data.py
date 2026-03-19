@@ -290,7 +290,6 @@ class Transform:
                 self.result_dicts.append(self.tracking_passing(result=result))
             elif self.pipeline.tracking_table == 'Possessions':
                 self.result_dicts.append(self.tracking_possessions(result=result))
-
             elif self.pipeline.tracking_table == 'PullUpShot':
                 self.result_dicts.append(self.tracking_shot_pull_up(result=result))
             elif self.pipeline.tracking_table == 'Rebounding':
@@ -305,6 +304,12 @@ class Transform:
                 self.result_dicts.append(self.tracking_touch_post(result=result))
             elif self.pipeline.tracking_table == 'PaintTouch':
                 self.result_dicts.append(self.tracking_touch_paint(result=result))
+                
+            elif self.pipeline.tracking_table == 'Hustle':
+                if self.pipeline.full_table_name == 'TeamHustle':
+                    self.result_dicts.append(self.tracking_team_hustle(result=result))
+                elif self.pipeline.full_table_name == 'PlayerHustle':
+                    self.result_dicts.append(self.tracking_player_hustle(result=result))
             bp = 'here'
         bp = 'here'
         data_transformed = self.result_dicts
@@ -805,7 +810,104 @@ class Transform:
 
 #endregion Tracking
 
+#region Hustle
 
+    def tracking_team_hustle(self, result:list):
+        '''tracking_hustle`(self, result)`
+    ===
+    Handles response from league Hustle endpoint
+
+    Depending on whether or not we hit the team or player version of the endpoint, format dictionaries accordingly for **PaintTouch** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Hustle** data
+    '''
+        result_dict = {
+            **self.result_formatted,
+            'ContestedShots': result[3 + self.index_diff],
+            'ContestedFG2': result[4 + self.index_diff],
+            'ContestedFG3': result[5 + self.index_diff],
+            'Deflections': result[6 + self.index_diff],
+            'ChargesDrawn': result[7 + self.index_diff],
+            'ScreenAst': result[8 + self.index_diff],
+            'ScreenAstPts': result[9 + self.index_diff],
+            'OffLooseBallsRec': result[10 + self.index_diff],
+            'DefLooseBallsRec': result[11 + self.index_diff],
+            'LooseBallsRec': result[12 + self.index_diff],
+            'OffBoxouts': result[15 + self.index_diff],
+            'DefBoxouts': result[16 + self.index_diff],
+            'Boxouts': result[17 + self.index_diff],
+            'LooseBallsRecOff%': result[13 + self.index_diff],
+            'LooseBallsRecDef%': result[14 + self.index_diff],
+            'OffBoxout%': result[18 + self.index_diff],
+            'DefBoxout%': result[19 + self.index_diff],
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+
+    def tracking_player_hustle(self, result:list):
+        '''tracking_player_hustle`(self, result)`
+    ===
+    Handles response from league Hustle endpoint
+
+    Depending on whether or not we hit the team or player version of the endpoint, format dictionaries accordingly for **PaintTouch** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Hustle** data
+    '''
+        result_dict = {
+            **self.result_formatted,
+            'ContestedShots': result[6 + self.index_diff],
+            'ContestedFG2': result[7 + self.index_diff],
+            'ContestedFG3': result[8 + self.index_diff],
+            'Deflections': result[9 + self.index_diff],
+            'ChargesDrawn': result[10 + self.index_diff],
+            'ScreenAst': result[11 + self.index_diff],
+            'ScreenAstPts': result[12 + self.index_diff],
+            'OffLooseBallsRec': result[13 + self.index_diff],
+            'DefLooseBallsRec': result[14 + self.index_diff],
+            'LooseBallsRec': result[15 + self.index_diff],
+            'OffBoxouts': result[18 + self.index_diff],
+            'DefBoxouts': result[19 + self.index_diff],
+            'Boxouts': result[20 + self.index_diff],
+            'BoxoutTeamReb': result[21 + self.index_diff],
+            'BoxoutPersReb': result[22 + self.index_diff],
+            'LooseBallsRecOff%': result[16 + self.index_diff],
+            'LooseBallsRecDef%': result[17 + self.index_diff],
+            'OffBoxout%': result[23 + self.index_diff],
+            'DefBoxout%': result[24 + self.index_diff],
+            'BoxoutTeamReb%': result[25 + self.index_diff],
+            'BoxoutPersReb%': result[26 + self.index_diff],
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+#endregion Hustle
 
 
 
@@ -853,20 +955,20 @@ Foreign Key (SeasonID, GameID, TeamID, MatchupID, PlayerID) references PlayerBox
 end"""
             
 
-        # for column in dictionary.keys():
-        #     if '%' in column:
-        #         col = f'[{column}]'
-        #         spacer = f'{(18 - len(col)) * ' '}'
-        #         col_string = f'[{column}]{spacer}decimal(18,3),'
-        #     else:
-        #         spacer = f'{(18 - len(column)) * ' '}'
-        #         col_string = f'{column}{spacer}int,'
+        for column in dictionary.keys():
+            if '%' in column:
+                col = f'[{column}]'
+                spacer = f'{(18 - len(col)) * ' '}'
+                col_string = f'[{column}]{spacer}decimal(18,3),'
+            else:
+                spacer = f'{(18 - len(column)) * ' '}'
+                col_string = f'{column}{spacer}int,'
             
-        #     full_str += f'\n{col_string}'
-        #     print(col_string)
-        # full_str += f'\n{key_string}'
-        # print(key_string)
-        # pyperclip.copy(full_str)
+            full_str += f'\n{col_string}'
+            print(col_string)
+        full_str += f'\n{key_string}'
+        print(key_string)
+        pyperclip.copy(full_str)
 
         print("\n\n        'columns': [")
         for column in dictionary.keys():

@@ -6,11 +6,6 @@ import polars as pl
 
 
 
-TRACKING_MEASURE_CONFIG ={
-    '', ''
-}
-
-
 class AdvancedStatsPipeline(Pipeline):
     def __init__(self, schema: str, params: dict, tracking_table: str | None = None, player_team: str | None = None):
         self.pipeline_name = f'advanced_stats.{schema}'
@@ -28,11 +23,11 @@ class AdvancedStatsPipeline(Pipeline):
         if not tracking_table:
             self._endpoint = self.source.player_stats
             self.full_table_name = 'PlayerBox'
-        elif tracking_table and tracking_table not in['PlayerHustle', 'TeamHustle']:
+        elif tracking_table and tracking_table != 'Hustle':
             self._endpoint = self.source.player_tracking
-        elif tracking_table and tracking_table == 'PlayerHustle':
+        elif tracking_table and self.full_table_name == 'PlayerHustle':
             self._endpoint = self.source.player_hustle
-        elif tracking_table and tracking_table == 'TeamHustle':
+        elif tracking_table and self.full_table_name == 'TeamHustle':
             self._endpoint = self.source.team_hustle
 
         self._params = {
