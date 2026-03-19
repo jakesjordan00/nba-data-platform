@@ -15,18 +15,18 @@ from pipelines import ScheduleForAPI
 from pipelines import AdvancedStatsPipeline
 
 for tracking_measure in[
-    'Drives',
-    'Defense',
-    # 'CatchShoot',
-    'Passing',
-    # 'Possessions',
-    # 'PullUpShot',
-    # 'Rebounding',
-    # 'Efficiency',
-    # 'SpeedDistance',
-    # 'ElbowTouch',
-    # 'PostTouch',
-    # 'PaintTouch'
+    #'Drives',           #done
+    #'Defense',          #done
+    'CatchShoot',
+    #'Passing',          #done
+    'Possessions',
+    'PullUpShot',
+    'Rebounding',
+    'Efficiency',
+    'SpeedDistance',
+    'ElbowTouch',
+    'PostTouch',
+    'PaintTouch'
 ]:
     schedule_pipeline = ScheduleForAPI(tracking_measure=tracking_measure)
     completed_schedule_pipeline = schedule_pipeline.run()
@@ -51,13 +51,13 @@ for tracking_measure in[
 schema_config = {
     'adv': 'Advanced',
     'misc': 'Misc',
-    'scoring': 'Scoring',
     'usage': 'Usage',
     'def': 'Defense',
-    'violations': 'Violations'
+    'violations': 'Violations',
+    # 'scoring': 'Scoring',
 }
 for schema, measure_type in schema_config.items():
-    schedule_pipeline = ScheduleForAPI(schema=schema_config['schema'])
+    schedule_pipeline = ScheduleForAPI(schema=schema)
     completed_schedule_pipeline = schedule_pipeline.run()
     schedule_data = completed_schedule_pipeline['loaded']
 

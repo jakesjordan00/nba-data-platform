@@ -1019,16 +1019,368 @@ where s.SeasonID = season_id and s.GameID in(game_id)
         ],
         'create': table('tracking.PlayerDefense')
     },
+    'tracking.TeamCatchShoot': {
+        'keys': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'update_columns': [
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'create': table('tracking.TeamCatchShoot')
+    },
+    'tracking.PlayerCatchShoot': {
+        'keys': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'update_columns': [
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'create': table('tracking.PlayerCatchShoot')
+    }
 
 
-    # 'placeholder': {
-    #     'keys': [],
+    # 'tracking.TeamPossessions': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
     #     'columns': [
 
     #     ],
     #     'update_columns': [
 
     #     ],
-    #     'create': table('')
-    # }
+    #     'create': table('tracking.TeamPossessions')
+    # },
+    # 'tracking.PlayerPossessions': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerPossessions')
+    # },
+
+
+    # 'tracking.TeamPullUpShot': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamPullUpShot')
+    # },
+    # 'tracking.PlayerPullUpShot': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerPullUpShot')
+    # },    
+    # 'tracking.TeamRebounding': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamRebounding')
+    # },
+    # 'tracking.PlayerRebounding': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerRebounding')
+    # },    
+    # 'tracking.TeamEfficiency': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamEfficiency')
+    # },
+    # 'tracking.PlayerEfficiency': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerEfficiency')
+    # },    
+    # 'tracking.TeamSpeedDistance': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamSpeedDistance')
+    # },
+    # 'tracking.PlayerSpeedDistance': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerSpeedDistance')
+    # },
+
+    
+    # 'tracking.TeamElbowTouch': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamElbowTouch')
+    # },
+    # 'tracking.PlayerElbowTouch': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerElbowTouch')
+    # },
+
+    
+    # 'tracking.TeamPostTouch': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamPostTouch')
+    # },
+    # 'tracking.PlayerPostTouch': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerPostTouch')
+    # },
+
+    
+    # 'tracking.TeamPaintTouch': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.TeamPaintTouch')
+    # },
+    # 'tracking.PlayerPaintTouch': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.PlayerPaintTouch')
+    # },
+
+
+
+
+    
+
+    
+    # 'tracking.Team': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.Team')
+    # },
+    # 'tracking.Player': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'GameID',
+    #       'TeamID',
+    #       'MatchupID',
+    #       'PlayerID'
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('tracking.Player')
+    # },
 }

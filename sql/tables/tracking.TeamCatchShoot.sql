@@ -8,17 +8,22 @@ if not exists(
 select *
 from sys.tables t
 inner join sys.schemas s on t.schema_id = s.schema_id
-where t.name = 'TeamDefense' and s.name = 'tracking'
+where t.name = 'TeamCatchShoot' and s.name = 'tracking'
 )
 begin
-create table tracking.TeamDefense(
+create table tracking.TeamCatchShoot(
 SeasonID          int,
 GameID            int,
 TeamID            int,
 MatchupID         int,
-DefRimFGM         int,
-DefRimFGA         int,
-[DefRimFG%]       decimal(18,3),
+FGM               int,
+FGA               int,
+[FG%]             decimal(18,3),
+PTS               int,
+FG3M              int,
+FG3A              int,
+[FG3%]            decimal(18,3),
+[EFG%]            decimal(18,3),
 Primary Key(SeasonID, GameID, TeamID, MatchupID),
 Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
 Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),

@@ -19,7 +19,7 @@ class ScheduleForAPI(Pipeline):
         if not self.tracking_measure:
             schema_query = self.source.queries.schedule_api_playerbox.query.format(schema=self.schema, table='PlayerBox')
         else:
-            schema_query = self.source.queries.schedule_api_playerbox.query.format(schema='tracking', table=self.tracking_measure)
+            schema_query = self.source.queries.schedule_api_playerbox.query.format(schema='tracking', table=f'Player{self.tracking_measure}')
         query = Query(name=f'{self.pipeline_name}_{self.schema}', query = schema_query)
         data_extract = self.source.query_to_dataframe(query=query)
         return {'data_extract': data_extract}

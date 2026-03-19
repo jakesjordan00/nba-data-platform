@@ -284,78 +284,31 @@ class Transform:
                 self.result_dicts.append(self.tracking_drives(result=result))
             elif self.pipeline.tracking_table == 'Defense':
                 self.result_dicts.append(self.tracking_defensive_impact(result=result))
+            elif self.pipeline.tracking_table == 'CatchShoot':
+                self.result_dicts.append(self.tracking_catch_shoot(result=result))
             elif self.pipeline.tracking_table == 'Passing':
                 self.result_dicts.append(self.tracking_passing(result=result))
+            elif self.pipeline.tracking_table == 'Possessions':
+                self.result_dicts.append(self.tracking_possessions(result=result))
+
+            elif self.pipeline.tracking_table == 'PullUpShot':
+                self.result_dicts.append(self.tracking_shot_pull_up(result=result))
+            elif self.pipeline.tracking_table == 'Rebounding':
+                self.result_dicts.append(self.tracking_rebounding(result=result))
+            elif self.pipeline.tracking_table == 'Efficiency':
+                self.result_dicts.append(self.tracking_efficiency(result=result))
+            elif self.pipeline.tracking_table == 'SpeedDistance':
+                self.result_dicts.append(self.tracking_speed_distance(result=result))
+            elif self.pipeline.tracking_table == 'ElbowTouch':
+                self.result_dicts.append(self.tracking_touch_elbow(result=result))
+            elif self.pipeline.tracking_table == 'PostTouch':
+                self.result_dicts.append(self.tracking_touch_post(result=result))
+            elif self.pipeline.tracking_table == 'PaintTouch':
+                self.result_dicts.append(self.tracking_touch_paint(result=result))
             bp = 'here'
         bp = 'here'
         data_transformed = self.result_dicts
         return data_transformed
-
-
-    def tracking_passing(self, result: list):
-        '''tracking_passing`(self, result)`
-    ===
-        When PtMeasureType == 'Passing', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Passing** data
-
-
-    Parameters
-    -------------
-    <hr>
-
-        __result__ (list): A list of either Player or Team data for a single Date
-
-
-    Returns
-    -------------
-    <hr>
-
-        __result_dict__ (dict): Formatted dict of **Passing** tracking data
-    '''
-        result_dict = {
-            **self.result_formatted,
-            'PassMade': result[7 + self.index_diff],
-            'PassRcvd': result[8 + self.index_diff],
-            'Ast': result[9 + self.index_diff],
-            'AstFT': result[10 + self.index_diff],
-            'AstSecondary': result[11 + self.index_diff],
-            'AstPotential': result[12 + self.index_diff],
-            'AstPointsCreated': result[13 + self.index_diff],
-            'AstAdj': result[14 + self.index_diff],
-            'AstToPass%': result[15 + self.index_diff],
-            'AstToPass%Adj': result[16 + self.index_diff],
-        }
-        # self._print_table_creates(result_dict)
-        return result_dict
-
-    def tracking_defensive_impact(self, result: list):
-        '''tracking_defensive_impact`(self, result)`
-    ===
-        When PtMeasureType == 'Defense', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Defensive Impact data
-
-
-    Parameters
-    -------------
-    <hr>
-
-        __result__ (list): A list of either Player or Team data for a single Date
-
-
-    Returns
-    -------------
-    <hr>
-
-        __result_dict__ (dict): Formatted dict of **Defended Field Goal** tracking data
-    '''
-        result_dict = {
-            **self.result_formatted,  
-            'DefRimFGM': result[10 + self.index_diff],
-            'DefRimFGA': result[11 + self.index_diff],
-            'DefRimFG%': result[12 + self.index_diff],
-        }
-        # self._print_table_creates(result_dict)
-        return result_dict
 
 
     def tracking_drives(self, result: list):
@@ -401,6 +354,332 @@ class Transform:
         # self._print_table_creates(result)
         bp = 'here'
         return result_dict
+    
+    def tracking_defensive_impact(self, result: list):
+        '''tracking_defensive_impact`(self, result)`
+    ===
+        When PtMeasureType == 'Defense', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Defensive Impact data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Defended Field Goal** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,  
+            'DefRimFGM': result[10 + self.index_diff],
+            'DefRimFGA': result[11 + self.index_diff],
+            'DefRimFG%': result[12 + self.index_diff],
+        }
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+    def tracking_catch_shoot(self, result: list):
+        '''tracking_catch_shoot`(self, result)`
+    ===
+        When PtMeasureType == 'CatchShoot', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **CatchShoot** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **CatchShoot** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+            'FGM': result[7 + self.index_diff],
+            'FGA': result[8 + self.index_diff],
+            'FG%': result[9 + self.index_diff],
+            'PTS': result[10 + self.index_diff],
+            'FG3M': result[11 + self.index_diff],
+            'FG3A': result[12 + self.index_diff],
+            'FG3%': result[13 + self.index_diff],
+            'EFG%': result[14 + self.index_diff],
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+    def tracking_passing(self, result: list):
+        '''tracking_passing`(self, result)`
+    ===
+        When PtMeasureType == 'Passing', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Passing** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Passing** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+            'PassMade': result[7 + self.index_diff],
+            'PassRcvd': result[8 + self.index_diff],
+            'Ast': result[9 + self.index_diff],
+            'AstFT': result[10 + self.index_diff],
+            'AstSecondary': result[11 + self.index_diff],
+            'AstPotential': result[12 + self.index_diff],
+            'AstPointsCreated': result[13 + self.index_diff],
+            'AstAdj': result[14 + self.index_diff],
+            'AstToPass%': result[15 + self.index_diff],
+            'AstToPass%Adj': result[16 + self.index_diff],
+        }
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+
+
+    def tracking_possessions(self, result: list):
+        '''tracking_possessions`(self, result)`
+    ===
+        When PtMeasureType == 'Possessions', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Possessions** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Possessions** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+    
+
+    
+
+
+
+    def tracking_shot_pull_up(self, result:list):
+        '''tracking_shot_pull_up`(self, result)`
+    ===
+        When PtMeasureType == 'PullUpShot', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PullUpShot** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **PullUpShot** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+
+    def tracking_rebounding(self, result:list):
+        '''tracking_rebounding`(self, result)`
+    ===
+        When PtMeasureType == 'Rebounding', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Rebounding** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Rebounding** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+
+    def tracking_efficiency(self, result:list):
+        '''tracking_efficiency`(self, result)`
+    ===
+        When PtMeasureType == 'Efficiency', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Efficiency** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **Efficiency** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+    def tracking_speed_distance(self, result:list):
+        '''tracking_speed_distance`(self, result)`
+    ===
+        When PtMeasureType == 'SpeedDistance', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **SpeedDistance** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **SpeedDistance** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+    def tracking_touch_elbow(self, result:list):
+        '''tracking_touch_elbow`(self, result)`
+    ===
+        When PtMeasureType == 'ElbowTouch', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **ElbowTouch** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **ElbowTouch** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+    def tracking_touch_post(self, result:list):
+        '''tracking_touch_post`(self, result)`
+    ===
+        When PtMeasureType == 'PostTouch', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PostTouch** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **PostTouch** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
+    def tracking_touch_paint(self, result:list):
+        '''tracking_touch_paint`(self, result)`
+    ===
+        When PtMeasureType == 'PaintTouch', format results<br>
+        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PaintTouch** data
+
+
+    Parameters
+    -------------
+    <hr>
+
+        __result__ (list): A list of either Player or Team data for a single Date
+
+
+    Returns
+    -------------
+    <hr>
+
+        __result_dict__ (dict): Formatted dict of **PaintTouch** tracking data
+    '''
+        result_dict = {
+            **self.result_formatted,
+        }
+        # self._print_columns_for_naming()
+        # self._print_table_creates(result_dict)
+        return result_dict
+
 
 #endregion Tracking
 
@@ -433,7 +712,15 @@ where t.name = '{self.pipeline.full_table_name}' and s.name = '{self.pipeline.sc
 )
 begin"""
         full_str = check_string
-        key_string = f"""Primary Key(SeasonID, GameID, TeamID, MatchupID, PlayerID),
+        if 'Team' in self.pipeline.full_table_name:
+            key_string = f"""Primary Key(SeasonID, GameID, TeamID, MatchupID),
+Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
+Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
+Foreign Key (SeasonID, MatchupID) references Team(SeasonID, TeamID),
+Foreign Key (SeasonID, GameID, TeamID, MatchupID) references TeamBox(SeasonID, GameID, TeamID, MatchupID))
+end"""
+        elif 'Player' in self.pipeline.full_table_name:
+            key_string = f"""Primary Key(SeasonID, GameID, TeamID, MatchupID, PlayerID),
 Foreign Key (SeasonID, GameID) references Game(SeasonID, GameID),
 Foreign Key (SeasonID, TeamID) references Team(SeasonID, TeamID),
 Foreign Key (SeasonID, MatchupID) references Team(SeasonID, TeamID),
