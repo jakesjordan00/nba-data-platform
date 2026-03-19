@@ -1656,70 +1656,224 @@ where s.SeasonID = season_id and s.GameID in(game_id)
     },
 
     
-    # 'tracking.TeamPostTouch': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.TeamPostTouch')
-    # },
-    # 'tracking.PlayerPostTouch': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID',
-    #       'PlayerID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.PlayerPostTouch')
-    # },
+    'tracking.TeamPostTouch': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'TotalTouches',
+            'PostTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'update_columns': [
+            'TotalTouches',
+            'PostTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'create': table('tracking.TeamPostTouch')
+    },
+    'tracking.PlayerPostTouch': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID',
+          'PlayerID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID',
+            'TotalTouches',
+            'PostTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'update_columns': [
+            'TotalTouches',
+            'PostTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'create': table('tracking.PlayerPostTouch')
+    },
 
     
-    # 'tracking.TeamPaintTouch': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.TeamPaintTouch')
-    # },
-    # 'tracking.PlayerPaintTouch': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID',
-    #       'PlayerID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.PlayerPaintTouch')
-    # },
+    'tracking.TeamPaintTouch': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'TotalTouches',
+            'PaintTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'update_columns': [
+            'TotalTouches',
+            'PaintTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'create': table('tracking.TeamPaintTouch')
+    },
+    'tracking.PlayerPaintTouch': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID',
+          'PlayerID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID',
+            'TotalTouches',
+            'PaintTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'update_columns': [
+            'TotalTouches',
+            'PaintTouches',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'FTM',
+            'FTA',
+            '[FT%]',
+            'Pts',
+            'Passes',
+            'Ast',
+            'TOV',
+            'Fouls',
+            '[Pts%]',
+            '[Pass%]',
+            '[Ast%]',
+            '[TOV%]',
+            '[Foul%]',
+        ],
+        'create': table('tracking.PlayerPaintTouch')
+    },
 
 
 

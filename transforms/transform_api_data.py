@@ -853,34 +853,34 @@ Foreign Key (SeasonID, GameID, TeamID, MatchupID, PlayerID) references PlayerBox
 end"""
             
 
-        for column in dictionary.keys():
-            if '%' in column:
-                col = f'[{column}]'
-                spacer = f'{(18 - len(col)) * ' '}'
-                col_string = f'[{column}]{spacer}decimal(18,3),'
-            else:
-                spacer = f'{(18 - len(column)) * ' '}'
-                col_string = f'{column}{spacer}int,'
-            
-            full_str += f'\n{col_string}'
-            print(col_string)
-        full_str += f'\n{key_string}'
-        print(key_string)
-        pyperclip.copy(full_str)
-
-        # print("\n\n        'columns': [")
         # for column in dictionary.keys():
         #     if '%' in column:
-        #         print(f"            '[{column}]',")
+        #         col = f'[{column}]'
+        #         spacer = f'{(18 - len(col)) * ' '}'
+        #         col_string = f'[{column}]{spacer}decimal(18,3),'
         #     else:
-        #         print(f"            '{column}',")
+        #         spacer = f'{(18 - len(column)) * ' '}'
+        #         col_string = f'{column}{spacer}int,'
+            
+        #     full_str += f'\n{col_string}'
+        #     print(col_string)
+        # full_str += f'\n{key_string}'
+        # print(key_string)
+        # pyperclip.copy(full_str)
+
+        print("\n\n        'columns': [")
+        for column in dictionary.keys():
+            if '%' in column:
+                print(f"            '[{column}]',")
+            else:
+                print(f"            '{column}',")
         
-        # print("        ],")
-        # print("        'update_columns': [")
-        # for column in dictionary.keys():
-        #     if 'ID' not in column:
-        #         if '%' in column:
-        #             print(f"            '[{column}]',")
-        #         else:
-        #             print(f"            '{column}',")
-        # print("        ],")
+        print("        ],")
+        print("        'update_columns': [")
+        for column in dictionary.keys():
+            if 'ID' not in column:
+                if '%' in column:
+                    print(f"            '[{column}]',")
+                else:
+                    print(f"            '{column}',")
+        print("        ],")
