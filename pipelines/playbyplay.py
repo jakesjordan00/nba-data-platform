@@ -34,7 +34,7 @@ class PlayByPlayPipeline(Pipeline[dict]):
         self.source = StaticDataConnector(self)
         self.url = self.source.playbyplay.replace('GameIDStr', self.GameIDStr)
         self.environment = environment
-        self.file_source = f'tests/pbp/{self.GameID}'
+        self.file_source = f'.tests/pbp/{self.GameID}'
 
         
         self.transformer = Transform(self)

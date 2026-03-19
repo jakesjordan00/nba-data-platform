@@ -63,7 +63,7 @@ class BoxscorePipeline(Pipeline[dict]):
         self.url = self.source.boxscore.replace('GameIDStr', self.GameIDStr)
         self.transformer = Transform(self)
         self.environment = environment
-        self.file_source = f'tests/box/{self.GameID}'
+        self.file_source = f'.tests/box/{self.GameID}'
         
     def extract(self) -> dict:
         '''Summary

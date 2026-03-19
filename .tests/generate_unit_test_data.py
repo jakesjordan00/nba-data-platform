@@ -7,8 +7,8 @@ from connectors.sql import SQLConnector
 connector = SQLConnector('generate_unit_test_data', 'JJsNBA')
 
 print("cwd:", os.getcwd())
-print("'tests' exists:", os.path.exists('tests'))
-print("is dir:", os.path.isdir('tests'))
+print("'tests' exists:", os.path.exists('.tests'))
+print("is dir:", os.path.isdir('.tests'))
 
 
 def run():
@@ -139,7 +139,7 @@ todays_scoreboard = f'''{{
 }}'''
 
 
-with open('tests/generated_scoreboard.json', 'w') as f:
+with open('.tests/generated_scoreboard.json', 'w') as f:
     f.write(todays_scoreboard)
 
 print(todays_scoreboard)

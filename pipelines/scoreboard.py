@@ -42,7 +42,7 @@ ___
         self.url = self.source.scoreboard
         self.transformer = Transform(self)
         self.environment = environment
-        self.file_source = 'tests/scoreboard'
+        self.file_source = '.tests/scoreboard'
 
 
     def extract(self):

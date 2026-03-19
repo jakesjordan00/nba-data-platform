@@ -14,6 +14,27 @@ from connectors import APIDataConnector, SQLConnector, StaticDataConnector
 from pipelines import ScheduleForAPI
 from pipelines import AdvancedStatsPipeline
 
+
+for pt in [
+    # 'Team', 
+    'Player'
+]:
+    schedule_pipeline = ScheduleForAPI(tracking_measure=f'{pt}Hustle')
+    completed_schedule_pipeline = schedule_pipeline.run()
+    schedule_data = completed_schedule_pipeline['loaded']
+    for date in schedule_data:
+        hustle_pipeline = AdvancedStatsPipeline(
+            schema = 'tracking',
+            params = {},
+            tracking_table = 'Hustle',
+            player_team = pt
+        )
+        completed_hustle_pipeline = hustle_pipeline.run(date_data=date)
+        hustle_data = completed_hustle_pipeline['loaded']
+    
+
+
+
 for tracking_measure in[
     #'Drives',           #done
     #'Defense',          #done
