@@ -1086,104 +1086,309 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             '[EFG%]',
         ],
         'create': table('tracking.PlayerCatchShoot')
-    }
+    },
+    'tracking.TeamPossessions': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'Pts',
+            'Touches',
+            'TouchFrontCourt',
+            'PossTime',
+            'SecPerTouch',
+            'DribblePerTouch',
+            'PtsPerTouch',
+            'TouchElbow',
+            'TouchPost',
+            'TouchPaint',
+            'PtsPerElbowTouch',
+            'PtsPerPostTouch',
+            'PtsPerPaintTouch',
+        ],
+        'update_columns': [
+            'Pts',
+            'Touches',
+            'TouchFrontCourt',
+            'PossTime',
+            'SecPerTouch',
+            'DribblePerTouch',
+            'PtsPerTouch',
+            'TouchElbow',
+            'TouchPost',
+            'TouchPaint',
+            'PtsPerElbowTouch',
+            'PtsPerPostTouch',
+            'PtsPerPaintTouch',
+        ],
+        'create': table('tracking.TeamPossessions')
+    },
+    'tracking.PlayerPossessions': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID',
+          'PlayerID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID',
+            'Pts',
+            'Touches',
+            'TouchFrontCourt',
+            'PossTime',
+            'SecPerTouch',
+            'DribblePerTouch',
+            'PtsPerTouch',
+            'TouchElbow',
+            'TouchPost',
+            'TouchPaint',
+            'PtsPerElbowTouch',
+            'PtsPerPostTouch',
+            'PtsPerPaintTouch',
+        ],
+        'update_columns': [
+            'Pts',
+            'Touches',
+            'TouchFrontCourt',
+            'PossTime',
+            'SecPerTouch',
+            'DribblePerTouch',
+            'PtsPerTouch',
+            'TouchElbow',
+            'TouchPost',
+            'TouchPaint',
+            'PtsPerElbowTouch',
+            'PtsPerPostTouch',
+            'PtsPerPaintTouch',
+        ],
+        'create': table('tracking.PlayerPossessions')
+    },
+    'tracking.TeamPullUpShot': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'update_columns': [
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'create': table('tracking.TeamPullUpShot')
+    },
+    'tracking.PlayerPullUpShot': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID',
+          'PlayerID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID',
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'update_columns': [
+            'FGM',
+            'FGA',
+            '[FG%]',
+            'PTS',
+            'FG3M',
+            'FG3A',
+            '[FG3%]',
+            '[EFG%]',
+        ],
+        'create': table('tracking.PlayerPullUpShot')
+    },
+    'tracking.TeamRebounding': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'OReb',
+            'ORebContested',
+            'ORebUnContested',
+            '[ORebContested%]',
+            'ORebChances',
+            '[ORebChance%]',
+            'ORebChanceDefer',
+            '[ORebChanceAdj%]',
+            'AvgORebDist',
+            'DReb',
+            'DRebContested',
+            'DRebUnContested',
+            '[DRebContested%]',
+            'DRebChances',
+            '[DRebChance%]',
+            'DRebChanceDefer',
+            '[DRebChanceAdj%]',
+            'AvgDRebDist',
+            'Reb',
+            'RebContested',
+            'RebUnContested',
+            '[RebContested%]',
+            'RebChances',
+            '[RebChance%]',
+            'RebChanceDefer',
+            '[RebChanceAdj%]',
+            'AvgRebDist',
+        ],
+        'update_columns': [
+            'OReb',
+            'ORebContested',
+            'ORebUnContested',
+            '[ORebContested%]',
+            'ORebChances',
+            '[ORebChance%]',
+            'ORebChanceDefer',
+            '[ORebChanceAdj%]',
+            'AvgORebDist',
+            'DReb',
+            'DRebContested',
+            'DRebUnContested',
+            '[DRebContested%]',
+            'DRebChances',
+            '[DRebChance%]',
+            'DRebChanceDefer',
+            '[DRebChanceAdj%]',
+            'AvgDRebDist',
+            'Reb',
+            'RebContested',
+            'RebUnContested',
+            '[RebContested%]',
+            'RebChances',
+            '[RebChance%]',
+            'RebChanceDefer',
+            '[RebChanceAdj%]',
+            'AvgRebDist',
+        ],
+        'create': table('tracking.TeamRebounding')
+    },
+    'tracking.PlayerRebounding': {
+        'keys': [
+          'SeasonID',
+          'GameID',
+          'TeamID',
+          'MatchupID',
+          'PlayerID'
+        ],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PlayerID',
+            'OReb',
+            'ORebContested',
+            'ORebUnContested',
+            '[ORebContested%]',
+            'ORebChances',
+            '[ORebChance%]',
+            'ORebChanceDefer',
+            '[ORebChanceAdj%]',
+            'AvgORebDist',
+            'DReb',
+            'DRebContested',
+            'DRebUnContested',
+            '[DRebContested%]',
+            'DRebChances',
+            '[DRebChance%]',
+            'DRebChanceDefer',
+            '[DRebChanceAdj%]',
+            'AvgDRebDist',
+            'Reb',
+            'RebContested',
+            'RebUnContested',
+            '[RebContested%]',
+            'RebChances',
+            '[RebChance%]',
+            'RebChanceDefer',
+            '[RebChanceAdj%]',
+            'AvgRebDist',
+        ],
+        'update_columns': [
+            'OReb',
+            'ORebContested',
+            'ORebUnContested',
+            '[ORebContested%]',
+            'ORebChances',
+            '[ORebChance%]',
+            'ORebChanceDefer',
+            '[ORebChanceAdj%]',
+            'AvgORebDist',
+            'DReb',
+            'DRebContested',
+            'DRebUnContested',
+            '[DRebContested%]',
+            'DRebChances',
+            '[DRebChance%]',
+            'DRebChanceDefer',
+            '[DRebChanceAdj%]',
+            'AvgDRebDist',
+            'Reb',
+            'RebContested',
+            'RebUnContested',
+            '[RebContested%]',
+            'RebChances',
+            '[RebChance%]',
+            'RebChanceDefer',
+            '[RebChanceAdj%]',
+            'AvgRebDist',
+        ],
+        'create': table('tracking.PlayerRebounding')
+    },    
 
 
-    # 'tracking.TeamPossessions': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.TeamPossessions')
-    # },
-    # 'tracking.PlayerPossessions': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID',
-    #       'PlayerID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.PlayerPossessions')
-    # },
-
-
-    # 'tracking.TeamPullUpShot': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.TeamPullUpShot')
-    # },
-    # 'tracking.PlayerPullUpShot': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID',
-    #       'PlayerID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.PlayerPullUpShot')
-    # },    
-    # 'tracking.TeamRebounding': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.TeamRebounding')
-    # },
-    # 'tracking.PlayerRebounding': {
-    #     'keys': [
-    #       'SeasonID',
-    #       'GameID',
-    #       'TeamID',
-    #       'MatchupID',
-    #       'PlayerID'
-    #     ],
-    #     'columns': [
-
-    #     ],
-    #     'update_columns': [
-
-    #     ],
-    #     'create': table('tracking.PlayerRebounding')
-    # },    
     # 'tracking.TeamEfficiency': {
     #     'keys': [
     #       'SeasonID',

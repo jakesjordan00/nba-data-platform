@@ -479,9 +479,22 @@ class Transform:
     '''
         result_dict = {
             **self.result_formatted,
+            'Pts': result[7 + self.index_diff],
+            'Touches': result[8 + self.index_diff],
+            'TouchFrontCourt': result[9 + self.index_diff],
+            'PossTime': result[10 + self.index_diff],
+            'SecPerTouch': result[11 + self.index_diff],
+            'DribblePerTouch': result[12 + self.index_diff],
+            'PtsPerTouch': result[13 + self.index_diff],
+            'TouchElbow': result[14 + self.index_diff],
+            'TouchPost': result[15 + self.index_diff],
+            'TouchPaint': result[16 + self.index_diff],
+            'PtsPerElbowTouch': result[17 + self.index_diff],
+            'PtsPerPostTouch': result[18 + self.index_diff],
+            'PtsPerPaintTouch': result[19 + self.index_diff],
         }
         # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
+        self._print_table_creates(result_dict)
         return result_dict
     
 
@@ -511,9 +524,17 @@ class Transform:
     '''
         result_dict = {
             **self.result_formatted,
+            'FGM': result[7 + self.index_diff],
+            'FGA': result[8 + self.index_diff],
+            'FG%': result[9 + self.index_diff],
+            'PTS': result[10 + self.index_diff],
+            'FG3M': result[11 + self.index_diff],
+            'FG3A': result[12 + self.index_diff],
+            'FG3%': result[13 + self.index_diff],
+            'EFG%': result[14 + self.index_diff],
         }
         # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
+        self._print_table_creates(result_dict)
         return result_dict
 
 
@@ -539,9 +560,36 @@ class Transform:
     '''
         result_dict = {
             **self.result_formatted,
+            'OReb': result[7 + self.index_diff],
+            'ORebContested': result[8 + self.index_diff],
+            'ORebUnContested': result[9 + self.index_diff],
+            'ORebContested%': result[10 + self.index_diff],
+            'ORebChances': result[11 + self.index_diff],
+            'ORebChance%': result[12 + self.index_diff],
+            'ORebChanceDefer': result[13 + self.index_diff],
+            'ORebChanceAdj%': result[14 + self.index_diff],
+            'AvgORebDist': result[15 + self.index_diff],
+            'DReb': result[16 + self.index_diff],
+            'DRebContested': result[17 + self.index_diff],
+            'DRebUnContested': result[18 + self.index_diff],
+            'DRebContested%': result[19 + self.index_diff],
+            'DRebChances': result[20 + self.index_diff],
+            'DRebChance%': result[21 + self.index_diff],
+            'DRebChanceDefer': result[22 + self.index_diff],
+            'DRebChanceAdj%': result[23 + self.index_diff],
+            'AvgDRebDist': result[24 + self.index_diff],
+            'Reb': result[25 + self.index_diff],
+            'RebContested': result[26 + self.index_diff],
+            'RebUnContested': result[27 + self.index_diff],
+            'RebContested%': result[28 + self.index_diff],
+            'RebChances': result[29 + self.index_diff],
+            'RebChance%': result[30 + self.index_diff],
+            'RebChanceDefer': result[31 + self.index_diff],
+            'RebChanceAdj%': result[32 + self.index_diff],
+            'AvgRebDist': result[33 + self.index_diff],
         }
         # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
+        self._print_table_creates(result_dict)
         return result_dict
 
 
@@ -568,7 +616,7 @@ class Transform:
         result_dict = {
             **self.result_formatted,
         }
-        # self._print_columns_for_naming()
+        self._print_columns_for_naming()
         # self._print_table_creates(result_dict)
         return result_dict
 
@@ -595,7 +643,7 @@ class Transform:
         result_dict = {
             **self.result_formatted,
         }
-        # self._print_columns_for_naming()
+        self._print_columns_for_naming()
         # self._print_table_creates(result_dict)
         return result_dict
 
@@ -622,7 +670,7 @@ class Transform:
         result_dict = {
             **self.result_formatted,
         }
-        # self._print_columns_for_naming()
+        self._print_columns_for_naming()
         # self._print_table_creates(result_dict)
         return result_dict
 
@@ -649,7 +697,7 @@ class Transform:
         result_dict = {
             **self.result_formatted,
         }
-        # self._print_columns_for_naming()
+        self._print_columns_for_naming()
         # self._print_table_creates(result_dict)
         return result_dict
 
@@ -676,7 +724,7 @@ class Transform:
         result_dict = {
             **self.result_formatted,
         }
-        # self._print_columns_for_naming()
+        self._print_columns_for_naming()
         # self._print_table_creates(result_dict)
         return result_dict
 
@@ -728,8 +776,8 @@ Foreign Key (SeasonID, PlayerID) references Player(SeasonID, PlayerID),
 Foreign Key (SeasonID, GameID, TeamID, MatchupID) references TeamBox(SeasonID, GameID, TeamID, MatchupID),
 Foreign Key (SeasonID, GameID, TeamID, MatchupID, PlayerID) references PlayerBox(SeasonID, GameID, TeamID, MatchupID, PlayerID))
 end"""
+        check_string += f'\ncreate table {self.pipeline.schema}.{self.pipeline.full_table_name}('
         print(check_string)
-        print(f'create table {self.pipeline.schema}.{self.pipeline.full_table_name}(')
         for column in dictionary.keys():
             if '%' in column:
                 col = f'[{column}]'
