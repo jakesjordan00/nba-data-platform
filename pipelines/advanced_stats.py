@@ -21,27 +21,17 @@ class AdvancedStatsPipeline(Pipeline):
         self.source = APIDataConnector(self)
         
         self._endpoint = self.source.get_endpoint(friendly_name=endpoint_friendly_name)
-        if not tracking_table:
-            self.full_table_name = 'PlayerBox'
-            # self._endpoint = self.source.player_stats
-        # elif tracking_table and tracking_table != 'Hustle':
-            # self._endpoint = self.source.pt_tracking
-        # elif tracking_table and self.full_table_name == 'PlayerHustle':
-            # self._endpoint = self.source.player_hustle
-        # elif tracking_table and self.full_table_name == 'TeamHustle':
-            # self._endpoint = self.source.team_hustle
-
         self._params = {
             **self._endpoint.params,
             **params
         }
+        self.runs = 0
+
         try:
             self.destination.check_specific_table(f'{self.schema}.{self.full_table_name}')
         except Exception as e:
             test = e
             self.logger.critical(f"Table doesn't exist in config/settings.py! Continuing to allow for debugging, but nothing will be inserted.")
-            bp = 'here'
-        self.runs = 0
 
 
     def extract(self):

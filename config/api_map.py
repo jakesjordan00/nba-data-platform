@@ -39,6 +39,7 @@ common_box_params = {
 
 friendly_name_map = {
     'player_stats':          'leaguedashplayerstats',
+    'team_stats':            'leaguedashteamstats',
     'pt_tracking':           'leaguedashptstats',
     'player_hustle':         'leaguehustlestatsplayer',
     'team_hustle':           'leaguehustlestatsteam',
@@ -94,6 +95,47 @@ nba_advanced_stats_endpoints: dict[str, Endpoint] = {
             'Weight':           '',                 # 
         }
     },
+
+    'leaguedashteamstats':{
+        'url': 'https://stats.nba.com/stats/leaguedashteamstats',
+        'headers': stats_headers,
+        'params': {
+            'Conference':       '',                 # 
+            'DateFrom':         '03/05/2026',       # 03/05/2026
+            'DateTo':           '03/05/2026',       # 03/05/2026
+            'GameScope':        '',                 # 
+            'GameSegment':      '',                 # 'First Half', 'Second Half', 'Overtime'
+            'Height':           '',                 # 
+            'ISTRound':         '',                 # 
+            'LastNGames':       0,                  # 0-15
+            'LeagueID':         '00',               # 
+            'Location':         '',                 # 
+            'MeasureType':      'Advanced',         # 'Base' = Traditional, 'Advanced', 'Misc', 'Scoring', 'Usage', 'Defense', 'Violations'
+            'Month':            0,                  # 1-12 (Starting October), 0 = null
+            'OpponentTeamID':   0,                  # 
+            'Outcome':          '',                 # 
+            'PORound':          0,                  # 
+            'PaceAdjust':       'N',                # 
+            'PerMode':          'PerGame',          # 'Pergame', 'Totals', 'Per100Possessions', 'Per100Plays', 'Per48', 'Per40', 'Per36' 
+            'Period':           0,                  # 0-14
+            'PlayerExperience': '',                 # 
+            'PlayerPosition':   '',                 # 'F', 'C', 'G'
+            'PlusMinus':        'N',                # 
+            'Rank':             'N',                # 
+            'Season':           '2025-26',          # '2025-26', '2024-25', cont..., '1996-97'
+            'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
+            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'ShotClockRange':   '',                 # '24-22', '22-18 Very Early', '18-15 Early', '15-7 Average', '7-4 Late', '4-0 Very Late'
+            'StarterBench':     '',                 # 'Starters', 'Bench'
+            'TeamID':           0,                  # 
+            'TwoWay':           0,                  # ?
+            'VsConference':     '',                 # 
+            'VsDivision':       '',                 # 
+        }
+    },
+
+
+
     'leaguedashptstats': {
         'url': 'https://stats.nba.com/stats/leaguedashptstats',
         'headers': stats_headers,

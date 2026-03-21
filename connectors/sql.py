@@ -392,6 +392,26 @@ end
             bp = 'here'
             
     def check_specific_table(self, table: str):
+        '''`check_specific_table`(self, table)
+    ===
+    Given the name of a Table, checks for its entry in *self.tables* **(*TABLES* in config/settings.py)**
+
+    If the corresponding dict entry for the table is found, executes that table's 'create' value.    
+        - The table creation query behaves as follows:
+                **1)** Determine if **Schema** exists
+                    **a.** Create Schema if not found
+                    **b.** Move on to *Table creation* if found
+
+                **2)** Determine if **Table** exists
+                    **a.** Create Table if not found
+                    **b.** Skip creation if found
+
+    Parameters
+    ---
+        <hr>
+
+    - **table** (*str*): Name of table in Database
+    '''
         self.logger.info(f'Creating {table} table')
         cursor = self.pyodbc_connection.cursor()
         table_config = self.tables[table]
@@ -401,10 +421,16 @@ end
         bp = 'here'
 
 
-    def raw_execute(self, query):
-        '''raw_execute
+    def raw_execute(self, query: str):
+        '''`raw_execute`(self, query)
     ===
     Given an Insert, Update or Delete command, will return number of rows affected
+
+    Parameters
+    ---
+        <hr>
+
+    - **query** (*str*): Query to be executed in Database as plain text
 
     '''
         cursor = self.pyodbc_connection.cursor()
