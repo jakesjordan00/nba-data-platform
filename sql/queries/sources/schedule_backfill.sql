@@ -1,5 +1,7 @@
 
 with NotDoneInGame as(
+/* Using Schedule table, checks Game and GameExt to determine any games not in game or not having a status like Final in GameExt. 
+*/
 	select s.SeasonID
 		 , s.GameID
 		 , e.Status
@@ -13,12 +15,20 @@ with NotDoneInGame as(
 	and left(s.GameID, 1) in(2, 4, 5) --Only get Regular Season, Playoffs and Play-in
 ),
 LastAction as(
+/* 
+For each game in the PlayByPlay table, find the max ActionID.
+	The ActionID returned should correspond to the game's final action up to that point
+*/
 	select p.SeasonID, p.GameID, max(p.ActionID) LastAction
 	from PlayByPlay p
 	where SeasonID = 2025 and SubType != 'memo'
 	group by p.SeasonID, p.GameID
 ),
 FirstAction as(
+/* 
+For each game in the PlayByPlay table, find the min ActionID.
+	The ActionID should equal 1, in which case it will be filtered. If any games are returned, they are missing data.
+*/
 	select p.SeasonID, p.GameID, min(p.ActionID) FirstAction
 	from PlayByPlay p
 	where SeasonID = 2025 and SubType != 'memo'
@@ -26,6 +36,9 @@ FirstAction as(
 	having min(p.ActionID) != 1
 ),
 NotInPlayByPlay as(
+/* 
+Games not found in PlayByPlay (Must be found in Game)
+*/
 	select s.SeasonID, s.GameID sch_GameID, p.GameID pbp_GameID
 	from Schedule s
 	left join Game g on s.SeasonID = g.SeasonID and s.GameID = g.GameID and s.HomeID = g.HomeID and s.AwayID = g.AwayID
