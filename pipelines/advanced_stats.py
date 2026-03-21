@@ -7,8 +7,8 @@ import polars as pl
 
 
 class AdvancedStatsPipeline(Pipeline):
-    def __init__(self, schema: str, params: dict,  endpoint_friendly_name: str, tracking_table: str | None = None, player_team: str | None = None):
-        self.pipeline_name = f'advanced_stats.{schema}'
+    def __init__(self, schema: str, params: dict,  endpoint_friendly_name: str, tracking_table: str | None = None, player_team: str | None = None, log_tag: str | None= None):
+        self.pipeline_name = f'advanced_stats.{schema}{log_tag}'
         self.tag = 'advancedStats'
         self.schema = schema
         self.tracking_table = tracking_table
@@ -41,6 +41,7 @@ class AdvancedStatsPipeline(Pipeline):
             test = e
             self.logger.critical(f"Table doesn't exist in config/settings.py! Continuing to allow for debugging, but nothing will be inserted.")
             bp = 'here'
+        self.runs = 0
 
 
     def extract(self):
@@ -61,6 +62,7 @@ class AdvancedStatsPipeline(Pipeline):
             self.logger.warning('No data transformed, skipping load')
             return None
         data_loaded = self.destination.checked_upsert(table_name=f'{self.schema}.{self.full_table_name}', data=data_transformed)
+        self.runs += 1
         return data_loaded
 
     def run(self, date_data: dict) -> dict:
@@ -68,7 +70,10 @@ class AdvancedStatsPipeline(Pipeline):
             self.date = date_data['date']
             self.data = date_data['games']
             self._params = {**self._params, 'DateFrom': self.date, 'DateTo': self.date}
-        else: 
+        else:
+            #If we're doing Playtypes and this isn't our first run, use new params. If it's our first run, use what we passed at init
+            if self.runs > 0: 
+                self._params = self._endpoint.params
             self.date = None
             self.data = None
         self.transformer = Transform(self)

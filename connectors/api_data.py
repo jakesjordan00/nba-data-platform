@@ -46,7 +46,7 @@ class APIDataConnector:
     
 
     def get_endpoint(self, friendly_name: str) -> Endpoint:
-        endpoint_name = map.friendly_name_map[friendly_name]
+        endpoint_name = map.friendly_name_map[friendly_name.lower()]
         return self.Endpoint(friendly_name, endpoint_name)
 
     def _set_endpoints(self):

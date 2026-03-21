@@ -214,7 +214,7 @@ nba_advanced_stats_endpoints: dict[str, Endpoint] = {
         'headers': stats_headers,
         'params': {
             'LeagueID':         '00',               # 
-            'PerMode':          'PerGame',          # 'Pergame', 'Totals',
+            'PerMode':          'Totals',           # 'Pergame', 'Totals',
             'PlayType':         'Isolation',        # 'Isolation', 'Transition', 'PRBallHandler', 'PRRollman', 'Postup', 'Spotup', 'Handoff', 'Cut', 'OffScreen', 'OffRebound', 'Misc'
             'PlayerOrTeam':     'P',                # 'P', 'T'
             'SeasonType':       'Regular Season',   # 'Regular Season', 'Playoffs',

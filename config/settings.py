@@ -1991,36 +1991,111 @@ where s.SeasonID = season_id and s.GameID in(game_id)
 
 
 #region schema: plays
-    'plays.Team': {
+    'plays.TeamPlays': {
         'keys': [
           'SeasonID',
           'TeamID',
+          'Play',
           'Type',
           'GP',
         ],
         'columns': [
-
+            'SeasonID',
+            'TeamID',
+            'Play',
+            'Type',
+            'GP',
+            'Possessions',
+            'Frequency',
+            'PtsPerPoss',
+            'FGM',
+            'FGA',
+            'PTS',
+            '[FG%]',
+            '[EFG%]',
+            'FTFreq',
+            'TOVFreq',
+            'FDrwnFreq',
+            'And1Freq',
+            'ScoreFreq',
+            'FGMX',
+            'Percentile',
+            'FirstDate',
+            'LastDate',
         ],
         'update_columns': [
-
+            'Possessions',
+            'Frequency',
+            'PtsPerPoss',
+            'FGM',
+            'FGA',
+            'PTS',
+            '[FG%]',
+            '[EFG%]',
+            'FTFreq',
+            'TOVFreq',
+            'FDrwnFreq',
+            'And1Freq',
+            'ScoreFreq',
+            'FGMX',
+            'Percentile',
+            'LastDate',
         ],
-        'create': table('plays.Team')
+        'create': table('plays.TeamPlays')
     },
-    'plays.Player': {
+    'plays.PlayerPlays': {
         'keys': [
           'SeasonID',
           'TeamID',
           'PlayerID',
+          'Play',
           'Type',
           'GP',
         ],
         'columns': [
-
+            'SeasonID',
+            'TeamID',
+            'PlayerID',
+            'Play',
+            'Type',
+            'GP',
+            'Possessions',
+            'Frequency',
+            'PtsPerPoss',
+            'FGM',
+            'FGA',
+            'PTS',
+            '[FG%]',
+            '[EFG%]',
+            'FTFreq',
+            'TOVFreq',
+            'FDrwnFreq',
+            'And1Freq',
+            'ScoreFreq',
+            'FGMX',
+            'Percentile',
+            'FirstDate',
+            'LastDate',
         ],
         'update_columns': [
-
+            'Possessions',
+            'Frequency',
+            'PtsPerPoss',
+            'FGM',
+            'FGA',
+            'PTS',
+            '[FG%]',
+            '[EFG%]',
+            'FTFreq',
+            'TOVFreq',
+            'FDrwnFreq',
+            'And1Freq',
+            'ScoreFreq',
+            'FGMX',
+            'Percentile',
+            'LastDate',
         ],
-        'create': table('plays.Player')
+        'create': table('plays.PlayerPlays')
     },
 
 #endregion schema: plays

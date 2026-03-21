@@ -304,6 +304,9 @@ class Transform:
 
 
 #region PlayTypes
+
+
+
     def transform_play_types(self):
         '''transform_play_types`(self)`
     ===
@@ -313,17 +316,18 @@ class Transform:
         '''
         self.result_dicts = []
         for result in self.results['rowSet']:
-            self.index_diff = 0 if self.pipeline.player_team == 'Team' else 1
-            if self.pipeline.tracking_table == 'Isolation':
-                self.play_type_isolation(result)
+            self._format_team_player_constants(result=result)
+            self.result_dicts.append(self.parse_plays(result=result))
         bp = 'here'
+        data_transformed = self.result_dicts
+        return data_transformed
 
 
-    def play_type_isolation(self, result: list):
-        '''play_type_isolation`(self, result)`
+    def parse_plays(self, result: list):
+        '''parse_plays`(self, result)`
     ===
-        When PlayType == 'Isolation', format results from Synergy api<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Isolation Synergy play type data
+        Parses and formats results from Synergy api<br>
+        Works for all PlayTypes and if Offensive/Defensive.
 
 
     Parameters
@@ -340,8 +344,8 @@ class Transform:
         __result_dict__ (dict): Formatted dict of **Isolation** play type data
     '''
         result_dict = {
-            'SeasonID': result[0 + self.index_diff][1:],
-            'TeamID': result[1 + self.index_diff],
+            **self.result_formatted,
+            'Play': result[4 + self.index_diff],
             'Type': result[5 + self.index_diff],
             'GP': result[7 + self.index_diff],
             'Possessions': result[17 + self.index_diff],
@@ -363,11 +367,46 @@ class Transform:
             'LastDate': datetime.now()
         }
         # self._print_columns_for_naming()
-        self._print_table_creates(result_dict)
+        # self._print_table_creates(result_dict)
         bp = 'here'
         return result_dict
+    
 
 
+
+
+    #region Utility - Constants
+    def _format_team_player_constants(self, result: list):
+        '''_format_team_player_constants`(self)`
+    ===
+        <hr>
+
+    Since the Synergy Playtypes don't use date tracking, we can't match GameID. 
+
+    Differing from tracking, we'll set our `index_diff` equal to 2 if `self.pipeline.player_team` == 'Player'
+
+    <hr>
+
+    Sets *`self.result_formatted`*
+    ---
+    - Team: **SeasonID**, **TeamID**        
+    - Player: **SeasonID**, **TeamID**, **PlayerID**
+
+        '''
+        if self.pipeline.player_team == 'Team':
+            self.index_diff = 0
+            self.result_formatted = {
+                'SeasonID': result[0][1:],
+                'TeamID': result[1],
+            }
+        elif self.pipeline.player_team == 'Player':
+            self.index_diff = 2
+            self.result_formatted = {
+                'SeasonID': result[0][1:],
+                'TeamID': result[3],
+                'PlayerID': result[1]
+            }
+    #endregion Utility - Constants
 
 #endregion PlayTypes
 

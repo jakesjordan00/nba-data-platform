@@ -31,8 +31,9 @@ for pt in [
                 'PlayerOrTeam': pt[0], #P or T
             },
             endpoint_friendly_name = 'pt_play_type',
-            tracking_table = play_type,
-            player_team = pt
+            tracking_table = 'Plays',
+            player_team = pt,
+            log_tag = f'.{play_type}'.lower()
         )
         completed_play_type_pipeline = play_type_pipeline.run(date_data={})
         play_type_data = completed_play_type_pipeline['loaded']
@@ -40,8 +41,10 @@ for pt in [
         type_group = 'Offensive' if play_type_pipeline._endpoint.params['TypeGrouping'] == 'Defensive' else 'Defensive'
         play_type_pipeline._endpoint.params = {
             **play_type_pipeline._endpoint.params,
-            'TypeGrouping': 'Defensive'
+            'TypeGrouping': type_group
         }
+        completed_play_type_pipeline = play_type_pipeline.run(date_data={})
+        play_type_data = completed_play_type_pipeline['loaded']
 
 
 #endregion Synergy Playtype Stats
@@ -67,7 +70,8 @@ for pt in [
             params = {},
             endpoint_friendly_name = f'{pt}_hustle',
             tracking_table = 'Hustle',
-            player_team = pt
+            player_team = pt,
+            log_tag = f'.{pt}_hustle'.lower()
         )
         completed_hustle_pipeline = hustle_pipeline.run(date_data=date)
         hustle_data = completed_hustle_pipeline['loaded']
@@ -111,7 +115,8 @@ for pt in [
                     },
                     endpoint_friendly_name = 'pt_tracking',
                     tracking_table = tracking_measure,
-                    player_team = pt
+                    player_team = pt,
+                    log_tag = f'.{pt}_{tracking_measure}'.lower()
                 )
                 completed_adv_stats_pipeline = adv_stats_pipeline.run(date_data=date)
                 stats_data = completed_adv_stats_pipeline['loaded']
