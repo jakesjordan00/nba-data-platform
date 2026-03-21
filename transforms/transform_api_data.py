@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 
 class Transform:
     def __init__(self, pipeline):
@@ -313,8 +313,7 @@ class Transform:
         '''
         self.result_dicts = []
         for result in self.results['rowSet']:
-            
-
+            self.index_diff = 0 if self.pipeline.player_team == 'Team' else 1
             if self.pipeline.tracking_table == 'Isolation':
                 self.play_type_isolation(result)
         bp = 'here'
@@ -341,26 +340,29 @@ class Transform:
         __result_dict__ (dict): Formatted dict of **Isolation** play type data
     '''
         result_dict = {
-            **self.result_formatted,                
-            # 'Drives': result[7 + self.index_diff],
-            # 'FGM': result[8 + self.index_diff],
-            # 'FGA': result[9 + self.index_diff],
-            # 'FG%': result[10 + self.index_diff],
-            # 'FTM': result[11 + self.index_diff],
-            # 'FTA': result[12 + self.index_diff],
-            # 'FT%': result[13 + self.index_diff],
-            # 'PTS': result[14 + self.index_diff],
-            # 'PTS%': result[15 + self.index_diff],
-            # 'Passes': result[16 + self.index_diff],
-            # 'Pass%': result[17 + self.index_diff],
-            # 'AST': result[18 + self.index_diff],
-            # 'AST%': result[19 + self.index_diff],
-            # 'TOV': result[20 + self.index_diff],
-            # 'TOV%': result[21 + self.index_diff],
-            # 'PF': result[22 + self.index_diff],
-            # 'PF%': result[23 + self.index_diff],
+            'SeasonID': result[0 + self.index_diff][1:],
+            'TeamID': result[1 + self.index_diff],
+            'Type': result[5 + self.index_diff],
+            'GP': result[7 + self.index_diff],
+            'Possessions': result[17 + self.index_diff],
+            'Frequency': result[8 + self.index_diff],
+            'PtsPerPoss': result[9 + self.index_diff],
+            'FGM': result[19 + self.index_diff],
+            'FGA': result[20 + self.index_diff],
+            'PTS': result[18 + self.index_diff],
+            'FG%': result[10 + self.index_diff],
+            'EFG%': result[16 + self.index_diff],
+            'FTFreq': result[11 + self.index_diff],
+            'TOVFreq': result[12 + self.index_diff],
+            'FDrwnFreq': result[13 + self.index_diff],
+            'And1Freq': result[14 + self.index_diff],
+            'ScoreFreq': result[15 + self.index_diff],
+            'FGMX': result[21 + self.index_diff],            
+            'Percentile': result[6 + self.index_diff],
+            'FirstDate': datetime.now(),
+            'LastDate': datetime.now()
         }
-        self._print_columns_for_naming()
+        # self._print_columns_for_naming()
         self._print_table_creates(result_dict)
         bp = 'here'
         return result_dict

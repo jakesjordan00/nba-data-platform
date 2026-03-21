@@ -64,10 +64,13 @@ class AdvancedStatsPipeline(Pipeline):
         return data_loaded
 
     def run(self, date_data: dict) -> dict:
-        self.date = date_data['date']
-        self.data = date_data['games']
         if self.schema != 'plays':
+            self.date = date_data['date']
+            self.data = date_data['games']
             self._params = {**self._params, 'DateFrom': self.date, 'DateTo': self.date}
+        else: 
+            self.date = None
+            self.data = None
         self.transformer = Transform(self)
         return super().run()
 

@@ -8,7 +8,7 @@ from pipelines import AdvancedStatsPipeline
 
 #region Synergy Playtype Stats
 for pt in [
-    # 'Team', 
+    'Team', 
     'Player'
 ]:
     for play_type in[
@@ -24,26 +24,25 @@ for pt in [
         'OffRebound',
         'Misc'
     ]:
-        schedule_pipeline = ScheduleForAPI(
-            schema='plays', 
-            tracking_measure=play_type,
+        play_type_pipeline = AdvancedStatsPipeline(
+            schema = 'plays',
+            params = {
+                'PlayType': play_type,
+                'PlayerOrTeam': pt[0], #P or T
+            },
+            endpoint_friendly_name = 'pt_play_type',
+            tracking_table = play_type,
             player_team = pt
         )
-        completed_schedule_pipeline = schedule_pipeline.run()
-        schedule_data = completed_schedule_pipeline['loaded']
-        for date in schedule_data:
-            play_type_pipeline = AdvancedStatsPipeline(
-                schema = 'plays',
-                params = {
-                    'PlayType': play_type,
-                    'PlayerOrTeam': pt[0], #P or T
-                },
-                endpoint_friendly_name = 'pt_play_type',
-                tracking_table = play_type,
-                player_team = pt
-            )
-            completed_play_type_pipeline = play_type_pipeline.run(date_data=date)
-            play_type_data = completed_play_type_pipeline['loaded']
+        completed_play_type_pipeline = play_type_pipeline.run(date_data={})
+        play_type_data = completed_play_type_pipeline['loaded']
+
+        type_group = 'Offensive' if play_type_pipeline._endpoint.params['TypeGrouping'] == 'Defensive' else 'Defensive'
+        play_type_pipeline._endpoint.params = {
+            **play_type_pipeline._endpoint.params,
+            'TypeGrouping': 'Defensive'
+        }
+
 
 #endregion Synergy Playtype Stats
 

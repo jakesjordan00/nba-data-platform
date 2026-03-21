@@ -15,6 +15,8 @@ DATABASES = {
 }
 
 TABLES = {
+
+#region schema: dbo
     'Team':{
         'keys': ['SeasonID', 'TeamID',],
         'columns': ['SeasonID',
@@ -633,6 +635,10 @@ where s.SeasonID = season_id and s.GameID in(game_id)
         ],
         'create': table('DailyLineups')
     },
+#endregion schema: dbo
+
+
+#region Advanced Stats
     'adv.PlayerBox': {
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
         'columns': [
@@ -813,6 +819,11 @@ where s.SeasonID = season_id and s.GameID in(game_id)
         ],
         'create': table('def.PlayerBox')
     },
+    
+#endregion Advanced Stats
+
+
+#region schema: tracking
     'tracking.TeamDrives': {
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID',],
         'columns': [
@@ -1539,9 +1550,7 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             'AvgSpeedDef',
         ],
         'create': table('tracking.PlayerSpeedDistance')
-    },
-
-    
+    },    
     'tracking.TeamElbowTouch': {
         'keys': [
           'SeasonID',
@@ -1649,9 +1658,7 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             '[Foul%]',
         ],
         'create': table('tracking.PlayerElbowTouch')
-    },
-
-    
+    },    
     'tracking.TeamPostTouch': {
         'keys': [
           'SeasonID',
@@ -1759,9 +1766,7 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             '[Foul%]',
         ],
         'create': table('tracking.PlayerPostTouch')
-    },
-
-    
+    },    
     'tracking.TeamPaintTouch': {
         'keys': [
           'SeasonID',
@@ -1981,10 +1986,77 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             '[BoxoutPersReb%]',
         ],
         'create': table('tracking.PlayerHustle')
+    },    
+#endregion schema: tracking
+
+
+#region schema: plays
+    'plays.Team': {
+        'keys': [
+          'SeasonID',
+          'TeamID',
+          'Type',
+          'GP',
+        ],
+        'columns': [
+
+        ],
+        'update_columns': [
+
+        ],
+        'create': table('plays.Team')
+    },
+    'plays.Player': {
+        'keys': [
+          'SeasonID',
+          'TeamID',
+          'PlayerID',
+          'Type',
+          'GP',
+        ],
+        'columns': [
+
+        ],
+        'update_columns': [
+
+        ],
+        'create': table('plays.Player')
     },
 
+#endregion schema: plays
 
 
+    # 'plays.Team': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'TeamID',
+    #       'Type',
+    #       'GP',
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('plays.Team')
+    # },
+    # 'plays.Player': {
+    #     'keys': [
+    #       'SeasonID',
+    #       'TeamID',
+    #       'PlayerID',
+    #       'Type',
+    #       'GP',
+    #     ],
+    #     'columns': [
+
+    #     ],
+    #     'update_columns': [
+
+    #     ],
+    #     'create': table('plays.Player')
+    # },
 
     
 
