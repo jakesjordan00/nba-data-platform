@@ -99,7 +99,7 @@ from pipelines import AdvancedStatsPipeline
 
 
 
-#region Hustle Stats
+# #region Hustle Stats
 # for pt in [
 #     'Team', 
 #     'Player'
@@ -123,7 +123,7 @@ from pipelines import AdvancedStatsPipeline
 #         completed_hustle_pipeline = hustle_pipeline.run(date_data=date)
 #         hustle_data = completed_hustle_pipeline['loaded']
 
-#endregion Hustle Stats
+# #endregion Hustle Stats
 
 
 
@@ -153,7 +153,8 @@ for pt in [
                 },
                 endpoint_friendly_name = f'{pt}_stats'.lower(),
                 tracking_table = 'Box',
-                player_team = pt
+                player_team = pt,
+                log_tag = f'.{pt.lower()}'
             )
             completed_adv_stats_pipeline = adv_stats_pipeline.run(date_data=date)
             stats_data = completed_adv_stats_pipeline['loaded'] 

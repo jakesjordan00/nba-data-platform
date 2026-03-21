@@ -16,15 +16,16 @@ class Transform:
             self.logger.warning(f'Multiple result sets returned! Only configured to handle one!')
         self.results = self.data_extract['resultSets'][0]
         if self.pipeline.schema == 'adv':
-            data_transformed = self.measure_advanced()
+            data_transformed = self.measure_player_advanced() if self.pipeline.player_team == 'Player' else self.measure_team_advanced()
         elif self.pipeline.schema == 'misc':
-            data_transformed = self.measure_misc()
+            data_transformed = self.measure_player_misc()
         elif self.pipeline.schema == 'usage':
-            data_transformed = self.measure_usage()
+            data_transformed = self.measure_player_usage()
         elif self.pipeline.schema == 'def':
-            data_transformed = self.measure_defensive()
+            data_transformed = self.measure_player_defensive()
         elif self.pipeline.schema == 'violations':
-            data_transformed = self.measure_violations()
+            data_transformed = self.measure_player_violations()
+
         elif self.pipeline.schema == 'tracking':
             data_transformed = self.transform_tracking()
         elif self.pipeline.schema == 'plays':
@@ -35,44 +36,50 @@ class Transform:
 
 
 #region MeasureTypes
-    def measure_violations(self):
-        '''measure_violations(self)
+
+    #region Advanced
+    def measure_team_advanced(self):
+        '''measure_team_advanced(self)
     ===
-    When MeasureType == 'Violations', format results
+    When MeasureType == 'Advanced', format Team results
         '''
         result_dicts = []
-        for player in self.results['rowSet']:
-            self._match_player_game(player=player)
-            player = {
-                'SeasonID':             self.SeasonID,
-                'GameID':               self.GameID,
-                'TeamID':               self.TeamID,
-                'MatchupID':            self.MatchupID,
-                'PlayerID':             player[0],
-                'Travel':               player[10],
-                'DblDribble':           player[11],
-                'Inbound':              player[14],
-                'Backcourt':            player[15],
-                'Palming':              player[17],
-                'OffFoul':              player[18],
-                'Off3':                 player[13],
-                'OffGoaltend':          player[16],
-                'Def3':                 player[19],
-                'DefGoaltend':          player[21],
-                'Charge':               player[20],
-                'Lane':                 player[22],
-                'JumpBall':             player[23],
-                'KickedBall':           player[24],
-                'DiscDribble':          player[12],
+        for team in self.results['rowSet']:
+            self._match_team_game(team=team)
+            team = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+                'OffRTG':       team[8],
+                'DefRTG':       team[10],
+                'NetRTG':       team[12],
+                'Ast%':         team[13],
+                'ATR':          team[14],
+                'AstRatio':     team[15],
+                'OReb%':        team[16],
+                'DReb%':        team[17],
+                'Reb%':         team[18],
+                'TeamTO%':      team[19],
+                'EOffRTG':       team[7],
+                'EDefRTG':       team[9],
+                'ENetRTG':       team[11],
+                'EFG%':         team[20],
+                'TS%':          team[21],
+                'Pace':         team[23],
+                'PacePer40':    team[24],
+                'PIE':          team[26],
+                'Possessions':         team[25],
             }
-            result_dicts.append(player)
-        return result_dicts
+            result_dicts.append(team)
+        self._print_table_creates(dictionary=team)
+        return(result_dicts)
+    
 
-
-    def measure_advanced(self):
-        '''measure_advanced(self)
+    def measure_player_advanced(self):
+        '''measure_player_advanced(self)
     ===
-    When MeasureType == 'Advanced', format results
+    When MeasureType == 'Advanced', format Player results
         '''
         result_dicts = []
         for player in self.results['rowSet']:
@@ -100,18 +107,42 @@ class Transform:
                 'Pace':         player[33],
                 'PacePer40':    player[34],
                 'PIE':          player[36],
-                'POSS':         player[37],
+                'Possessions':  player[37],
                 'FGM':          player[38],
                 'FGA':          player[39],
                 'FG%':          player[42],
             }
             result_dicts.append(player)
+        return(result_dicts)    
+    #endregion Advanced
+
+
+    #region Misc
+    def measure_team_misc(self):
+        '''measure_team_misc(self)
+    ===
+    When MeasureType == 'Misc', format Team results
+        '''
+        result_dicts = []
+        for team in self.results['rowSet']:
+            self._match_team_game(team=team)
+            team = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+            }
+            result_dicts.append(team)
+
+        self._print_columns_for_naming()
+        self._print_table_creates(dictionary=team)
         return(result_dicts)
     
-    def measure_misc(self):
-        '''measure_misc(self)
+
+    def measure_player_misc(self):
+        '''measure_player_misc(self)
     ===
-    When MeasureType == 'Misc', format results
+    When MeasureType == 'Misc', format Player results
         '''
         result_dicts = []
         for player in self.results['rowSet']:
@@ -133,8 +164,11 @@ class Transform:
             }
             result_dicts.append(player)
         return result_dicts
+    #endregion Misc
 
-    def measure_usage(self):
+
+    #region Usage
+    def measure_player_usage(self):
         '''measure_usage(self)
     ===
     When MeasureType == 'Usage', format results
@@ -170,9 +204,11 @@ class Transform:
             }
             result_dicts.append(player)
         return(result_dicts)
-    
-    
-    def measure_defensive(self):
+    #endregion Usage
+
+
+    #region Defensive
+    def measure_player_defensive(self):
         '''measure_defensive(self)
     ===
     When MeasureType == 'Defensive', format results
@@ -195,7 +231,44 @@ class Transform:
             result_dicts.append(player)
             
         return result_dicts
-    
+    #endregion Defensive
+
+
+    #region Violations
+    def measure_player_violations(self):
+        '''measure_violations(self)
+    ===
+    When MeasureType == 'Violations', format results
+        '''
+        result_dicts = []
+        for player in self.results['rowSet']:
+            self._match_player_game(player=player)
+            player = {
+                'SeasonID':             self.SeasonID,
+                'GameID':               self.GameID,
+                'TeamID':               self.TeamID,
+                'MatchupID':            self.MatchupID,
+                'PlayerID':             player[0],
+                'Travel':               player[10],
+                'DblDribble':           player[11],
+                'Inbound':              player[14],
+                'Backcourt':            player[15],
+                'Palming':              player[17],
+                'OffFoul':              player[18],
+                'Off3':                 player[13],
+                'OffGoaltend':          player[16],
+                'Def3':                 player[19],
+                'DefGoaltend':          player[21],
+                'Charge':               player[20],
+                'Lane':                 player[22],
+                'JumpBall':             player[23],
+                'KickedBall':           player[24],
+                'DiscDribble':          player[12],
+            }
+            result_dicts.append(player)
+        return result_dicts
+    #endregion Violations  
+
 #endregion MeasureTypes
 
 
@@ -1093,6 +1166,10 @@ end"""
                 col = f'[{column}]'
                 spacer = f'{(18 - len(col)) * ' '}'
                 col_string = f'[{column}]{spacer}decimal(18,3),'
+            elif 'RTG' in column:
+                col = f'{column}'
+                spacer = f'{(18 - len(col)) * ' '}'
+                col_string = f'{column}{spacer}decimal(18,1),'
             else:
                 spacer = f'{(18 - len(column)) * ' '}'
                 col_string = f'{column}{spacer}int,'
