@@ -18,13 +18,13 @@ class Transform:
         if self.pipeline.schema == 'adv':
             data_transformed = self.measure_player_advanced() if self.pipeline.player_team == 'Player' else self.measure_team_advanced()
         elif self.pipeline.schema == 'misc':
-            data_transformed = self.measure_player_misc()
+            data_transformed = self.measure_player_misc() if self.pipeline.player_team == 'Player' else self.measure_team_misc()
         elif self.pipeline.schema == 'usage':
-            data_transformed = self.measure_player_usage()
+            data_transformed = self.measure_player_usage() if self.pipeline.player_team == 'Player' else self.measure_team_usage()
         elif self.pipeline.schema == 'def':
-            data_transformed = self.measure_player_defensive()
+            data_transformed = self.measure_player_defensive() if self.pipeline.player_team == 'Player' else self.measure_team_defensive()
         elif self.pipeline.schema == 'violations':
-            data_transformed = self.measure_player_violations()
+            data_transformed = self.measure_player_violations() if self.pipeline.player_team == 'Player' else self.measure_team_violations()
 
         elif self.pipeline.schema == 'tracking':
             data_transformed = self.transform_tracking()
@@ -131,10 +131,18 @@ class Transform:
                 'GameID':       self.GameID,
                 'TeamID':       self.TeamID,
                 'MatchupID':    self.MatchupID,
+                'PtsTurnover':          int(team[7]),
+                'PtsSecondChance':      int(team[8]),
+                'PtsFastBreak':         int(team[9]),
+                'PtsInThePaint':        int(team[10]),
+                'OpPtsTurnover':        int(team[11]),
+                'OpPtsSecondChance':    int(team[12]),
+                'OpPtsFastBreak':       int(team[13]),
+                'OpPtsInThePaint':      int(team[14])
             }
             result_dicts.append(team)
 
-        self._print_columns_for_naming()
+        # self._print_columns_for_naming()
         self._print_table_creates(dictionary=team)
         return(result_dicts)
     
@@ -168,10 +176,32 @@ class Transform:
 
 
     #region Usage
+    def measure_team_usage(self):
+        '''measure_team_usage(self)
+    ===
+
+    MAY REMOVE, TEAMS DONT HAVE USAGE... WOULD REFACTOR TO collect 'Four Factors' data for Teams (which players doesnt have)
+    When MeasureType == 'Usage', format Team results
+        '''
+        result_dicts = []
+        for team in self.results['rowSet']:
+            self._match_team_game(team=team)
+            team = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+            }
+            result_dicts.append(team)
+
+        self._print_columns_for_naming()
+        self._print_table_creates(dictionary=team)
+        return(result_dicts)
+    
     def measure_player_usage(self):
         '''measure_usage(self)
     ===
-    When MeasureType == 'Usage', format results
+    When MeasureType == 'Usage', format Player results
         '''
         result_dicts = []
         for player in self.results['rowSet']:
@@ -208,10 +238,31 @@ class Transform:
 
 
     #region Defensive
+    def measure_team_defensive(self):
+        '''measure_team_defensive(self)
+    ===
+    When MeasureType == 'Defensive', format Team results
+        '''
+        result_dicts = []
+        for team in self.results['rowSet']:
+            self._match_team_game(team=team)
+            team = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+                'DReb%':        team[9],
+            }
+            result_dicts.append(team)
+
+        # self._print_columns_for_naming()
+        self._print_table_creates(dictionary=team)
+        return(result_dicts)
+    
     def measure_player_defensive(self):
         '''measure_defensive(self)
     ===
-    When MeasureType == 'Defensive', format results
+    When MeasureType == 'Defensive', format Player results
         '''
         result_dicts = []
         for player in self.results['rowSet']:
@@ -235,10 +286,49 @@ class Transform:
 
 
     #region Violations
+    def measure_team_violations(self):
+        '''measure_team_violations(self)
+    ===
+    When MeasureType == 'Violations', format Team results
+        '''
+        result_dicts = []
+        for team in self.results['rowSet']:
+            self._match_team_game(team=team)
+            team = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+                'Travel':       team[6],
+                'DblDribble':   team[7],
+                'Inbound':      team[13],
+                'Backcourt':    team[14],
+                'Palming':      team[16],
+                'OffFoul':      team[17],
+                'Off3':         team[9],
+                'OffGoaltend':  team[15],
+                'Def3':         team[18],
+                'DefGoaltend':  team[21],
+                'FiveSec':      team[10],
+                'EightSec':     team[11],
+                'ShotClock':    team[12],
+                'Charge':       team[19],
+                'DelayOfGame':  team[20],
+                'Lane':         team[22],
+                'JumpBall':     team[23],
+                'KickedBall':   team[24],
+                'DiscDribble':  team[8],
+            }
+            result_dicts.append(team)
+
+        # self._print_columns_for_naming()
+        self._print_table_creates(dictionary=team)
+        return(result_dicts)
+    
     def measure_player_violations(self):
         '''measure_violations(self)
     ===
-    When MeasureType == 'Violations', format results
+    When MeasureType == 'Violations', format Player results
         '''
         result_dicts = []
         for player in self.results['rowSet']:

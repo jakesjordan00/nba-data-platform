@@ -133,10 +133,10 @@ for pt in [
     'Player'
 ]:
     schema_config = {
-        'adv': 'Advanced',
-        'misc': 'Misc',
-        'usage': 'Usage',
-        'def': 'Defense',
+        # 'adv': 'Advanced',
+        # 'misc': 'Misc',
+        # 'usage': 'Usage',   #No Usage for teams
+        # 'def': 'Defense',
         'violations': 'Violations',
         # 'scoring': 'Scoring',
     }
