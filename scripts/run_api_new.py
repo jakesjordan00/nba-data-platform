@@ -14,42 +14,42 @@ data_schedule_for_api = ScheduleForAPI()
 
 
 #region Synergy Playtype Stats
-# for pt in [
-#     'Team', 
-#     'Player'
-# ]:
-#     for play_type in[
-#         'Isolation',
-#         'Transition',
-#         'PRBallHandler',
-#         'PRRollman',
-#         'Postup',
-#         'Spotup',
-#         'Handoff',
-#         'Cut',
-#         'OffScreen',
-#         'OffRebound',
-#         'Misc'
-#     ]:
-#         for type_group in [
-#             'Offensive', 
-#             'Defensive'
-#         ]:
-#             pipeline_nba_api._re_init(
-#                 schema = 'plays',
-#                 params = {
-#                     'PlayType': play_type,
-#                     'PlayerOrTeam': pt[0], #P or T
-#                     'TypeGrouping': type_group
-#                 },
-#                 endpoint_friendly_name = 'pt_play_type',
-#                 table_name = 'Plays',
-#                 player_team = pt,
-#                 log_tag = f'.{play_type}'.lower(),
-#                 extract_tag = f'Extracting {type_group} {pt} {play_type} data via the NBA/Synergy API'
-#             )
-#             play_type_pipeline = pipeline_nba_api.run(date_data={})
-#             play_type_data = play_type_pipeline['loaded']
+for pt in [
+    'Team', 
+    'Player'
+]:
+    for play_type in[
+        'Isolation',
+        'Transition',
+        'PRBallHandler',
+        'PRRollman',
+        'Postup',
+        'Spotup',
+        'Handoff',
+        'Cut',
+        'OffScreen',
+        'OffRebound',
+        'Misc'
+    ]:
+        for type_group in [
+            'Offensive', 
+            'Defensive'
+        ]:
+            pipeline_nba_api._re_init(
+                schema = 'plays',
+                params = {
+                    'PlayType': play_type,
+                    'PlayerOrTeam': pt[0], #P or T
+                    'TypeGrouping': type_group
+                },
+                endpoint_friendly_name = 'pt_play_type',
+                table_base_name = 'Plays',
+                player_team = pt,
+                log_tag = f'.{play_type}'.lower(),
+                extract_tag = f'Extracting {type_group} {pt} {play_type} data via the NBA/Synergy API'
+            )
+            play_type_pipeline = pipeline_nba_api.run(date_data={})
+            play_type_data = play_type_pipeline['loaded']
 
 
 #endregion Synergy Playtype Stats
@@ -58,82 +58,82 @@ data_schedule_for_api = ScheduleForAPI()
 
 
 
-# #region SecondSpectrum Tracking
+#region SecondSpectrum Tracking
 
-# for pt in [
-#     # 'Team', 
-#     'Player'
-# ]:
-#     for tracking_measure in[
-#         'Drives',
-#         'Defense',
-#         'CatchShoot',
-#         'Passing',
-#         'Possessions',
-#         'PullUpShot',
-#         'Rebounding',
-#         'Efficiency',
-#         'SpeedDistance',
-#         'ElbowTouch',
-#         'PostTouch',
-#         'PaintTouch'
-#     ]:
-#         data_schedule_for_api._re_init(
-#             schema = 'tracking', 
-#             table_base_name = tracking_measure,
-#             player_team = pt,
-#             log_tag = f'.{pt}_{tracking_measure}'.lower(),
-#         )
-#         completed_schedule_pipeline = data_schedule_for_api.run()
-#         schedule_data = completed_schedule_pipeline['loaded']
-#         for date in schedule_data:
-#             pipeline_nba_api._re_init(
-#                 schema = 'tracking',
-#                 params = {
-#                     'PlayerOrTeam': pt,
-#                     'PtMeasureType': tracking_measure,
-#                 },
-#                 endpoint_friendly_name = 'pt_tracking',
-#                 table_base_name = tracking_measure,
-#                 player_team = pt,
-#                 log_tag = f'.{pt}_{tracking_measure}'.lower(),
-#                 extract_tag = f'Extracting {pt} {tracking_measure} data from {date['date']} via the NBA/SecondSpectrum API'
-#             )
-#             completed_adv_stats_pipeline = pipeline_nba_api.run(date_data=date)
-#             stats_data = completed_adv_stats_pipeline['loaded']
+for pt in [
+    # 'Team', 
+    'Player'
+]:
+    for tracking_measure in[
+        'Drives',
+        'Defense',
+        'CatchShoot',
+        'Passing',
+        'Possessions',
+        'PullUpShot',
+        'Rebounding',
+        'Efficiency',
+        'SpeedDistance',
+        'ElbowTouch',
+        'PostTouch',
+        'PaintTouch'
+    ]:
+        data_schedule_for_api._re_init(
+            schema = 'tracking', 
+            table_base_name = tracking_measure,
+            player_team = pt,
+            log_tag = f'.{pt}_{tracking_measure}'.lower(),
+        )
+        completed_schedule_pipeline = data_schedule_for_api.run()
+        schedule_data = completed_schedule_pipeline['loaded']
+        for date in schedule_data:
+            pipeline_nba_api._re_init(
+                schema = 'tracking',
+                params = {
+                    'PlayerOrTeam': pt,
+                    'PtMeasureType': tracking_measure,
+                },
+                endpoint_friendly_name = 'pt_tracking',
+                table_base_name = tracking_measure,
+                player_team = pt,
+                log_tag = f'.{pt}_{tracking_measure}'.lower(),
+                extract_tag = f'Extracting {pt} {tracking_measure} data from {date['date']} via the NBA/SecondSpectrum API'
+            )
+            completed_adv_stats_pipeline = pipeline_nba_api.run(date_data=date)
+            stats_data = completed_adv_stats_pipeline['loaded']
 
-# #endregion SecondSpectrum Tracking  
-
-
-
-# #region Hustle Stats
-# for pt in [
-#     'Team', 
-#     'Player'
-# ]:
-#     data_schedule_for_api._re_init(
-#         schema='tracking', 
-#         table_base_name='Hustle',
-#         player_team = pt,
-#         log_tag = f'.{pt}_hustle'.lower()
-#     )
-#     completed_schedule_pipeline = data_schedule_for_api.run()
-#     schedule_data = completed_schedule_pipeline['loaded']
-#     for date in schedule_data:
-#         pipeline_nba_api._re_init(
-#         schema = 'tracking',
-#         params = {},
-#         endpoint_friendly_name = f'{pt}_hustle'.lower(),
-#         table_base_name = 'Hustle',
-#         player_team = pt,
-#         log_tag = f'.{pt}_hustle'.lower(),
-#         extract_tag = f'Extracting {pt} Hustle data from {date['date']} via the NBA API'
-#         )
-#         hustle_pipeline = pipeline_nba_api.run(date_data=date)
-#         hustle_data = hustle_pipeline['loaded']
+#endregion SecondSpectrum Tracking  
 
 
-# #endregion Hustle Stats
+
+#region Hustle Stats
+for pt in [
+    'Team', 
+    'Player'
+]:
+    data_schedule_for_api._re_init(
+        schema='tracking', 
+        table_base_name='Hustle',
+        player_team = pt,
+        log_tag = f'.{pt}_hustle'.lower()
+    )
+    completed_schedule_pipeline = data_schedule_for_api.run()
+    schedule_data = completed_schedule_pipeline['loaded']
+    for date in schedule_data:
+        pipeline_nba_api._re_init(
+        schema = 'tracking',
+        params = {},
+        endpoint_friendly_name = f'{pt}_hustle'.lower(),
+        table_base_name = 'Hustle',
+        player_team = pt,
+        log_tag = f'.{pt}_hustle'.lower(),
+        extract_tag = f'Extracting {pt} Hustle data from {date['date']} via the NBA API'
+        )
+        hustle_pipeline = pipeline_nba_api.run(date_data=date)
+        hustle_data = hustle_pipeline['loaded']
+
+
+#endregion Hustle Stats
 
 
 
@@ -143,11 +143,11 @@ for pt in [
     # 'Player'
 ]:
     schema_config = {
-        # 'adv': 'Advanced',
-        # 'misc': 'Misc',
-        # 'def': 'Defense',
-        # 'violations': 'Violations',
-        # 'usage': 'Usage',                   #No Usage for Team
+        'adv': 'Advanced',
+        'misc': 'Misc',
+        'def': 'Defense',
+        'violations': 'Violations',
+        'usage': 'Usage',                   #No Usage for Team
         'ffactors': 'Four Factors'          #No usage for Player
         # 'scoring': 'Scoring'       #Looking at the results, its seems redundant..We capture all the data returned here across other sources
     }
