@@ -6,6 +6,13 @@ from pipelines import ScheduleForAPI
 from pipelines import AdvancedStatsPipeline
 
 
+
+
+nba_api_pipeline = AdvancedStatsPipeline()
+
+
+
+
 #region Synergy Playtype Stats
 for pt in [
     'Team', 
@@ -24,27 +31,25 @@ for pt in [
         'OffRebound',
         'Misc'
     ]:
-        play_type_pipeline = AdvancedStatsPipeline(
-            schema = 'plays',
-            params = {
-                'PlayType': play_type,
-                'PlayerOrTeam': pt[0], #P or T
-            },
-            endpoint_friendly_name = 'pt_play_type',
-            tracking_table = 'Plays',
-            player_team = pt,
-            log_tag = f'.{play_type}'.lower()
-        )
-        completed_play_type_pipeline = play_type_pipeline.run(date_data={})
-        play_type_data = completed_play_type_pipeline['loaded']
-
-        type_group = 'Offensive' if play_type_pipeline._endpoint.params['TypeGrouping'] == 'Defensive' else 'Defensive'
-        play_type_pipeline._endpoint.params = {
-            **play_type_pipeline._endpoint.params,
-            'TypeGrouping': type_group
-        }
-        completed_play_type_pipeline = play_type_pipeline.run(date_data={})
-        play_type_data = completed_play_type_pipeline['loaded']
+        for type_group in [
+            'Offensive', 
+            'Defensive'
+        ]:
+            nba_api_pipeline._re_init(
+                schema = 'plays',
+                params = {
+                    'PlayType': play_type,
+                    'PlayerOrTeam': pt[0], #P or T
+                    'TypeGrouping': type_group
+                },
+                endpoint_friendly_name = 'pt_play_type',
+                tracking_table = 'Plays',
+                player_team = pt,
+                log_tag = f'.{play_type}'.lower(),
+                extract_tag = f'Synergy API - {type_group} {pt} {play_type}'
+            )
+            play_type_pipeline = nba_api_pipeline.run(date_data={})
+            play_type_data = play_type_pipeline['loaded']
 
 
 #endregion Synergy Playtype Stats
@@ -81,7 +86,7 @@ for pt in [
         completed_schedule_pipeline = schedule_pipeline.run()
         schedule_data = completed_schedule_pipeline['loaded']
         for date in schedule_data:
-                adv_stats_pipeline = AdvancedStatsPipeline(
+                nba_api_pipeline._re_init(
                     schema = 'tracking',
                     params = {
                         'PlayerOrTeam': pt,
@@ -90,9 +95,10 @@ for pt in [
                     endpoint_friendly_name = 'pt_tracking',
                     tracking_table = tracking_measure,
                     player_team = pt,
-                    log_tag = f'.{pt}_{tracking_measure}'.lower()
+                    log_tag = f'.{pt}_{tracking_measure}'.lower(),
+                    extract_tag = date
                 )
-                completed_adv_stats_pipeline = adv_stats_pipeline.run(date_data=date)
+                completed_adv_stats_pipeline = nba_api_pipeline.run(date_data=date)
                 stats_data = completed_adv_stats_pipeline['loaded']
 
 #endregion SecondSpectrum Tracking  
@@ -118,7 +124,8 @@ for pt in [
             endpoint_friendly_name = f'{pt}_hustle'.lower(),
             tracking_table = 'Hustle',
             player_team = pt,
-            log_tag = f'.{pt}_hustle'.lower()
+            log_tag = f'.{pt}_hustle'.lower(),
+            extract_tag = ''
         )
         completed_hustle_pipeline = hustle_pipeline.run(date_data=date)
         hustle_data = completed_hustle_pipeline['loaded']
@@ -154,7 +161,8 @@ for pt in [
                 endpoint_friendly_name = f'{pt}_stats'.lower(),
                 tracking_table = 'Box',
                 player_team = pt,
-                log_tag = f'.{pt.lower()}'
+                log_tag = f'.{pt.lower()}',
+                extract_tag = ''
             )
             completed_adv_stats_pipeline = adv_stats_pipeline.run(date_data=date)
             stats_data = completed_adv_stats_pipeline['loaded'] 

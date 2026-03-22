@@ -76,6 +76,7 @@ class BoxscorePipeline(Pipeline[dict]):
         ------------
         >>> {"meta": {}, "game":{}}
         '''
+        self.logger.info(f'Fetching {self.GameID} Box data from {self.url}')
         data_extract = self.source.fetch() if self.environment == 'Production' else self.source.fetch_file()
         self.logger.info(f'Extracted {self.GameID} Box data')
         return data_extract
