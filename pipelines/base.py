@@ -53,15 +53,12 @@ class Pipeline(ABC, Generic[T]):
         self.logger.info('Spinning up...')
 
         #Extract
-        self.logger.info(f'Extracting {self.pipeline_tag} via {self.source_tag}')
         data_extract = self.extract()
 
         #Transform
-        self.logger.info(f'Transforming...')
         data_transformed = self.transform(data_extract)
 
         #Load
-        self.logger.info(f'Loading...')
         data = self.load(data_transformed)
 
         return {
