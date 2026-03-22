@@ -6,4 +6,4 @@ from .schedule import SchedulePipeline, DailyBackfillSchedulePipeline
 from .player_positions import PlayerPositionPipeline
 from .daily_lineups import DailyLineupsPipeline
 from .schedule_api_usage import ScheduleForAPI
-from .advanced_stats import AdvancedStatsPipeline
+from .league_dash_api import LeagueDashAPI

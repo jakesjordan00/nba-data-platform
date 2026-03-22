@@ -50,7 +50,7 @@ class Endpoint(TypedDict):
     headers: dict
     params: dict
 
-nba_advanced_stats_endpoints: dict[str, Endpoint] = {
+nba_api_endpoints: dict[str, Endpoint] = {
     'leaguedashplayerstats':{
         'url': 'https://stats.nba.com/stats/leaguedashplayerstats',
         'headers': stats_headers,
@@ -274,7 +274,6 @@ nba_advanced_stats_endpoints: dict[str, Endpoint] = {
     # }
 }
 
-nba_advanced_stats_endpoints['leaguedashplayerstats']['params']
 nba_stats_endpoints: dict[str, Endpoint] = {
 ############################
 #region Play-By-Play

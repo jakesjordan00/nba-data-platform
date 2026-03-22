@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from connectors import APIDataConnector, SQLConnector, StaticDataConnector
 from pipelines import ScheduleForAPI
-from pipelines import AdvancedStatsPipeline
+from pipelines import LeagueDashAPI
 
 
 #region Synergy Playtype Stats
@@ -24,14 +24,14 @@ for pt in [
         'OffRebound',
         'Misc'
     ]:
-        play_type_pipeline = AdvancedStatsPipeline(
+        play_type_pipeline = LeagueDashAPI(
             schema = 'plays',
             params = {
                 'PlayType': play_type,
                 'PlayerOrTeam': pt[0], #P or T
             },
             endpoint_friendly_name = 'pt_play_type',
-            tracking_table = 'Plays',
+            table_base_name = 'Plays',
             player_team = pt,
             log_tag = f'.{play_type}'.lower()
         )
@@ -81,14 +81,14 @@ for pt in [
         completed_schedule_pipeline = schedule_pipeline.run()
         schedule_data = completed_schedule_pipeline['loaded']
         for date in schedule_data:
-                adv_stats_pipeline = AdvancedStatsPipeline(
+                adv_stats_pipeline = LeagueDashAPI(
                     schema = 'tracking',
                     params = {
                         'PlayerOrTeam': pt,
                         'PtMeasureType': tracking_measure,
                     },
                     endpoint_friendly_name = 'pt_tracking',
-                    tracking_table = tracking_measure,
+                    table_base_name = tracking_measure,
                     player_team = pt,
                     log_tag = f'.{pt}_{tracking_measure}'.lower()
                 )
@@ -112,11 +112,11 @@ for pt in [
     completed_schedule_pipeline = schedule_pipeline.run()
     schedule_data = completed_schedule_pipeline['loaded']
     for date in schedule_data:
-        hustle_pipeline = AdvancedStatsPipeline(
+        hustle_pipeline = LeagueDashAPI(
             schema = 'tracking',
             params = {},
             endpoint_friendly_name = f'{pt}_hustle'.lower(),
-            tracking_table = 'Hustle',
+            table_base_name = 'Hustle',
             player_team = pt,
             log_tag = f'.{pt}_hustle'.lower()
         )
@@ -146,13 +146,13 @@ for pt in [
         schedule_data = completed_schedule_pipeline['loaded']
 
         for date in schedule_data:
-            adv_stats_pipeline = AdvancedStatsPipeline(
+            adv_stats_pipeline = LeagueDashAPI(
                 schema=schema,
                 params = {
                     'MeasureType': measure_type,
                 },
                 endpoint_friendly_name = f'{pt}_stats'.lower(),
-                tracking_table = 'Box',
+                table_base_name = 'Box',
                 player_team = pt,
                 log_tag = f'.{pt.lower()}'
             )

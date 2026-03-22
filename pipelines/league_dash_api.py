@@ -6,7 +6,7 @@ import polars as pl
 
 
 
-class AdvancedStatsPipeline(Pipeline):
+class LeagueDashAPI(Pipeline):
     def __init__(self, ):
         self.pipeline_name = f'nba-api'
         self.tag = 'nba-api'
@@ -35,7 +35,7 @@ class AdvancedStatsPipeline(Pipeline):
             self.logger.warning('No data transformed, skipping load')
             return None
         self.logger.info(f'Loading data via checked_upsert in sql.py')
-        data_loaded = self.destination.checked_upsert(table_name=f'{self.schema}.{self.full_table_name}', data=data_transformed)
+        data_loaded = self.destination.checked_upsert(table_name=self.full_table_name, data=data_transformed)
         self.runs += 1
         return data_loaded
 
@@ -54,14 +54,15 @@ class AdvancedStatsPipeline(Pipeline):
         return super().run()
 
 
-    def _re_init(self, schema: str, params: dict,  endpoint_friendly_name: str, tracking_table: str, player_team: str, 
+    def _re_init(self, schema: str, params: dict,  endpoint_friendly_name: str, table_base_name: str, player_team: str, 
                  log_tag: str | None = None, extract_tag: str | None = None):
         self.pipeline_name = f'nba-api.{schema}{log_tag}'
         self.tag = 'nba-api'
         self.extract_tag = extract_tag
         self.schema = schema
-        self.tracking_table = tracking_table
-        self.full_table_name = f'{player_team}{tracking_table}'
+        self.table_base_name = table_base_name
+        self.table_name = f'{player_team}{table_base_name}'
+        self.full_table_name = f'{schema}.{player_team}{table_base_name}'
         self.player_team = player_team
         self.params = params
         
@@ -72,7 +73,7 @@ class AdvancedStatsPipeline(Pipeline):
         }
         self.runs = 0
         try:
-            self.destination.check_specific_table(f'{self.schema}.{self.full_table_name}')
+            self.destination.check_specific_table(self.full_table_name)
         except Exception as e:
             test = e
             self.logger.critical(f"Table doesn't exist in config/settings.py! Continuing to allow for debugging, but nothing will be inserted.")

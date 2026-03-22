@@ -19,13 +19,15 @@ class Transform:
         if len(self.data_extract['resultSets']) > 1:
             self.logger.warning(f'Multiple result sets returned! Only configured to handle one!')
         self.results = self.data_extract['resultSets'][0]
-        self.logger.info(f'Formatting data for {self.pipeline.schema}.{self.pipeline.player_team}{self.pipeline.tracking_table}')
+        self.logger.info(f'Formatting data for {self.pipeline.schema}.{self.pipeline.player_team}{self.pipeline.table_base_name}')
         if self.pipeline.schema == 'adv':
             data_transformed = self.measure_player_advanced() if self.pipeline.player_team == 'Player' else self.measure_team_advanced()
         elif self.pipeline.schema == 'misc':
             data_transformed = self.measure_player_misc() if self.pipeline.player_team == 'Player' else self.measure_team_misc()
         elif self.pipeline.schema == 'usage':
-            data_transformed = self.measure_player_usage() if self.pipeline.player_team == 'Player' else self.measure_team_usage()
+            data_transformed = self.measure_player_usage()
+        elif self.pipeline.schema == 'ffactors':
+            data_transformed = self.measure_team_four_factors()
         elif self.pipeline.schema == 'def':
             data_transformed = self.measure_player_defensive() if self.pipeline.player_team == 'Player' else self.measure_team_defensive()
         elif self.pipeline.schema == 'violations':
@@ -46,8 +48,9 @@ class Transform:
     def measure_team_advanced(self):
         '''measure_team_advanced(self)
     ===
-    When MeasureType == 'Advanced', format Team results
-        '''
+        <hr>
+        
+    When `MeasureType` API parameter == '**Advanced**', format Team results'''
         result_dicts = []
         for team in self.results['rowSet']:
             self._match_team_game(team=team)
@@ -65,7 +68,7 @@ class Transform:
                 'OReb%':        team[16],
                 'DReb%':        team[17],
                 'Reb%':         team[18],
-                'TeamTO%':      team[19],
+                'TeamTOV%':      team[19],
                 'EOffRTG':       team[7],
                 'EDefRTG':       team[9],
                 'ENetRTG':       team[11],
@@ -84,8 +87,9 @@ class Transform:
     def measure_player_advanced(self):
         '''measure_player_advanced(self)
     ===
-    When MeasureType == 'Advanced', format Player results
-        '''
+        <hr>
+        
+    When `MeasureType` API parameter == '**Advanced**', format Player results'''
         result_dicts = []
         for player in self.results['rowSet']:
             self._match_player_game(player=player)
@@ -105,7 +109,7 @@ class Transform:
                 'OReb%':        player[23],
                 'DReb%':        player[24],
                 'Reb%':         player[25],
-                'TeamTO%':      player[26],
+                'TeamTOV%':      player[26],
                 'EFG%':         player[28],
                 'TS%':          player[29],
                 'Usage%':       player[30],
@@ -126,8 +130,9 @@ class Transform:
     def measure_team_misc(self):
         '''measure_team_misc(self)
     ===
-    When MeasureType == 'Misc', format Team results
-        '''
+        <hr>
+        
+    When `MeasureType` API parameter == '**Misc**', format Team results'''
         result_dicts = []
         for team in self.results['rowSet']:
             self._match_team_game(team=team)
@@ -155,8 +160,9 @@ class Transform:
     def measure_player_misc(self):
         '''measure_player_misc(self)
     ===
-    When MeasureType == 'Misc', format Player results
-        '''
+        <hr>
+        
+    When `MeasureType` API parameter == '**Misc**', format Player results'''
         result_dicts = []
         for player in self.results['rowSet']:
             self._match_player_game(player=player)
@@ -180,34 +186,15 @@ class Transform:
     #endregion Misc
 
 
-    #region Usage
-    def measure_team_usage(self):
-        '''measure_team_usage(self)
-    ===
-
-    MAY REMOVE, TEAMS DONT HAVE USAGE... WOULD REFACTOR TO collect 'Four Factors' data for Teams (which players doesnt have)
-    When MeasureType == 'Usage', format Team results
-        '''
-        result_dicts = []
-        for team in self.results['rowSet']:
-            self._match_team_game(team=team)
-            team = {
-                'SeasonID':     self.SeasonID,
-                'GameID':       self.GameID,
-                'TeamID':       self.TeamID,
-                'MatchupID':    self.MatchupID,
-            }
-            result_dicts.append(team)
-
-        self._print_columns_for_naming()
-        self._print_table_creates(dictionary=team)
-        return(result_dicts)
-    
+    #region Usage/Four Factors
     def measure_player_usage(self):
         '''measure_usage(self)
     ===
-    When MeasureType == 'Usage', format Player results
-        '''
+        <hr>
+
+    When `MeasureType` API parameter == '**Usage**', format Player results
+
+    **Only valid parameter for Player data**'''
         result_dicts = []
         for player in self.results['rowSet']:
             self._match_player_game(player)
@@ -239,15 +226,47 @@ class Transform:
             }
             result_dicts.append(player)
         return(result_dicts)
-    #endregion Usage
+    
+    def measure_team_four_factors(self):
+        '''measure_team_usage(self)
+    ===
+        <hr>
+
+    When `MeasureType` API parameter == '**Four Factors**', format Team results
+
+    **Only valid parameter for Team data**'''
+        result_dicts = []
+        for team in self.results['rowSet']:
+            self._match_team_game(team=team)
+            team = {
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
+                'TeamID':       self.TeamID,
+                'MatchupID':    self.MatchupID,
+                'EFG%':         team[7],
+                'FTARate':      team[8],
+                'TOV%':         team[9],
+                'OReb%':        team[10],
+                'OpEFG%':       team[11],
+                'OpFTARate':    team[12],
+                'OpTOV%':       team[13],
+                'OpOReb%':      team[14],
+            }
+            result_dicts.append(team)
+
+        # self._print_table_creates(dictionary=team)
+        return(result_dicts)
+    
+    #endregion Usage/Four Factors
 
 
     #region Defensive
     def measure_team_defensive(self):
         '''measure_team_defensive(self)
     ===
-    When MeasureType == 'Defensive', format Team results
-        '''
+        <hr>
+
+    When `MeasureType` API parameter == '**Defensive**', format Team results'''
         result_dicts = []
         for team in self.results['rowSet']:
             self._match_team_game(team=team)
@@ -261,14 +280,15 @@ class Transform:
             result_dicts.append(team)
 
         # self._print_columns_for_naming()
-        self._print_table_creates(dictionary=team)
+        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
     def measure_player_defensive(self):
         '''measure_defensive(self)
     ===
-    When MeasureType == 'Defensive', format Player results
-        '''
+        <hr>
+        
+    When `MeasureType` API parameter == '**Defensive**', format Player results'''
         result_dicts = []
         for player in self.results['rowSet']:
             self._match_player_game(player=player)
@@ -294,8 +314,9 @@ class Transform:
     def measure_team_violations(self):
         '''measure_team_violations(self)
     ===
-    When MeasureType == 'Violations', format Team results
-        '''
+        <hr>
+        
+    When `MeasureType` API parameter == '**Violations**', format Team results'''
         result_dicts = []
         for team in self.results['rowSet']:
             self._match_team_game(team=team)
@@ -333,8 +354,9 @@ class Transform:
     def measure_player_violations(self):
         '''measure_violations(self)
     ===
-    When MeasureType == 'Violations', format Player results
-        '''
+        <hr>
+
+    When `MeasureType` API parameter == '**Violations**', format Player results'''
         result_dicts = []
         for player in self.results['rowSet']:
             self._match_player_game(player=player)
@@ -374,6 +396,7 @@ class Transform:
     def _set_result_formatted(self, result: list):
         '''_set_result_formatted(self, result)
     ===
+        <hr>
 
     Determines **SeasonID**, **GameID**, **sf.TeamID** and **MatchupID** values for result_formatted. 
     
@@ -387,8 +410,7 @@ class Transform:
     Function Calls
     ---
 
-        self._match_team_game(result)
-        '''
+        self._match_team_game(result)'''
         self.index_diff = 0
         if self.pipeline.player_team == 'Team':
             self._match_team_game(team=result)
@@ -423,9 +445,11 @@ class Transform:
 
     If found, sets **SeasonID**, **GameID**, **self.TeamID**, **self.MatchupID**    
 
-        :param player list: list of values returned from the API for a single player
+    Parameters
+    -------------
+    <hr>
 
-        '''
+        __player__ list: list of values returned from the API for a single player'''
         self.logger.info(f'Finding game on {self.pipeline.date} with {player[1]} in the lineup...')
         self.matching_game = next((
             game for game in self.games_on_date 
@@ -447,15 +471,19 @@ class Transform:
     def _match_team_game(self, team: list):
         '''_match_team_game(self, team)
     ===
+        <hr>
+
     Using the self.games_on_date value, finds the GameIDs and their respective HomeID and AwayID entries for all games that took place on that date in question.
 
     For each game taking place on the date in question, check if the **team** parameter, TeamID, is equal to HomeID or AwayID
 
     If found, sets **SeasonID**, **GameID**, **self.TeamID**, **self.MatchupID**    
 
-        :param team list: list of values returned from the API for a single Team
-
-        '''
+    Parameters
+    -------------
+    <hr>
+        
+        __team__ (list): list of values returned from the API for a single Team'''
         self.logger.info(f'Finding game on {self.pipeline.date} with the {team[2]}...')
         self.matching_game = next((
             game for game in self.games_on_date 
@@ -488,7 +516,23 @@ class Transform:
         <hr>
 
     Acts similarly to `transform_tracking`, but for the Synergy PlayType endpoint
-        '''
+
+    Function Calls
+    -------------
+    <hr>
+
+    *   **_format_team_player_constants(result)**
+        - Drives formatting of Team, TeamBox, Player, PlayerBox and StartingLineups dicts and lists of dicts
+
+    *   **parse_plays(result)**
+        - Parses and formats results from Synergy API
+
+
+    Returns
+    -------------
+    <hr>
+
+    __data_transformed__ (list): Transformed PlayType data ready for load to plays.*PlayType* table'''
         self.result_dicts = []
         for result in self.results['rowSet']:
             self._format_team_player_constants(result=result)
@@ -501,8 +545,10 @@ class Transform:
     def parse_plays(self, result: list):
         '''parse_plays`(self, result)`
     ===
-        Parses and formats results from Synergy api<br>
-        Works for all PlayTypes and if Offensive/Defensive.
+        <hr>
+
+    Parses and formats results from NBA/Synergy API<br>
+    Works for all PlayTypes and if Offensive/Defensive.
 
 
     Parameters
@@ -516,8 +562,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Isolation** play type data
-    '''
+        __result_dict__ (dict): Formatted dict of **Isolation** play type data'''
         result_dict = {
             **self.result_formatted,
             'Play': result[4 + self.index_diff],
@@ -565,9 +610,7 @@ class Transform:
     Sets *`self.result_formatted`*
     ---
     - Team: **SeasonID**, **TeamID**        
-    - Player: **SeasonID**, **TeamID**, **PlayerID**
-
-        '''
+    - Player: **SeasonID**, **TeamID**, **PlayerID**'''
         if self.pipeline.player_team == 'Team':
             self.index_diff = 0
             self.result_formatted = {
@@ -589,39 +632,39 @@ class Transform:
     def transform_tracking(self):
         '''transform_tracking`(self)`
     ===
+        <hr>    
 
-        Acts similarly to `start_transform`, but for the Tracking endpoint
-        '''
+    Acts similarly to `start_transform`, but for the Tracking endpoint'''
         self.result_dicts = []
         for result in self.results['rowSet']:
             self._set_result_formatted(result=result)
 
-            if self.pipeline.tracking_table == 'Drives':
+            if self.pipeline.table_base_name == 'Drives':
                 self.result_dicts.append(self.tracking_drives(result=result))
-            elif self.pipeline.tracking_table == 'Defense':
+            elif self.pipeline.table_base_name == 'Defense':
                 self.result_dicts.append(self.tracking_defensive_impact(result=result))
-            elif self.pipeline.tracking_table == 'CatchShoot':
+            elif self.pipeline.table_base_name == 'CatchShoot':
                 self.result_dicts.append(self.tracking_catch_shoot(result=result))
-            elif self.pipeline.tracking_table == 'Passing':
+            elif self.pipeline.table_base_name == 'Passing':
                 self.result_dicts.append(self.tracking_passing(result=result))
-            elif self.pipeline.tracking_table == 'Possessions':
+            elif self.pipeline.table_base_name == 'Possessions':
                 self.result_dicts.append(self.tracking_possessions(result=result))
-            elif self.pipeline.tracking_table == 'PullUpShot':
+            elif self.pipeline.table_base_name == 'PullUpShot':
                 self.result_dicts.append(self.tracking_shot_pull_up(result=result))
-            elif self.pipeline.tracking_table == 'Rebounding':
+            elif self.pipeline.table_base_name == 'Rebounding':
                 self.result_dicts.append(self.tracking_rebounding(result=result))
-            elif self.pipeline.tracking_table == 'Efficiency':
+            elif self.pipeline.table_base_name == 'Efficiency':
                 self.result_dicts.append(self.tracking_efficiency(result=result))
-            elif self.pipeline.tracking_table == 'SpeedDistance':
+            elif self.pipeline.table_base_name == 'SpeedDistance':
                 self.result_dicts.append(self.tracking_speed_distance(result=result))
-            elif self.pipeline.tracking_table == 'ElbowTouch':
+            elif self.pipeline.table_base_name == 'ElbowTouch':
                 self.result_dicts.append(self.tracking_touch_elbow(result=result))
-            elif self.pipeline.tracking_table == 'PostTouch':
+            elif self.pipeline.table_base_name == 'PostTouch':
                 self.result_dicts.append(self.tracking_touch_post(result=result))
-            elif self.pipeline.tracking_table == 'PaintTouch':
+            elif self.pipeline.table_base_name == 'PaintTouch':
                 self.result_dicts.append(self.tracking_touch_paint(result=result))
                 
-            elif self.pipeline.tracking_table == 'Hustle':
+            elif self.pipeline.table_base_name == 'Hustle':
                 if self.pipeline.full_table_name == 'TeamHustle':
                     self.result_dicts.append(self.tracking_team_hustle(result=result))
                 elif self.pipeline.full_table_name == 'PlayerHustle':
@@ -634,8 +677,10 @@ class Transform:
     def tracking_drives(self, result: list):
         '''tracking_drives`(self, result)`
     ===
-        When PtMeasureType == 'Drives', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Drive data
+        <hr>
+    
+    When `PtMeasureType` == '**Drives'**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Drive data
 
 
     Parameters
@@ -649,8 +694,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Drives** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **Drives** tracking data'''
         result_dict = {
             **self.result_formatted,                
             'Drives': result[7 + self.index_diff],
@@ -678,8 +722,10 @@ class Transform:
     def tracking_defensive_impact(self, result: list):
         '''tracking_defensive_impact`(self, result)`
     ===
-        When PtMeasureType == 'Defense', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Defensive Impact data
+        <hr>
+    
+    When `PtMeasureType` == '**Defense**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for Defensive Impact data
 
 
     Parameters
@@ -693,8 +739,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Defended Field Goal** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **Defended Field Goal** tracking data'''
         result_dict = {
             **self.result_formatted,  
             'DefRimFGM': result[10 + self.index_diff],
@@ -707,8 +752,10 @@ class Transform:
     def tracking_catch_shoot(self, result: list):
         '''tracking_catch_shoot`(self, result)`
     ===
-        When PtMeasureType == 'CatchShoot', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **CatchShoot** data
+        <hr>
+    
+    When `PtMeasureType` == '**CatchShoot**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **CatchShoot** data
 
 
     Parameters
@@ -722,8 +769,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **CatchShoot** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **CatchShoot** tracking data'''
         result_dict = {
             **self.result_formatted,
             'FGM': result[7 + self.index_diff],
@@ -742,8 +788,10 @@ class Transform:
     def tracking_passing(self, result: list):
         '''tracking_passing`(self, result)`
     ===
-        When PtMeasureType == 'Passing', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Passing** data
+        <hr>
+    
+    When `PtMeasureType` == '**Passing**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Passing** data
 
 
     Parameters
@@ -757,8 +805,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Passing** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **Passing** tracking data'''
         result_dict = {
             **self.result_formatted,
             'PassMade': result[7 + self.index_diff],
@@ -778,8 +825,10 @@ class Transform:
     def tracking_possessions(self, result: list):
         '''tracking_possessions`(self, result)`
     ===
-        When PtMeasureType == 'Possessions', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Possessions** data
+        <hr>
+    
+    When `PtMeasureType` == '**Possessions**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Possessions** data
 
 
     Parameters
@@ -793,8 +842,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Possessions** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **Possessions** tracking data'''
         result_dict = {
             **self.result_formatted,
             'Pts': result[7 + self.index_diff],
@@ -818,8 +866,10 @@ class Transform:
     def tracking_shot_pull_up(self, result:list):
         '''tracking_shot_pull_up`(self, result)`
     ===
-        When PtMeasureType == 'PullUpShot', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PullUpShot** data
+        <hr>
+    
+    When `PtMeasureType` == '**PullUpShot**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PullUpShot** data
 
 
     Parameters
@@ -833,8 +883,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **PullUpShot** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **PullUpShot** tracking data'''
         result_dict = {
             **self.result_formatted,
             'FGM': result[7 + self.index_diff],
@@ -853,8 +902,10 @@ class Transform:
     def tracking_rebounding(self, result:list):
         '''tracking_rebounding`(self, result)`
     ===
-        When PtMeasureType == 'Rebounding', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Rebounding** data
+        <hr>
+        
+    When `PtMeasureType` == '**Rebounding**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Rebounding** data
 
 
     Parameters
@@ -868,8 +919,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Rebounding** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **Rebounding** tracking data'''
         result_dict = {
             **self.result_formatted,
             'OReb': result[7 + self.index_diff],
@@ -907,8 +957,10 @@ class Transform:
     def tracking_efficiency(self, result:list):
         '''tracking_efficiency`(self, result)`
     ===
-        When PtMeasureType == 'Efficiency', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Efficiency** data
+        <hr>
+    
+    When `PtMeasureType` == '**Efficiency**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **Efficiency** data
 
 
     Parameters
@@ -922,8 +974,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Efficiency** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **Efficiency** tracking data'''
         result_dict = {
             **self.result_formatted,
             'DrivePts': result[8 + self.index_diff],
@@ -947,8 +998,10 @@ class Transform:
     def tracking_speed_distance(self, result:list):
         '''tracking_speed_distance`(self, result)`
     ===
-        When PtMeasureType == 'SpeedDistance', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **SpeedDistance** data
+        <hr>
+
+    When `PtMeasureType` == '**SpeedDistance**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **SpeedDistance** data
 
 
     Parameters
@@ -962,8 +1015,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **SpeedDistance** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **SpeedDistance** tracking data'''
         result_dict = {
             **self.result_formatted,
             'DistFeet': result[8 + self.index_diff],
@@ -981,8 +1033,10 @@ class Transform:
     def tracking_touch_elbow(self, result:list):
         '''tracking_touch_elbow`(self, result)`
     ===
-        When PtMeasureType == 'ElbowTouch', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **ElbowTouch** data
+        <hr>
+    
+    When `PtMeasureType` == '**ElbowTouch**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **ElbowTouch** data
 
 
     Parameters
@@ -996,8 +1050,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **ElbowTouch** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **ElbowTouch** tracking data'''
         result_dict = {
             **self.result_formatted,
             'TotalTouches': result[7 + self.index_diff],
@@ -1026,8 +1079,10 @@ class Transform:
     def tracking_touch_post(self, result:list):
         '''tracking_touch_post`(self, result)`
     ===
-        When PtMeasureType == 'PostTouch', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PostTouch** data
+        <hr>
+    
+    When `PtMeasureType` == '**PostTouch**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PostTouch** data
 
 
     Parameters
@@ -1041,8 +1096,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **PostTouch** tracking data
-    '''
+        __result_dict__ (dict): Formatted dict of **PostTouch** tracking data'''
         result_dict = {
             **self.result_formatted,
             'TotalTouches': result[7 + self.index_diff],
@@ -1071,8 +1125,10 @@ class Transform:
     def tracking_touch_paint(self, result:list):
         '''tracking_touch_paint`(self, result)`
     ===
-        When PtMeasureType == 'PaintTouch', format results<br>
-        Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PaintTouch** data
+        <hr>
+    
+    When `PtMeasureType` == '**PaintTouch**', format results<br>
+    Depending on whether or not player_team is Player or Team, format dictionaries accordingly for **PaintTouch** data
 
 
     Parameters
@@ -1121,6 +1177,8 @@ class Transform:
     def tracking_team_hustle(self, result:list):
         '''tracking_hustle`(self, result)`
     ===
+        <hr>
+        
     Handles response from league Hustle endpoint
 
     Depending on whether or not we hit the team or player version of the endpoint, format dictionaries accordingly for **PaintTouch** data
@@ -1137,8 +1195,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Hustle** data
-    '''
+        __result_dict__ (dict): Formatted dict of **Hustle** data'''
         result_dict = {
             **self.result_formatted,
             'ContestedShots': result[3 + self.index_diff],
@@ -1166,6 +1223,8 @@ class Transform:
     def tracking_player_hustle(self, result:list):
         '''tracking_player_hustle`(self, result)`
     ===
+        <hr>
+        
     Handles response from league Hustle endpoint
 
     Depending on whether or not we hit the team or player version of the endpoint, format dictionaries accordingly for **PaintTouch** data
@@ -1182,8 +1241,7 @@ class Transform:
     -------------
     <hr>
 
-        __result_dict__ (dict): Formatted dict of **Hustle** data
-    '''
+        __result_dict__ (dict): Formatted dict of **Hustle** data'''
         result_dict = {
             **self.result_formatted,
             'ContestedShots': result[6 + self.index_diff],
@@ -1238,10 +1296,10 @@ if not exists(
 select *
 from sys.tables t
 inner join sys.schemas s on t.schema_id = s.schema_id
-where t.name = '{self.pipeline.full_table_name}' and s.name = '{self.pipeline.schema}'
+where t.name = '{self.pipeline.table_name}' and s.name = '{self.pipeline.schema}'
 )
 begin"""
-        check_string += f'\ncreate table {self.pipeline.schema}.{self.pipeline.full_table_name}('
+        check_string += f'\ncreate table {self.pipeline.full_table_name}('
         full_str = check_string
         print(check_string)
         if 'Team' in self.pipeline.full_table_name:

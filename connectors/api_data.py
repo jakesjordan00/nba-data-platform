@@ -11,7 +11,7 @@ class APIDataConnector:
     class Endpoint:
         def __init__(self, friendly_name: str, endpoint_name) -> None:
             self.name = friendly_name
-            config = map.nba_advanced_stats_endpoints[endpoint_name]
+            config = map.nba_api_endpoints[endpoint_name]
             self.url = config['url']
             self.headers = config['headers']                
             self.params = config['params']

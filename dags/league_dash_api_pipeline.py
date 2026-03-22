@@ -33,8 +33,8 @@ def nba_advanced_stats_pipeline():
 
     @task
     def player_advanced(date):
-        from pipelines import AdvancedStatsPipeline
-        adv_stats_pipeline = AdvancedStatsPipeline(data=date['data'], schema = 'adv')
+        from pipelines import LeagueDashAPI
+        adv_stats_pipeline = LeagueDashAPI(data=date['data'], schema = 'adv')
         adv_stats_pipeline.source.player_stats.params = {**adv_stats_pipeline.source.player_stats.params, 'DateFrom': date['date'], 'DateTo': date['date']}
         completed_adv_stats_pipeline = adv_stats_pipeline.run()
         data = completed_adv_stats_pipeline['loaded']
