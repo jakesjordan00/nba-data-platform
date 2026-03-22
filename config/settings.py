@@ -764,7 +764,40 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             'OpPtsInThePaint'
         ],
         'create': table('misc.PlayerBox')
-        },
+    },
+    'misc.TeamBox': {
+        'keys': [
+			'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID'
+		],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'PtsTurnover',
+            'PtsSecondChance',
+            'PtsFastBreak',
+            'PtsInThePaint',
+            'OpPtsTurnover',
+            'OpPtsSecondChance',
+            'OpPtsFastBreak',
+            'OpPtsInThePaint',
+        ],
+        'update_columns': [
+            'PtsTurnover',
+            'PtsSecondChance',
+            'PtsFastBreak',
+            'PtsInThePaint',
+            'OpPtsTurnover',
+            'OpPtsSecondChance',
+            'OpPtsFastBreak',
+            'OpPtsInThePaint',
+        ],
+        'create': table('misc.TeamBox')
+	},
     'usage.PlayerBox': {
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
         'columns': [
@@ -849,7 +882,62 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             'DiscDribble',
         ],
         'create': table('violations.PlayerBox')
-    },    
+    },
+    'violations.TeamBox': {
+        'keys': [
+			'SeasonID',
+			'GameID',
+			'TeamID',
+			'MatchupID'
+		],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            'Travel',
+            'DblDribble',
+            'Inbound',
+            'Backcourt',
+            'Palming',
+            'OffFoul',
+            'Off3',
+            'OffGoaltend',
+            'Def3',
+            'DefGoaltend',
+            'FiveSec',
+            'EightSec',
+            'ShotClock',
+            'Charge',
+            'DelayOfGame',
+            'Lane',
+            'JumpBall',
+            'KickedBall',
+            'DiscDribble',
+        ],
+        'update_columns': [
+            'Travel',
+            'DblDribble',
+            'Inbound',
+            'Backcourt',
+            'Palming',
+            'OffFoul',
+            'Off3',
+            'OffGoaltend',
+            'Def3',
+            'DefGoaltend',
+            'FiveSec',
+            'EightSec',
+            'ShotClock',
+            'Charge',
+            'DelayOfGame',
+            'Lane',
+            'JumpBall',
+            'KickedBall',
+            'DiscDribble',
+        ],
+        'create': table('violations.TeamBox')
+    },
     'def.PlayerBox': {
         'keys': ['SeasonID', 'GameID', 'TeamID', 'MatchupID', 'PlayerID'],
         'columns': [
@@ -868,6 +956,25 @@ where s.SeasonID = season_id and s.GameID in(game_id)
             'DefWinShare',
         ],
         'create': table('def.PlayerBox')
+    },
+    'def.TeamBox': {
+        'keys': [
+			'SeasonID',
+			'GameID',
+			'TeamID',
+			'MatchupID'
+		],
+        'columns': [
+            'SeasonID',
+            'GameID',
+            'TeamID',
+            'MatchupID',
+            '[DReb%]',
+        ],
+        'update_columns': [
+            '[DReb%]',
+        ],
+        'create': table('def.TeamBox')
     },
     
 #endregion Advanced Stats

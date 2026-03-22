@@ -18,7 +18,7 @@ class AdvancedStatsPipeline(Pipeline):
 
 
     def extract(self):
-        self.logger.info(f'Extracting data from {self.date}')
+        self.logger.info(self.extract_tag)
         data_extract = self.source.fetch(endpoint=self._endpoint, params = self._params)
         return data_extract
     
@@ -34,6 +34,7 @@ class AdvancedStatsPipeline(Pipeline):
         if not data_transformed:
             self.logger.warning('No data transformed, skipping load')
             return None
+        self.logger.info(f'Loading data via checked_upsert in sql.py')
         data_loaded = self.destination.checked_upsert(table_name=f'{self.schema}.{self.full_table_name}', data=data_transformed)
         self.runs += 1
         return data_loaded
@@ -57,6 +58,7 @@ class AdvancedStatsPipeline(Pipeline):
                  log_tag: str | None = None, extract_tag: str | None = None):
         self.pipeline_name = f'nba-api.{schema}{log_tag}'
         self.tag = 'nba-api'
+        self.extract_tag = extract_tag
         self.schema = schema
         self.tracking_table = tracking_table
         self.full_table_name = f'{player_team}{tracking_table}'

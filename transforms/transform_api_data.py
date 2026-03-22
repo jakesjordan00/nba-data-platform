@@ -1,6 +1,8 @@
 import logging
 from datetime import datetime
 
+from sqlalchemy import schema
+
 class Transform:
     def __init__(self, pipeline):
         self.pipeline = pipeline
@@ -11,10 +13,13 @@ class Transform:
 
     def start_transform(self, data_extract):
         self.data_extract = data_extract
-        self.games_on_date = self.data if self.data else []
+        if self.data and self.data != []:
+            self.games_on_date = self.data if self.data else []
+            self.logger.info(f'{len(self.games_on_date)} games found on {self.pipeline.date}')
         if len(self.data_extract['resultSets']) > 1:
             self.logger.warning(f'Multiple result sets returned! Only configured to handle one!')
         self.results = self.data_extract['resultSets'][0]
+        self.logger.info(f'Formatting data for {self.pipeline.schema}.{self.pipeline.player_team}{self.pipeline.tracking_table}')
         if self.pipeline.schema == 'adv':
             data_transformed = self.measure_player_advanced() if self.pipeline.player_team == 'Player' else self.measure_team_advanced()
         elif self.pipeline.schema == 'misc':
@@ -72,7 +77,7 @@ class Transform:
                 'Possessions':         team[25],
             }
             result_dicts.append(team)
-        self._print_table_creates(dictionary=team)
+        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
 
@@ -143,7 +148,7 @@ class Transform:
             result_dicts.append(team)
 
         # self._print_columns_for_naming()
-        self._print_table_creates(dictionary=team)
+        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
 
@@ -388,11 +393,12 @@ class Transform:
         if self.pipeline.player_team == 'Team':
             self._match_team_game(team=result)
             self.result_formatted = {
-                'SeasonID': self.SeasonID,
-                'GameID': self.GameID,
+                'SeasonID':     self.SeasonID,
+                'GameID':       self.GameID,
                 'TeamID':       self.TeamID,
                 'MatchupID':    self.MatchupID,
-            }
+            }            
+            self.logger.info(f'Key values set! SeasonID: {self.SeasonID}, GameID: {self.GameID}, TeamID: {self.TeamID}, MatchupID: {self.MatchupID}')
         elif self.pipeline.player_team == 'Player':
             self._match_player_game(player=result)
             self.index_diff = 1
@@ -403,6 +409,7 @@ class Transform:
                 'MatchupID':    self.MatchupID,
                 'PlayerID':     result[0],
             }
+            self.logger.info(f'Key values set! SeasonID: {self.SeasonID}, GameID: {self.GameID}, TeamID: {self.TeamID}, MatchupID: {self.MatchupID}, PlayerID: {result[0]}')
 
 
     def _match_player_game(self, player: list):
@@ -419,12 +426,14 @@ class Transform:
         :param player list: list of values returned from the API for a single player
 
         '''
+        self.logger.info(f'Finding game on {self.pipeline.date} with {player[1]} in the lineup...')
         self.matching_game = next((
             game for game in self.games_on_date 
                 if player[0] in game['home_players']
                 or player[0] in game['away_players']), {})
         self.SeasonID = self.matching_game.get('SeasonID')
         self.GameID = self.matching_game.get('GameID')
+        self.logger.info(f'Game found! {self.GameID}')
         if player[0] in self.matching_game['home_players']:
             self.TeamID = self.matching_game['HomeID']
             self.MatchupID = self.matching_game['AwayID']
@@ -447,12 +456,14 @@ class Transform:
         :param team list: list of values returned from the API for a single Team
 
         '''
+        self.logger.info(f'Finding game on {self.pipeline.date} with the {team[2]}...')
         self.matching_game = next((
             game for game in self.games_on_date 
                 if team[0] == game['HomeID']
                 or team[0] == game['AwayID']), {})
         self.SeasonID = self.matching_game.get('SeasonID')
         self.GameID = self.matching_game.get('GameID')
+        self.logger.info(f'Game found! {self.GameID}')
         if team[0] == self.matching_game['HomeID']:
             self.TeamID = self.matching_game['HomeID']
             self.MatchupID = self.matching_game['AwayID']
@@ -460,6 +471,7 @@ class Transform:
             self.TeamID = self.matching_game['AwayID']
             self.MatchupID = self.matching_game['HomeID']            
         else:
+            self.logger.critical(f'RARE ERROR!!! Match not found!')
             self.MatchupID = 0
 
 #endregion Utility - Game Match
@@ -614,8 +626,7 @@ class Transform:
                     self.result_dicts.append(self.tracking_team_hustle(result=result))
                 elif self.pipeline.full_table_name == 'PlayerHustle':
                     self.result_dicts.append(self.tracking_player_hustle(result=result))
-            bp = 'here'
-        bp = 'here'
+            self.logger.info(f'Result formatted succesfully')
         data_transformed = self.result_dicts
         return data_transformed
 
