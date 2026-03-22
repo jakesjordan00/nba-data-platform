@@ -7,31 +7,14 @@ import polars as pl
 
 
 class AdvancedStatsPipeline(Pipeline):
-    def __init__(self, schema: str, params: dict,  endpoint_friendly_name: str, tracking_table: str | None = None, player_team: str | None = None, log_tag: str | None= None):
-        self.pipeline_name = f'advanced_stats.{schema}{log_tag}'
-        self.tag = 'advancedStats'
-        self.schema = schema
-        self.tracking_table = tracking_table
-        self.full_table_name = f'{player_team}{tracking_table}'
-        self.player_team = player_team
-        self.params = params
+    def __init__(self, ):
+        self.pipeline_name = f'nba-api'
+        self.tag = 'nba-api'
         super().__init__(self.pipeline_name, self.tag, 'NBA API')
-        self.schedule_source = StaticDataConnector(self)
-        self.url = self.schedule_source.schedule        
         self.source = APIDataConnector(self)
-        
-        self._endpoint = self.source.get_endpoint(friendly_name=endpoint_friendly_name)
-        self._params = {
-            **self._endpoint.params,
-            **params
-        }
-        self.runs = 0
-
-        try:
-            self.destination.check_specific_table(f'{self.schema}.{self.full_table_name}')
-        except Exception as e:
-            test = e
-            self.logger.critical(f"Table doesn't exist in config/settings.py! Continuing to allow for debugging, but nothing will be inserted.")
+        self.total_runs = 0
+        # self.schedule_source = StaticDataConnector(self)
+        # self.url = self.schedule_source.schedule
 
 
     def extract(self):
@@ -70,3 +53,27 @@ class AdvancedStatsPipeline(Pipeline):
         return super().run()
 
 
+    def _re_init(self, schema: str, params: dict,  endpoint_friendly_name: str, tracking_table: str, player_team: str, 
+                 log_tag: str | None = None, extract_tag: str | None = None):
+        self.pipeline_name = f'nba-api.{schema}{log_tag}'
+        self.tag = 'nba-api'
+        self.schema = schema
+        self.tracking_table = tracking_table
+        self.full_table_name = f'{player_team}{tracking_table}'
+        self.player_team = player_team
+        self.params = params
+        
+        self._endpoint = self.source.get_endpoint(friendly_name=endpoint_friendly_name)
+        self._params = {
+            **self._endpoint.params,
+            **params
+        }
+        self.runs = 0
+        try:
+            self.destination.check_specific_table(f'{self.schema}.{self.full_table_name}')
+        except Exception as e:
+            test = e
+            self.logger.critical(f"Table doesn't exist in config/settings.py! Continuing to allow for debugging, but nothing will be inserted.")
+
+        
+        bp = 'here'
