@@ -18,7 +18,6 @@ class LeagueDashAPI(Pipeline):
 
 
     def extract(self):
-        self.logger.info(self.extract_tag)
         data_extract = self.source.fetch(endpoint=self._endpoint, params = self._params)
         return data_extract
     

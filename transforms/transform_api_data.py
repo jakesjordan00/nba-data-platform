@@ -484,7 +484,8 @@ class Transform:
     <hr>
         
         __team__ (list): list of values returned from the API for a single Team'''
-        self.logger.info(f'Finding game on {self.pipeline.date} with the {team[2]}...')
+        team_name = team[2] if type(team[2]) == str else team[1]
+        self.logger.info(f'Finding game on {self.pipeline.date} with the {team_name}...')
         self.matching_game = next((
             game for game in self.games_on_date 
                 if team[0] == game['HomeID']

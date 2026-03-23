@@ -26,6 +26,7 @@ class APIDataConnector:
 
 
     def fetch(self, endpoint: Endpoint, params: dict = None, retries=2, backoff=5):
+        self.logger.info(self.pipeline.extract_tag)
         if params:
             endpoint.params = params
         for attempt in range(retries):
