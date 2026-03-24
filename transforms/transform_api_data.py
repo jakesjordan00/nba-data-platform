@@ -7,11 +7,11 @@ class Transform:
     def __init__(self, pipeline):
         self.pipeline = pipeline
         self.logger = logging.getLogger(f'{pipeline.pipeline_name}.transform')
-        self.data = pipeline.data if pipeline.data else None
         pass
 
 
     def start_transform(self, data_extract):
+        self.data = self.pipeline.data if self.pipeline.data else None
         self.data_extract = data_extract
         if self.data and self.data != []:
             self.games_on_date = self.data if self.data else []

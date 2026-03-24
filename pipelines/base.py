@@ -5,7 +5,7 @@ import colorlog
 from typing import TypeVar, Generic
 import polars as pl
 from connectors.sql import SQLConnector 
-
+import time
 
 T = TypeVar('T', list, dict)
 
@@ -35,6 +35,11 @@ class Pipeline(ABC, Generic[T]):
         self.destination = SQLConnector(self.pipeline_name, 'JJsNBA')
         self.run_timestamp = None
 
+        self.extract_time = 0
+        self.transform_time = 0
+        self.load_time = 0
+
+
     @abstractmethod
     def extract(self) -> T:
         pass
@@ -52,25 +57,54 @@ class Pipeline(ABC, Generic[T]):
         self.run_timestamp = datetime.now()
         self.logger.info('Spinning up...')
 
+        #-------------
         #Extract
+        start = time.perf_counter()
         self.logger.info('Extracting...')
         data_extract = self.extract()
 
+        elapsed = round(time.perf_counter() - start, 3)
+        self.logger.info(f'Extraction complete in {elapsed} seconds')
+        self.extract_time += elapsed
+
+        #-------------
         #Transform
+        start = time.perf_counter()
         self.logger.info('Transforming...')
         data_transformed = self.transform(data_extract)
 
+        elapsed = round(time.perf_counter() - start, 3)
+        self.logger.info(f'Transformation complete in {elapsed} seconds')
+        self.transform_time += elapsed
+
+        #-------------
         #Load
+        start = time.perf_counter()
         self.logger.info('Loading...')
         data = self.load(data_transformed)
-
+        
+        elapsed = round(time.perf_counter() - start, 3)
+        self.logger.info(f'Load complete in {elapsed} seconds')
+        self.load_time += elapsed
+        try:            
+            extract_len = len(data_extract['resultSets'][0])
+        except:
+            extract_len = len(data_extract) if data_extract else 0
         return {
             'pipeline': self.pipeline_name,
             'status': 'success',
-            'extracted': len(data_extract) if data_extract else 0,
+            'extracted': extract_len,
             'transformed': data_transformed,
             'loaded': data,
-            'timestamp': self.run_timestamp.isoformat()
+            'timestamp': self.run_timestamp.isoformat(),
+            'xcom': {
+                'extracted': extract_len,
+                'extract_time': self.extract_time,
+                'transformed': len(data_transformed) if data_transformed else 0,
+                'transform_time': self.transform_time,
+                'loaded': len(data) if data else 0,
+                'load_time': self.load_time,
+            }
         }
     
 

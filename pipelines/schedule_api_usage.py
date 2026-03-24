@@ -12,17 +12,6 @@ class ScheduleForAPI(Pipeline):
         self.source = self.destination
         
     def extract(self):
-        if self.player_team:
-            if self.player_team == 'Team':
-                schema_query = self.source.queries.schedule_api_team_check.query.format(schema=self.schema, table=f'{self.player_team}{self.table_name}')
-                backfill_query = self.source.queries.schedule_api_team_backfill.query
-            elif self.player_team == 'Player':
-                schema_query = self.source.queries.schedule_api_player_check.query.format(schema=self.schema, table=f'{self.player_team}{self.table_name}')
-                backfill_query = self.source.queries.schedule_api_player_backfill.query
-        else:
-            schema_query = self.source.queries.schedule_api_player_check.query.format(schema=self.schema, table='PlayerBox')
-            backfill_query = self.source.queries.schedule_api_player_backfill.query
-
         query = Query(name=f'{self.pipeline_name}_{self.schema}', query = self.schema_query)
         try:
             data_extract = self.source.query_to_dataframe(query=query)

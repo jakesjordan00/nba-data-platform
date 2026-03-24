@@ -412,7 +412,7 @@ end
 
     - **table** (*str*): Name of table in Database
     '''
-        self.logger.info(f'Creating {table} table')
+        self.logger.info(f'Checking if {table} exists, creating if needed')
         cursor = self.pyodbc_connection.cursor()
         table_config = self.tables[table]
         query = table_config['create']

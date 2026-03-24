@@ -3,7 +3,7 @@ from connectors import StaticDataConnector, APIDataConnector
 from transforms.transform_api_data import Transform
 from datetime import datetime
 import polars as pl
-
+import time
 
 
 class LeagueDashAPI(Pipeline):
@@ -13,8 +13,7 @@ class LeagueDashAPI(Pipeline):
         super().__init__(self.pipeline_name, self.tag, 'NBA API')
         self.source = APIDataConnector(self)
         self.total_runs = 0
-        # self.schedule_source = StaticDataConnector(self)
-        # self.url = self.schedule_source.schedule
+
 
 
     def extract(self):
@@ -79,3 +78,4 @@ class LeagueDashAPI(Pipeline):
 
         
         bp = 'here'
+

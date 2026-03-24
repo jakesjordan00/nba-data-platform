@@ -49,6 +49,7 @@ class Endpoint(TypedDict):
     url: str
     headers: dict
     params: dict
+    param_options: dict
 
 nba_api_endpoints: dict[str, Endpoint] = {
     'leaguedashplayerstats':{
@@ -93,6 +94,22 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
             'Weight':           '',                 # 
+        },
+        'param_options':{
+            'MeasureType': [
+                'Advanced',
+                'Misc',
+                'Defense',
+                'Violations',
+                'Usage',
+                'Four Factors'
+            ],
+            'SeasonType': [                
+                'Regular Season',
+                'Playoffs',
+                'PlayIn',
+                #'Pre Season', 'IST', 'All Star'
+            ],
         }
     },
 
@@ -131,11 +148,24 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'TwoWay':           0,                  # ?
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
+        },
+        'param_options':{
+            'MeasureType': [
+                'Advanced',
+                'Misc',
+                'Defense',
+                'Violations',
+                'Usage',
+                'Four Factors'
+            ],
+            'SeasonType': [                
+                'Regular Season',
+                'Playoffs',
+                'PlayIn',
+                #'Pre Season', 'IST', 'All Star'
+            ],
         }
     },
-
-
-
     'leaguedashptstats': {
         'url': 'https://stats.nba.com/stats/leaguedashptstats',
         'headers': stats_headers,
@@ -172,6 +202,33 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
             'Weight':           '',                 # 
+        },
+        'param_options':{
+            'PlayerOrTeam': ['Player', 'Team'],
+            'PtMeasureType': [
+                'Drives', 
+                'Defense',
+                'CatchShoot',
+                'Passing',
+                'Possessions',
+                'PullUpShot',
+                'Rebounding',
+                'Efficiency',
+                'SpeedDistance',
+                'ElbowTouch',
+                'PostTouch',
+                'PaintTouch'
+            ],
+            'SeasonType': [                
+                'Regular Season',
+                'Playoffs',
+                'PlayIn',
+                #'Pre Season', 'IST', 'All Star'
+            ],
+            'Season': [
+                '2025-26',
+                '2024-25'
+            ],
         }
     },
     'leaguehustlestatsplayer': {
@@ -209,7 +266,14 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
             'Weight':           '',                 # 
-
+        },
+        'param_options':{
+            'SeasonType': [                
+                'Regular Season',
+                'Playoffs',
+                'PlayIn',
+                #'Pre Season', 'IST', 'All Star'
+            ],
         }
     },
     'leaguehustlestatsteam': {
@@ -248,7 +312,14 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
             'Weight':           '',                 # 
-
+        },
+        'param_options':{
+            'SeasonType': [                
+                'Regular Season',
+                'Playoffs',
+                'PlayIn',
+                #'Pre Season', 'IST', 'All Star'
+            ],
         }
     },
     'synergyplaytypes': {
@@ -262,6 +333,23 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'SeasonType':       'Regular Season',   # 'Regular Season', 'Playoffs',
             'SeasonYear':       '2025-26',          # '2025-26', '2024-25', cont..., '2015-16'
             'TypeGrouping':     'Offensive'         # 'Offensive', 'Defensive'
+        },
+        'param_options':{
+            'PlayType': [
+                'Isolation',
+                'Transition',
+                'PRBallHandler',
+                'PRRollman',
+                'Postup',
+                'Spotup',
+                'Handoff',
+                'Cut',
+                'OffScreen',
+                'OffRebound',
+                'Misc'
+            ],
+            'PlayerOrTeam': ['P', 'T'],
+            'TypeGrouping': ['Offensive', 'Defensive'],
         }
     }
 
