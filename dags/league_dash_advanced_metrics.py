@@ -16,7 +16,17 @@ import textwrap
         'retry_delay': timedelta(seconds=30)
     },
     doc_md = textwrap.dedent(
-    text="""
+    text="""# NBA Advanced Metrics Pipeline
+
+## Overview
+
+This DAG pulls data from the NBA Player and Team stats API, transforms, and stores data for downstream analytics.
+
+---
+
+## APIs
+- **leaguedashplayerstats**
+- **leaguedashteamstats**
 """
     )
 )
@@ -36,7 +46,8 @@ def nba_advanced_metrics_pipeline():
             if (pt == 'Team' and measure_type == 'Usage') or (pt == 'Player' and measure_type == 'Four Factors'):
                 continue
 
-            with TaskGroup(group_id = f'{pt.lower()}_advanced_metrics_{schema}',group_display_name = f'{pt} Advanced Metrics - {measure_type}') as taskgroup:
+            with TaskGroup(group_id = f'{pt.lower()}_advanced_metrics_{schema}',
+                           group_display_name = f'{pt} {measure_type} - {schema}.{pt}Box') as taskgroup:
                 
                 @task(
                     task_id = f'{pt.lower()}_{schema}_schedule',
