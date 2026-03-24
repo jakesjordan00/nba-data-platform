@@ -1286,7 +1286,7 @@ class Transform:
         bp = 'here'
 
     def _print_table_creates(self, dictionary):
-        import pyperclip
+        # import pyperclip
         check_string = f"""if not exists(
 select *
 from sys.schemas s
@@ -1338,7 +1338,7 @@ end"""
             print(col_string)
         full_str += f'\n{key_string}'
         print(key_string)
-        pyperclip.copy(full_str)
+        # pyperclip.copy(full_str)
 
         print("\n\n        'columns': [")
         for column in dictionary.keys():
