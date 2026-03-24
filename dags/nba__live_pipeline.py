@@ -14,6 +14,14 @@ import textwrap
         'retries': 2,
         'retry_delay': timedelta(seconds = 30)
     },
+    tags = [
+        'src - static data feed',
+        'dbo',
+        'daily - 5min',
+        'live games',
+        'statistics'
+    ]
+    ,
     doc_md = textwrap.dedent("""Uses **ScoreboardPipeline** to check today's games.
     
     For each game that's *in progress* or *completed*, uses **BoxscorePipeline** to upsert real-time data to the following tables in db:
@@ -22,10 +30,7 @@ import textwrap
         Player, PlayerBox, StartingLineups
         Arena, Official
     
-    """),
-    
-    description="""test
-    """
+    """)
 )
 def nba_pipeline():
     @task

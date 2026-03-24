@@ -2,11 +2,10 @@
 
 from airflow.sdk import dag, task, BaseHook, TaskGroup
 from datetime import datetime, timedelta
-import textwrap
 
 @dag(
     dag_id = 'league_dash_advanced_metrics_pipeline',
-    dag_display_name = 'NBA Advanced Metrics Pipeline',
+    dag_display_name = 'NBA API - Advanced Metrics Pipeline',
     start_date = datetime(year=2026, month=3, day=10),
     schedule = '0 12-23,0-4/1 * * *',
     catchup = False,
@@ -15,8 +14,13 @@ import textwrap
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
     },
-    doc_md = textwrap.dedent(
-    text="""# NBA Advanced Metrics Pipeline
+    tags = [
+        'src - nba api',
+        'statistics',
+        'daily',
+        'adv', 'def', 'violations', 'usage', 'ffactors', 'misc'
+    ],
+    doc_md = """# NBA Advanced Metrics Pipeline
 
 ## Overview
 
@@ -65,7 +69,6 @@ _get_measure_type_data_
 - Once data is returned, match GameIDs, finish formatting and load.
 
 """
-    )
 )
 def nba_advanced_metrics_pipeline():
     from pipelines import LeagueDashAPI, ScheduleForAPI
@@ -118,12 +121,12 @@ def nba_advanced_metrics_pipeline():
                         extract_tag = f'Extracting {pt} {measure_type} data from {date['date']} via the NBA API'
                     )
                     measure_type_pipeline = pipeline_nba_api.run(date_data = date)
-                    measure_type_data = measure_type_pipeline['loaded']
+                    measure_type_metadata = measure_type_pipeline['xcom']
 
 
                 schedule_dates_to_do = get_schedule()
 
-                get_measure_type_data.expand(date = schedule_dates_to_do)
+                measure_type_metadata = get_measure_type_data.expand(date = schedule_dates_to_do)
 
 
 nba_advanced_metrics_pipeline()

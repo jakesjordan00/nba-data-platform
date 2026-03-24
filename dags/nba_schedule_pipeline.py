@@ -12,7 +12,17 @@ from dataclasses import asdict
     default_args= {
         'retries': 1,
         'retry_delay': timedelta(seconds = 30)
-    }
+    },
+    tags = [
+        'src - static data feed'
+        'monthly'
+    ],
+    doc_md = """# NBA Schedule Games Pipeline
+
+## Overview
+
+This DAG uses the NBA Static data feed Schedule data as its source and runs the core BoxScore and PlayByPlay pipelines for the games returned
+"""
 )
 
 def nba_pipeline():

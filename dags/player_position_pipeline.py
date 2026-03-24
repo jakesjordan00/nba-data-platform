@@ -12,6 +12,12 @@ from datetime import datetime, timedelta
         'retries': 0,
         'retry_delay': timedelta(minutes = 5)
     },
+    tags = [
+        'source - sql'
+        'weekly',
+        'metadata',
+        'positions'
+    ],
     description = "Queries db for a count of each players' starts at each position for the current season. Updates Position value in Player table to most frequently occuring position for each player.",
 
 )

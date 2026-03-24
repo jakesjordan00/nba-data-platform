@@ -17,7 +17,12 @@ import textwrap
     },
     doc_md = textwrap.dedent("""
 
-""")
+"""),
+    tags = [
+        'src - static data feed',
+        'metadata',
+        'daily'
+    ]
 )
 def daily_lineups_pipeline():
     @task()

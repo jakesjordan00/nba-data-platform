@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 @dag(
     dag_id = 'league_dash_tracking_pipeline',
-    dag_display_name = 'NBA SecondSpectrum Tracking Pipeline',
+    dag_display_name = 'NBA API - SecondSpectrum Tracking Pipeline',
     start_date = datetime(2025, 3, 1),
     schedule = '5 12-23,0-4/1 * * *',
     catchup = False,
@@ -13,7 +13,15 @@ from datetime import datetime, timedelta
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
     },
-    doc_md = """"""
+    tags = [
+        'src - nba api',
+        'second spectrum',
+        'statistics',
+        'daily',
+        'tracking',        
+    ],
+    doc_md = """
+"""
 
 )
 def nba_tracking_pipeline():

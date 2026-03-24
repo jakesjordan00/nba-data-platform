@@ -12,40 +12,40 @@ for pt in [
     'Player',
     'Team',
 ]:
-    # #region Synergy Playtype Stats
-    # for play_type in[
-    #     'Isolation',
-    #     'Transition',
-    #     'PRBallHandler',
-    #     'PRRollman',
-    #     'Postup',
-    #     'Spotup',
-    #     'Handoff',
-    #     'Cut',
-    #     'OffScreen',
-    #     'OffRebound',
-    #     'Misc'
-    # ]:
-    #     for type_group in [
-    #         'Offensive', 
-    #         'Defensive'
-    #     ]:
-    #         pipeline_nba_api._re_init(
-    #             schema = 'plays',
-    #             params = {
-    #                 'PlayType': play_type,
-    #                 'PlayerOrTeam': pt[0], #P or T
-    #                 'TypeGrouping': type_group
-    #             },
-    #             endpoint_friendly_name = 'pt_play_type',
-    #             table_base_name = 'Plays',
-    #             player_team = pt,
-    #             log_tag = f'.{play_type}'.lower(),
-    #             extract_tag = f'Extracting {type_group} {pt} {play_type} data via the NBA/Synergy API'
-    #         )
-    #         play_type_pipeline = pipeline_nba_api.run(date_data={})
-    #         play_type_data = play_type_pipeline['loaded']    
-    # #endregion Synergy Playtype Stats
+    #region Synergy Playtype Stats
+    for play_type in[
+        'Isolation',
+        'Transition',
+        'PRBallHandler',
+        'PRRollman',
+        'Postup',
+        'Spotup',
+        'Handoff',
+        'Cut',
+        'OffScreen',
+        'OffRebound',
+        'Misc'
+    ]:
+        for type_group in [
+            'Offensive', 
+            'Defensive'
+        ]:
+            pipeline_nba_api._re_init(
+                schema = 'plays',
+                params = {
+                    'PlayType': play_type,
+                    'PlayerOrTeam': pt[0], #P or T
+                    'TypeGrouping': type_group
+                },
+                endpoint_friendly_name = 'pt_play_type',
+                table_base_name = 'Plays',
+                player_team = pt,
+                log_tag = f'.{play_type}'.lower(),
+                extract_tag = f'Extracting {type_group} {pt} {play_type} data via the NBA/Synergy API'
+            )
+            play_type_pipeline = pipeline_nba_api.run(date_data={})
+            play_type_data = play_type_pipeline['loaded']    
+    #endregion Synergy Playtype Stats
 
     
     #region SecondSpectrum Tracking

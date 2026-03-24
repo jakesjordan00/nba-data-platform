@@ -12,7 +12,20 @@ from dataclasses import asdict
     default_args= {
         'retries': 1,
         'retry_delay': timedelta(seconds = 30)
-    }
+    },
+    tags = [
+        'src - sql',
+        'src - static data feed',
+        'dbo',
+        'daily',
+        'backfill',
+        'statistics',
+        'metadata',
+    ],
+    doc_md="""
+
+Checks for any games that are missing in any of our main dbo tables and runs the core pipelines for missing games.
+"""
 )
 
 def nba_pipeline():
