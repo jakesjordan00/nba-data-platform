@@ -20,7 +20,6 @@ import textwrap
 """
     )
 )
-@task
 def nba_advanced_metrics_pipeline():
     from pipelines import LeagueDashAPI, ScheduleForAPI
     pipeline_nba_api = LeagueDashAPI()
@@ -36,14 +35,14 @@ def nba_advanced_metrics_pipeline():
         }.items():
             if (pt == 'Team' and measure_type == 'Usage') or (pt == 'Player' and measure_type == 'Four Factors'):
                 continue
-            with TaskGroup(group_id = f'{pt.lower()}_advanced_metrics_{schema}', 
-                group_display_name = f'{pt} Advanced Metics - {measure_type}'
-            ) as taskgroup:
+
+            with TaskGroup(group_id = f'{pt.lower()}_advanced_metrics_{schema}',group_display_name = f'{pt} Advanced Metrics - {measure_type}') as taskgroup:
+                
                 @task(
                     task_id = f'{pt.lower()}_{schema}_schedule',
                     task_display_name = f'Schedule - {pt} {measure_type}'
                 )
-                def get_schedule():
+                def get_schedule(schema = schema, pt = pt, measure_type = measure_type):
                     data_schedule_for_api._re_init(
                         schema = schema,
                         table_base_name = 'Box',
@@ -58,7 +57,7 @@ def nba_advanced_metrics_pipeline():
                     task_id = f'league_dash_{pt.lower()}_{schema}',
                     task_display_name = f'Leaguedash API - {pt} {measure_type}'
                 )
-                def get_measure_type_data(date):
+                def get_measure_type_data(date, schema = schema, pt = pt, measure_type = measure_type):
                     pipeline_nba_api._re_init(
                         schema=schema,
                         params = {
@@ -72,6 +71,11 @@ def nba_advanced_metrics_pipeline():
                     )
                     measure_type_pipeline = pipeline_nba_api.run(date_data = date)
                     measure_type_data = measure_type_pipeline['loaded']
+
+
+                schedule_dates_to_do = get_schedule()
+
+                get_measure_type_data.expand(date = schedule_dates_to_do)
 
 
 nba_advanced_metrics_pipeline()
