@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
         'src - nba api',
         'statistics',
         'daily',
-        'adv', 'def', 'violations', 'usage', 'ffactors', 'misc'
+        'schema - adv', 'schema - def', 'schema - violations', 'schema - usage', 'schema - ffactors', 'schema - misc'
     ],
     doc_md = """# NBA Advanced Metrics Pipeline
 

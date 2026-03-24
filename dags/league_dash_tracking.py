@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
         'second spectrum',
         'statistics',
         'daily',
-        'tracking',        
+        'schema - tracking',        
     ],
     doc_md = """
 """

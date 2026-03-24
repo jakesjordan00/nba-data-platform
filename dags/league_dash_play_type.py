@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
         'synergy',
         'statistics',
         'daily',
-        'hustle',        
+        'schema - plays'    
     ],
     doc_md = """
 """
