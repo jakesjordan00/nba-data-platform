@@ -89,8 +89,7 @@ build_pipeline_with_parameters(
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
-    },
-    doc_md = DOCUMENTATION
+    }
 )
 
 
@@ -106,8 +105,7 @@ build_pipeline_with_parameters(
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
-    },
-    doc_md = DOCUMENTATION
+    }
 )
 
                 
