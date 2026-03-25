@@ -6,9 +6,10 @@ from datetime import datetime, timedelta
     dag_id = 'league_dash_hustle_pipeline',
     dag_display_name = 'NBA API - Hustle Stats Pipeline',
     start_date = datetime(2025, 3, 1),
-    schedule = '5 12-23,0-4/1 * * *',
+    schedule = '5/10 12-23,0-4/1 * * *',
     catchup = False,
     max_active_runs = 1,
+    max_active_tasks= 4,
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
