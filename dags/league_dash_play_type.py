@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
     dag_id = 'league_dash_play_type_pipeline',
     dag_display_name = 'NBA API - Synergy Play Type Pipeline',
     start_date = datetime(2025, 3, 1),
-    schedule = '2 12-23,0-4/1 * * *',
+    schedule = '2 16-23,0-8 * * *',
     catchup = False,
     max_active_runs = 1,
     max_active_tasks= 4,
