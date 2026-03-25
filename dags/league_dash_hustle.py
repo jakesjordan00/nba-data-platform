@@ -83,7 +83,7 @@ build_pipeline_with_parameters(
 
 build_pipeline_with_parameters(
     dag_id = 'league_dash_hustle_pipeline_daily',
-    display_name = 'NBA API - Hustle Stats Pipeline Daily',
+    display_name = 'NBA API - Daily Hustle Stats Pipeline',
     schedule = '45 18 * * *', #18 = 2pm EST -> 2:45pm EST
     schedule_tag = 'daily',
     start_date = datetime(2025, 3, 1),
