@@ -121,7 +121,7 @@ def build_pipeline_with_parameters(dag_id, display_name, schedule, where_additio
 build_pipeline_with_parameters(
     dag_id = 'league_dash_advanced_metrics_pipeline_hourly',
     display_name = 'NBA API - Hourly Advanced Metrics Pipeline',
-    schedule = '8 12-23,0-4/1 * * *',
+    schedule = '8 16-23,0-8/1 * * *',
     where_addition = 'and s.GameTimeEST >= cast(getdate()-2 as date)',
     start_date = datetime(year=2026, month=3, day=10),
     catchup = False,
@@ -141,7 +141,7 @@ build_pipeline_with_parameters(
 build_pipeline_with_parameters(
     dag_id = 'league_dash_advanced_metrics_pipeline_daily',
     display_name = 'NBA API - Daily Advanced Metrics Pipeline',
-    schedule = '45 12 * * *',
+    schedule = '45 16 * * *',
     start_date = datetime(year=2026, month=3, day=10),
     catchup = False,
     max_active_runs = 1,
