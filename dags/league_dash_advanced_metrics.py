@@ -1,7 +1,7 @@
 from airflow.sdk import dag, task, BaseHook, TaskGroup
 from datetime import datetime, timedelta
 from pathlib import Path
-DOCUMENTATION_advanced_metrics_pipeline = """# NBA Advanced Metrics Pipeline 
+DOCUMENTATION = """# NBA Advanced Metrics Pipeline 
 
 ## Overview
 
@@ -50,12 +50,18 @@ _get_measure_type_data_
 
 - Once data is returned, match GameIDs, finish formatting and load."""
 
-def build_pipeline_with_parameters(dag_id, display_name, schedule, where_addition='', **kwargs):
+def build_pipeline_with_parameters(dag_id, display_name, schedule, where_addition = '', schedule_tag = 'daily', **kwargs):
     @dag(
-        dag_id=dag_id,
-        dag_display_name=display_name,
-        schedule=schedule,
-        doc_md=DOCUMENTATION_advanced_metrics_pipeline,
+        dag_id = dag_id,
+        dag_display_name = display_name,
+        schedule = schedule,
+        doc_md = DOCUMENTATION,
+        tags = [
+            schedule_tag, 'src - nba api', 'statistics',
+            'schema - adv', 'schema - def', 
+            'schema - violations', 'schema - usage', 
+            'schema - ffactors', 'schema - misc'
+        ],
         **kwargs
     )
     def nba_advanced_metrics_pipeline():
@@ -121,8 +127,9 @@ def build_pipeline_with_parameters(dag_id, display_name, schedule, where_additio
 build_pipeline_with_parameters(
     dag_id = 'league_dash_advanced_metrics_pipeline_hourly',
     display_name = 'NBA API - Hourly Advanced Metrics Pipeline',
-    schedule = '8 16-23,0-8/1 * * *',
+    schedule = '8 16-23,0-8 * * *',
     where_addition = 'and s.GameTimeEST >= cast(getdate()-2 as date)',
+    schedule_tag =  'hourly',
     start_date = datetime(year=2026, month=3, day=10),
     catchup = False,
     max_active_runs = 1,
@@ -130,18 +137,14 @@ build_pipeline_with_parameters(
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
-    },
-    tags = [
-        'src - nba api', 'hourly',
-        'statistics',
-        'schema - adv', 'schema - def', 'schema - violations', 'schema - usage', 'schema - ffactors', 'schema - misc'
-    ],
+    }
 )
 
 build_pipeline_with_parameters(
     dag_id = 'league_dash_advanced_metrics_pipeline_daily',
     display_name = 'NBA API - Daily Advanced Metrics Pipeline',
-    schedule = '45 16 * * *',
+    schedule = '45 20 * * *', #20 = 4pm EST -> 4:45pm EST
+    schedule_tag =  'daily',
     start_date = datetime(year=2026, month=3, day=10),
     catchup = False,
     max_active_runs = 1,
@@ -149,11 +152,5 @@ build_pipeline_with_parameters(
     default_args = {
         'retries': 2,
         'retry_delay': timedelta(seconds=30)
-    },
-    tags = [
-        'src - nba api',
-        'statistics',
-        'daily',
-        'schema - adv', 'schema - def', 'schema - violations', 'schema - usage', 'schema - ffactors', 'schema - misc'
-    ],
+    }
 )
