@@ -34,11 +34,9 @@ def nba_play_type_pipeline():
     for pt in ['Player', 'Team']:
         for play_type in PlayType_options:
             for type_group in ['Offensive', 'Defensive']:
-
-                @task(
-                    task_id=f'synergy_{pt.lower()}_{type_group.lower()}_{play_type.lower()}',
-                    task_display_name=f'Synergy API - {pt} {type_group} {play_type}'
-            )
+                t_id = f'synergy_{pt.lower()}_{type_group.lower()}_{play_type.lower()}'
+                t_name = f'Synergy API - {pt} {type_group} {play_type}'
+                @task(task_id=t_id,task_display_name=t_name)
                 def get_play_type_data(pt = pt, play_type = play_type, type_group = type_group):
                     pipeline_nba_api._re_init(
                         schema = 'plays',

@@ -63,7 +63,7 @@ class ScheduleForAPI(Pipeline):
 
 
 
-    def _re_init(self, schema: str, table_base_name: str, player_team: str, log_tag: str | None = None):
+    def _re_init(self, schema: str, table_base_name: str, player_team: str, log_tag: str | None = None, where_addition: str | None = ''):
         self.pipeline_name = f'nba-api-schedule.{schema}{log_tag}'
         self.pipeline_tag = 'schedule'
         self.schema = schema
@@ -73,10 +73,10 @@ class ScheduleForAPI(Pipeline):
         self.table_full_name = f'{self.schema}.{self.table_name}'
     
         if self.player_team == 'Team':
-            self.schema_query = self.source.queries.schedule_api_team_check.query.format(schema=self.schema, table=f'{self.table_name}')
+            self.schema_query = self.source.queries.schedule_api_team_check.query.format(schema=self.schema, table=f'{self.table_name}', where_addition=where_addition)
             self.backfill_query = self.source.queries.schedule_api_team_backfill.query
         elif self.player_team == 'Player':
-            self.schema_query = self.source.queries.schedule_api_player_check.query.format(schema=self.schema, table=f'{self.table_name}')
+            self.schema_query = self.source.queries.schedule_api_player_check.query.format(schema=self.schema, table=f'{self.table_name}', where_addition=where_addition)
             self.backfill_query = self.source.queries.schedule_api_player_backfill.query
 
 

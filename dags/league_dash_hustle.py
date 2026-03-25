@@ -31,29 +31,27 @@ def nba_hustle_pipeline():
     pipeline_nba_api = LeagueDashAPI()
     data_schedule_for_api = ScheduleForAPI()
     for pt in ['Player','Team']:
-        with TaskGroup(
-            group_id = f'{pt.lower()}_hustle', 
-            group_display_name = f'{pt} Hustle - tracking.{pt}Hustle'
-        ) as taskgroup:
-            @task(
-                    task_id=f'schedule_{pt.lower()}_hustle',
-                    task_display_name=f'Schedule - {pt} Hustle'
-            )
+        tg_id = f'{pt.lower()}_hustle'
+        tg_name = f'{pt} Hustle - tracking.{pt}Hustle'
+        with TaskGroup(group_id=tg_id,group_display_name=tg_name) as taskgroup:
+            t_id = f'schedule_{pt.lower()}_hustle'
+            t_name = f'Schedule - {pt} Hustle'
+            @task(task_id=t_id,task_display_name=t_name)
             def get_schedule(pt = pt):
                 data_schedule_for_api._re_init(
                     schema='tracking', 
                     table_base_name='Hustle',
                     player_team = pt,
-                    log_tag = f'.{pt}_hustle'.lower()
+                    log_tag = f'.{pt}_hustle'.lower(),
+                    where_addition = 'and s.GameTimeEST >= cast(getdate()-2 as date)'
                 )
                 completed_schedule_pipeline = data_schedule_for_api.run()
                 schedule_data = completed_schedule_pipeline['loaded']
                 return schedule_data
             
-            @task(
-                    task_id=f'league_dash_{pt.lower()}_hustle',
-                    task_display_name=f'Leaguedash API - {pt} Hustle'
-            )
+            t_id = f'league_dash_{pt.lower()}_hustle'
+            t_name = f'Leaguedash API - {pt} Hustle'
+            @task(task_id=t_id,task_display_name=t_name)
             def get_hustle_data(date, pt = pt):
                 pipeline_nba_api._re_init(
                 schema = 'tracking',

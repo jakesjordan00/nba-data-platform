@@ -33,32 +33,28 @@ def nba_tracking_pipeline():
     
     for pt in ['Player', 'Team']:
         for tracking_measure in PtMeasureType_options:
-
-            with TaskGroup(
-                group_id = f'{pt.lower()}_tracking_{tracking_measure.lower()}', 
-                group_display_name = f'{pt} {tracking_measure} - tracking.{pt}{tracking_measure}'
-            ) as taskgroup:
-                
-                @task(
-                    task_id=f'schedule_{pt.lower()}_tracking',
-                    task_display_name=f'Schedule - {pt} {tracking_measure}'
-                )
+            tg_id = f'{pt.lower()}_tracking_{tracking_measure.lower()}'
+            tg_name = f'{pt} {tracking_measure} - tracking.{pt}{tracking_measure}'
+            with TaskGroup(group_id=tg_id, group_display_name=tg_name) as taskgroup:
+                t_id = f'schedule_{pt.lower()}_tracking'
+                t_name = f'Schedule - {pt} {tracking_measure}'
+                @task(task_id=t_id,task_display_name=t_name)
                 def get_schedule(pt = pt, tracking_measure = tracking_measure):
                     data_schedule_for_api._re_init(
                         schema = 'tracking', 
                         table_base_name = tracking_measure,
                         player_team = pt,
                         log_tag = f'.{pt}_{tracking_measure}'.lower(),
+                        where_addition = 'and s.GameTimeEST >= cast(getdate()-2 as date)'
                     )
                     completed_schedule_pipeline = data_schedule_for_api.run()
                     schedule_data = completed_schedule_pipeline['loaded']
                     return schedule_data
                 
-
-                @task(
-                    task_id=f'second_spectrum_tracking_{pt.lower()}_{tracking_measure}',
-                    task_display_name=f'SecondSpectrum Tracking - {pt} {tracking_measure}'
-                )
+                
+                t_id = f'second_spectrum_tracking_{pt.lower()}_{tracking_measure}'
+                t_name = f'SecondSpectrum Tracking - {pt} {tracking_measure}'
+                @task(task_id=t_id,task_display_name=t_name)
                 def get_tracking_data(date, pt = pt, tracking_measure = tracking_measure):
                     pipeline_nba_api._re_init(
                         schema = 'tracking',

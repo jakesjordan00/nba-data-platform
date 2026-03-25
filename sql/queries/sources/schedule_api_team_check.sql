@@ -4,7 +4,7 @@ from Schedule s
 left join TeamBox b on s.SeasonID = b.SeasonID and s.GameID = b.GameID
 left join {schema}.{table} pb on b.SeasonID = pb.SeasonID and b.GameID = pb.GameID and b.TeamID = pb.TeamID and b.MatchupID = pb.MatchupID
 where b.SeasonID = 2025 and left(b.GameID, 1) not in(1, 3, 6)
-and pb.TeamID is null
+and pb.TeamID is null {where_addition}
 )
 select s.*
 from Schedule s

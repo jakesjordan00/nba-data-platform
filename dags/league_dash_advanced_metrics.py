@@ -86,29 +86,28 @@ def nba_advanced_metrics_pipeline():
         }.items():
             if (pt == 'Team' and measure_type == 'Usage') or (pt == 'Player' and measure_type == 'Four Factors'):
                 continue
-
-            with TaskGroup(group_id = f'{pt.lower()}_advanced_metrics_{schema}',
-                           group_display_name = f'{pt} {measure_type} - {schema}.{pt}Box') as taskgroup:
+            tg_id = f'{pt.lower()}_advanced_metrics_{schema}'
+            tg_name = f'{pt} {measure_type} - {schema}.{pt}Box'
+            with TaskGroup(group_id=tg_id,group_display_name=tg_name) as taskgroup:
                 
-                @task(
-                    task_id=f'schedule_{pt.lower()}_{schema}',
-                    task_display_name=f'Schedule - {pt} {measure_type}'
-                )
+                t_id = f'schedule_{pt.lower()}_{schema}'
+                t_name = f'Schedule - {pt} {measure_type}'
+                @task(task_id=t_id,task_display_name=t_name)
                 def get_schedule(schema = schema, pt = pt, measure_type = measure_type):
                     data_schedule_for_api._re_init(
                         schema = schema,
                         table_base_name = 'Box',
                         player_team = pt,
                         log_tag = f'.{pt.lower()}',
+                        where_addition = 'and s.GameTimeEST >= cast(getdate()-2 as date)'
                         )
                     schedule_pipeline = data_schedule_for_api.run()
                     schedule_data = schedule_pipeline['loaded']
                     return schedule_data
 
-                @task(
-                    task_id = f'league_dash_{pt.lower()}_{schema}',
-                    task_display_name = f'Leaguedash API - {pt} {measure_type}'
-                )
+                t_id = f'league_dash_{pt.lower()}_{schema}'
+                t_name = f'Leaguedash API - {pt} {measure_type}'
+                @task(task_id=t_id,task_display_name=t_name)
                 def get_measure_type_data(date, schema = schema, pt = pt, measure_type = measure_type):
                     pipeline_nba_api._re_init(
                         schema=schema,

@@ -14,7 +14,7 @@ from dataclasses import asdict
         'retry_delay': timedelta(seconds = 30)
     },
     tags = [
-        'src - static data feed'
+        'src - static data feed',
         'monthly'
     ],
     doc_md = """# NBA Schedule Games Pipeline
