@@ -80,7 +80,6 @@ class Transform:
                 'Possessions':         team[25],
             }
             result_dicts.append(team)
-        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
 
@@ -151,9 +150,6 @@ class Transform:
                 'OpPtsInThePaint':      int(team[14])
             }
             result_dicts.append(team)
-
-        # self._print_columns_for_naming()
-        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
 
@@ -253,8 +249,6 @@ class Transform:
                 'OpOReb%':      team[14],
             }
             result_dicts.append(team)
-
-        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
     #endregion Usage/Four Factors
@@ -278,9 +272,6 @@ class Transform:
                 'DReb%':        team[9],
             }
             result_dicts.append(team)
-
-        # self._print_columns_for_naming()
-        # self._print_table_creates(dictionary=team)
         return(result_dicts)
     
     def measure_player_defensive(self):
@@ -346,9 +337,6 @@ class Transform:
                 'DiscDribble':  team[8],
             }
             result_dicts.append(team)
-
-        # self._print_columns_for_naming()
-        self._print_table_creates(dictionary=team)
         return(result_dicts)
     
     def measure_player_violations(self):
@@ -587,8 +575,6 @@ class Transform:
             'FirstDate': datetime.now(),
             'LastDate': datetime.now()
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         bp = 'here'
         return result_dict
     
@@ -716,7 +702,6 @@ class Transform:
             'PF': result[22 + self.index_diff],
             'PF%': result[23 + self.index_diff],
         }
-        # self._print_table_creates(result)
         bp = 'here'
         return result_dict
     
@@ -747,7 +732,6 @@ class Transform:
             'DefRimFGA': result[11 + self.index_diff],
             'DefRimFG%': result[12 + self.index_diff],
         }
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_catch_shoot(self, result: list):
@@ -782,8 +766,6 @@ class Transform:
             'FG3%': result[13 + self.index_diff],
             'EFG%': result[14 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_passing(self, result: list):
@@ -820,7 +802,6 @@ class Transform:
             'AstToPass%': result[15 + self.index_diff],
             'AstToPass%Adj': result[16 + self.index_diff],
         }
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_possessions(self, result: list):
@@ -860,8 +841,6 @@ class Transform:
             'PtsPerPostTouch': result[18 + self.index_diff],
             'PtsPerPaintTouch': result[19 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_shot_pull_up(self, result:list):
@@ -896,8 +875,6 @@ class Transform:
             'FG3%': result[13 + self.index_diff],
             'EFG%': result[14 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_rebounding(self, result:list):
@@ -951,8 +928,6 @@ class Transform:
             'RebChance%': result[30 + self.index_diff],
             'RebChanceAdj%': result[32 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_efficiency(self, result:list):
@@ -992,8 +967,6 @@ class Transform:
             'ElbowTouchFG%': result[19 + self.index_diff],
             'EFG%': result[20 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_speed_distance(self, result:list):
@@ -1027,8 +1000,6 @@ class Transform:
             'AvgSpeedOff': result[13 + self.index_diff],
             'AvgSpeedDef': result[14 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_touch_elbow(self, result:list):
@@ -1073,8 +1044,6 @@ class Transform:
             'TOV%': result[20 + self.index_diff],
             'Foul%': result[23 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_touch_post(self, result:list):
@@ -1119,8 +1088,6 @@ class Transform:
             'TOV%': result[22 + self.index_diff],
             'Foul%': result[24 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_touch_paint(self, result:list):
@@ -1166,8 +1133,6 @@ class Transform:
             'TOV%': result[22 + self.index_diff],
             'Foul%': result[24 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
 #endregion Tracking
@@ -1217,8 +1182,6 @@ class Transform:
             'OffBoxout%': result[18 + self.index_diff],
             'DefBoxout%': result[19 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
     def tracking_player_hustle(self, result:list):
@@ -1267,8 +1230,6 @@ class Transform:
             'BoxoutTeamReb%': result[25 + self.index_diff],
             'BoxoutPersReb%': result[26 + self.index_diff],
         }
-        # self._print_columns_for_naming()
-        # self._print_table_creates(result_dict)
         return result_dict
 
 #endregion Hustle
@@ -1286,7 +1247,6 @@ class Transform:
         bp = 'here'
 
     def _print_table_creates(self, dictionary):
-        # import pyperclip
         check_string = f"""if not exists(
 select *
 from sys.schemas s
