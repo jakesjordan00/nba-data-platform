@@ -17,4 +17,4 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["config*", "connectors*", "pipelines*", "transforms*", "sql*"]
+include = ["config*", "connectors*", "pipelines*", "transforms*", "sql*", "docs*"]
