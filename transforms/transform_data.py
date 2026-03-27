@@ -2,7 +2,6 @@ import pandas as pd
 import polars as pl
 from datetime import datetime
 import logging
-from datetime import datetime
 
 
 class Transform:
@@ -71,7 +70,7 @@ class Transform:
 
 
 
-    def schedule(self, data: dict) -> list:
+    def schedule(self, data_extract: dict) -> list:
         '''
         Returns a list of formatted Game dictionaries
 
@@ -82,7 +81,7 @@ class Transform:
         :rtype: list
         
         '''
-        data = data['leagueSchedule']
+        data = data_extract['leagueSchedule']
         SeasonID = data['seasonYear'][:4]
         full_schedule_games = [game['games'] for game in data['gameDates']]
         schedule_games = [game['games'] for game in data['gameDates'] if datetime.strptime(game['gameDate'], '%m/%d/%Y %H:%M:%S') <= datetime.today()]
@@ -161,3 +160,47 @@ class Transform:
         data_transformed = [game for game in data_extract_formatted if game['GameID'] in games]
         self.logger.info(f'{len(data_transformed)} games to backfill')
         return data_transformed
+
+
+    def schedule_db(self, data_extract):
+        data = data_extract['leagueSchedule']
+        SeasonID = data['seasonYear'][:4]
+        schedule_games = [game for date in data['gameDates'] for game in date['games']] #For each date, then for each game on that date -> add to list
+        db_schedule = []
+        for game in schedule_games:
+            game_type = int(game['gameId'][2])
+            gt_est = datetime.strptime(game['gameDateTimeEst'], '%Y-%m-%dT%H:%M:%SZ')
+            gt_utc = datetime.strptime(game['gameDateTimeUTC'], '%Y-%m-%dT%H:%M:%SZ')
+            gt_htt = datetime.strptime(game['homeTeamTime'], '%Y-%m-%dT%H:%M:%SZ')
+            gt_att = datetime.strptime(game['awayTeamTime'], '%Y-%m-%dT%H:%M:%SZ')
+            schedule ={
+                'SeasonID': SeasonID,
+                'GameID': int(game['gameId']),
+                'GameType': 'PRE' if game_type == 1 else 'RS' if game_type == 2 else 'PS' if game_type == 4 else 'PI' if game_type == 5 else 'AS' if game_type == 3 else 'CUP',
+                'Status': game['gameStatusText'],
+                'Sequence': game['gameSequence'],
+                'GameTimeEST':  gt_est if gt_est > datetime(year=1900, month = 1, day = 1) else None,
+                'GameTimeUTC':  gt_utc if gt_utc > datetime(year=1900, month = 1, day = 1) else None,
+                'GameTimeHome': gt_htt if gt_htt > datetime(year=1900, month = 1, day = 1) else None,
+                'GameTimeAway': gt_att if gt_att > datetime(year=1900, month = 1, day = 1) else None,
+                'Day': game['day'],
+                'Week': game['weekNumber'],
+                'Label': game['gameLabel'],
+                'LabelDetail': game['gameSubLabel'],
+                'IsNeutral': 1 if game['isNeutral'] else 0,
+                'HomeID': game['homeTeam']['teamId'],
+                'HomeWins': game['homeTeam']['wins'],
+                'HomeLosses': game['homeTeam']['losses'],
+                'HomeScore': game['homeTeam']['score'],
+                'HomeSeed': game['homeTeam']['seed'],
+                'AwayID': game['awayTeam']['teamId'],
+                'AwayWins': game['awayTeam']['wins'],
+                'AwayLosses': game['awayTeam']['losses'],
+                'AwayScore': game['awayTeam']['score'],
+                'AwaySeed': game['awayTeam']['seed'],
+                'IfNecessary': 1 if game['ifNecessary'] else 0,
+                'SeriesText': game['seriesText'],
+            }
+            db_schedule.append(schedule)
+            
+        return(db_schedule)

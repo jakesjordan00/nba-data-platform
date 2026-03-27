@@ -70,7 +70,7 @@ for pt in [
             log_tag = f'.{pt}_{tracking_measure}'.lower(),
         )
         completed_schedule_pipeline = data_schedule_for_api.run()
-        schedule_data = completed_schedule_pipeline['loaded']
+        schedule_data = completed_schedule_pipeline['transformed']['data_transformed']
         for date in schedule_data:
             pipeline_nba_api._re_init(
                 schema = 'tracking',
@@ -107,7 +107,7 @@ for pt in [
             log_tag = f'.{pt.lower()}',
             )
         completed_schedule_pipeline = data_schedule_for_api.run()
-        schedule_data = completed_schedule_pipeline['loaded']
+        schedule_data = completed_schedule_pipeline['transformed']['data_transformed']
         for date in schedule_data:
             pipeline_nba_api._re_init(
                 schema=schema,
@@ -134,7 +134,7 @@ for pt in [
         log_tag = f'.{pt}_hustle'.lower()
     )
     completed_schedule_pipeline = data_schedule_for_api.run()
-    schedule_data = completed_schedule_pipeline['loaded']
+    schedule_data = completed_schedule_pipeline['transformed']['data_transformed']
     for date in schedule_data:
         pipeline_nba_api._re_init(
         schema = 'tracking',

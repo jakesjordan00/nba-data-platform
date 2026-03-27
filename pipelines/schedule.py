@@ -22,10 +22,16 @@ class SchedulePipeline(Pipeline[list]):
 
     def transform(self, data_extract):
         data_transformed = self.transformer.schedule(data_extract)
-        return data_transformed
+        data_db = self.transformer.schedule_db(data_extract)
+        data = {
+            'data_transformed': data_transformed,
+            'data_db': data_db
+        }
+        return data
 
-    def load(self, data_transformed):
-        data_loaded = data_transformed
+    def load(self, data: dict):
+        data_loaded = data['data_transformed']
+        data_db_loaded = self.destination.checked_upsert('Schedule', data['data_db'])
         return data_loaded
 
 

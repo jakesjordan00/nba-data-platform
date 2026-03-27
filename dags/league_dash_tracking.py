@@ -44,7 +44,7 @@ def build_pipeline_with_parameters(dag_id, display_name, schedule, where_additio
                             where_addition = 'and s.GameTimeEST >= cast(getdate()-2 as date)'
                         )
                         completed_schedule_pipeline = data_schedule_for_api.run()
-                        schedule_data = completed_schedule_pipeline['loaded']
+                        schedule_data = completed_schedule_pipeline['transformed']['data_transformed']
                         return schedule_data
                     
                     
