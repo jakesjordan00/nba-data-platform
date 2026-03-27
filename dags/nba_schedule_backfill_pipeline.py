@@ -34,7 +34,7 @@ def nba_pipeline():
         from pipelines import DailyBackfillSchedulePipeline
         schedule_pipeline = DailyBackfillSchedulePipeline()
         completed_schedule_pipeline = schedule_pipeline.run()
-        schedule_data = completed_schedule_pipeline['transformed']['data_transformed']
+        schedule_data = completed_schedule_pipeline['loaded']
         return schedule_data
     
 

@@ -95,7 +95,7 @@ def build_pipeline_with_parameters(dag_id, display_name, schedule, where_additio
                             where_addition = where_addition
                             )
                         schedule_pipeline = data_schedule_for_api.run()
-                        schedule_data = schedule_pipeline['transformed']['data_transformed']
+                        schedule_data = schedule_pipeline['loaded']
                         return schedule_data
 
                     t_id = f'league_dash_{pt.lower()}_{schema}'
