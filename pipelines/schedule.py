@@ -43,4 +43,9 @@ class DailyBackfillSchedulePipeline(SchedulePipeline):
         db_schedule = self.destination.query_to_dataframe(self.destination.queries.schedule_backfill)
         data_extract_formatted = self.transformer.schedule(data_extract)
         data_transformed = self.transformer.schedule_backfill(data_extract_formatted, db_schedule)
+        data_db = self.transformer.schedule_db(data_extract)
+        data = {
+            'data_transformed': data_transformed,
+            'data_db': data_db
+        }
         return data_transformed

@@ -532,7 +532,7 @@ class Transform:
 
 
     def parse_plays(self, result: list):
-        '''parse_plays`(self, result)`
+        '''parse_plays`(self, result:list)`
     ===
         <hr>
 
@@ -662,7 +662,7 @@ class Transform:
 
 
     def tracking_drives(self, result: list):
-        '''tracking_drives`(self, result)`
+        '''tracking_drives`(self, result:list)`
     ===
         <hr>
     
@@ -706,7 +706,7 @@ class Transform:
         return result_dict
     
     def tracking_defensive_impact(self, result: list):
-        '''tracking_defensive_impact`(self, result)`
+        '''tracking_defensive_impact`(self, result:list)`
     ===
         <hr>
     
@@ -735,7 +735,7 @@ class Transform:
         return result_dict
 
     def tracking_catch_shoot(self, result: list):
-        '''tracking_catch_shoot`(self, result)`
+        '''tracking_catch_shoot`(self, result:list)`
     ===
         <hr>
     
@@ -769,7 +769,7 @@ class Transform:
         return result_dict
 
     def tracking_passing(self, result: list):
-        '''tracking_passing`(self, result)`
+        '''tracking_passing`(self, result:list)`
     ===
         <hr>
     
@@ -805,7 +805,7 @@ class Transform:
         return result_dict
 
     def tracking_possessions(self, result: list):
-        '''tracking_possessions`(self, result)`
+        '''tracking_possessions`(self, result:list)`
     ===
         <hr>
     
@@ -844,7 +844,7 @@ class Transform:
         return result_dict
 
     def tracking_shot_pull_up(self, result:list):
-        '''tracking_shot_pull_up`(self, result)`
+        '''tracking_shot_pull_up`(self, result:list)`
     ===
         <hr>
     
@@ -878,7 +878,7 @@ class Transform:
         return result_dict
 
     def tracking_rebounding(self, result:list):
-        '''tracking_rebounding`(self, result)`
+        '''tracking_rebounding`(self, result:list)`
     ===
         <hr>
         
@@ -931,7 +931,7 @@ class Transform:
         return result_dict
 
     def tracking_efficiency(self, result:list):
-        '''tracking_efficiency`(self, result)`
+        '''tracking_efficiency`(self, result:list)`
     ===
         <hr>
     
@@ -970,7 +970,7 @@ class Transform:
         return result_dict
 
     def tracking_speed_distance(self, result:list):
-        '''tracking_speed_distance`(self, result)`
+        '''tracking_speed_distance`(self, result:list)`
     ===
         <hr>
 
@@ -1003,7 +1003,7 @@ class Transform:
         return result_dict
 
     def tracking_touch_elbow(self, result:list):
-        '''tracking_touch_elbow`(self, result)`
+        '''tracking_touch_elbow`(self, result:list)`
     ===
         <hr>
     
@@ -1047,7 +1047,7 @@ class Transform:
         return result_dict
 
     def tracking_touch_post(self, result:list):
-        '''tracking_touch_post`(self, result)`
+        '''tracking_touch_post`(self, result:list)`
     ===
         <hr>
     
@@ -1091,7 +1091,7 @@ class Transform:
         return result_dict
 
     def tracking_touch_paint(self, result:list):
-        '''tracking_touch_paint`(self, result)`
+        '''tracking_touch_paint`(self, result:list)`
     ===
         <hr>
     
@@ -1141,7 +1141,7 @@ class Transform:
 
 #region Hustle
     def tracking_team_hustle(self, result:list):
-        '''tracking_hustle`(self, result)`
+        '''tracking_hustle`(self, result:list)`
     ===
         <hr>
         
@@ -1185,7 +1185,7 @@ class Transform:
         return result_dict
 
     def tracking_player_hustle(self, result:list):
-        '''tracking_player_hustle`(self, result)`
+        '''tracking_player_hustle`(self, result: list)`
     ===
         <hr>
         
