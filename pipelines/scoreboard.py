@@ -45,7 +45,7 @@ ___
         self.file_source = '.tests/scoreboard'
 
 
-    def extract(self):
+    def extract(self) -> dict:
         '''Summary
         -------------
         Fetches Scoreboard data from NBA's static data feed
@@ -65,7 +65,7 @@ ___
         return data_extract
 
 
-    def transform(self, data_extract):
+    def transform(self, data_extract: dict) -> list:
         '''Summary
         -------------
         Returns a list of formatted Scoreboard dictionaries
