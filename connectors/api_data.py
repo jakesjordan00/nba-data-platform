@@ -7,7 +7,32 @@ import logging
 from datetime import datetime
 
 
-class APIDataConnector:   
+class APIDataConnector:
+    '''APIDataConnector
+===
+
+Connector for NBA API, preconfigured for usage with the DAGS and endpoints listed below:
+
+### **DAG:** [dags/league_dash_tracking.py](https://github.com/jakesjordan00/nba-data-platform/blob/main/dags/league_dash_tracking.py)
+    - **leaguedashptstats**
+        - SecondSpectrum NBA API for Player & Team tracking data
+
+### **DAG:** [dags/league_dash_play_type.py](https://github.com/jakesjordan00/nba-data-platform/blob/main/dags/league_dash_play_type.py)
+    - **synergyplaytypes**
+        - Synergy NBA API for Player and & Team play type data
+
+### **DAG:** [dags/league_dash_advanced_metrics.py](https://github.com/jakesjordan00/nba-data-platform/blob/main/dags/league_dash_advanced_metrics.py)
+    - **leaguedashplayerstats**
+        - **leaguedashteamstats**
+
+### **DAG:** [dags/league_dash_hustle.py](https://github.com/jakesjordan00/nba-data-platform/blob/main/dags/league_dash_hustle.py)
+    - **leaguehustlestatsplayer**
+        - **leaguehustlestatsteam**
+
+
+
+
+    '''
     class Endpoint:
         def __init__(self, friendly_name: str, endpoint_name) -> None:
             self.name = friendly_name
@@ -55,10 +80,20 @@ class APIDataConnector:
             friendly_name='player_stats', 
             endpoint_name='leaguedashplayerstats'
         )
+        self.team_stats   = self.Endpoint(
+            friendly_name='team_stats', 
+            endpoint_name='leaguedashteamstats'
+        )
+
         self.pt_tracking    = self.Endpoint(
             friendly_name='player_tracking_stats',
             endpoint_name='leaguedashptstats'
         )
+        self.pt_play_type   = self.Endpoint(
+            friendly_name = 'pt_play_type',
+            endpoint_name = 'synergyplaytypes'
+        )
+
         self.player_hustle  = self.Endpoint(
             friendly_name='player_hustle',
             endpoint_name='leaguehustlestatsplayer'
@@ -66,8 +101,4 @@ class APIDataConnector:
         self.team_hustle    = self.Endpoint(
             friendly_name = 'team_hustle',
             endpoint_name='leaguehustlestatsteam'
-        )
-        self.pt_play_type   = self.Endpoint(
-            friendly_name = 'pt_play_type',
-            endpoint_name = 'synergyplaytypes'
         )

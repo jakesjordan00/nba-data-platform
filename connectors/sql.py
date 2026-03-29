@@ -439,12 +439,74 @@ end
         return db_msg.rowcount
 
     def query_to_dataframe(self, query: Query):
+        """query_to_dataframe
+===
+	<hr>
+	
+Given a *Query*, will execute the str value of Query.query
+
+>>> class Query:
+    name: str
+    query: str
+
+Parameters
+-------------
+<hr>
+
+    __query__ (*Query*): An instance of the Query class, the text of which will be executed and the results output to a polars DataFrame
+
+        schedule_backfill: ClassVar[Query] = Query(
+            name = 'schedule_backfill',
+            query = query('schedule_backfill')
+        )
+        example_query = ClassVar[Query] = Query('test', 'select * from Game')
+
+
+
+
+Returns
+-------------
+<hr>
+
+    __data__ (*pl.DataFrame*): polars DataFrame with results of query
+    """
         self.logger.info(f'Running {query.name} query...')
         data = pl.read_database(query.query, self.engine)
         self.logger.info(f'{data.height} rows returned')
         return data
 
+
+
     def _dict_to_params(self, d: dict, keys: list) -> tuple:
+        '''_dict_to_params
+    ===
+        <hr>
+        
+    Utility function used by **checked_upsert** to format table keys, columns and update_columns with their respective values to parameters
+
+    Parameters
+    -------------
+    <hr>
+
+        __d__ (*dict*): dict containing the data to be inserted to database
+        __keys__ (*list*): list containing the names of keys, columns and update_columns of table receiving insert
+
+
+    Function Calls
+    -------------
+    <hr>
+
+    *   **FunctionName()**
+        - BulletPoint
+
+
+    Returns
+    -------------
+    <hr>
+
+        __      __ (type): Return value and type
+        '''
+        
         return tuple(d[k.replace('[', '').replace(']', '')] for k in keys)
     
 

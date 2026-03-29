@@ -7,7 +7,44 @@ import time
 
 
 class LeagueDashAPI(Pipeline):
-    def __init__(self, ):
+    '''LeagueDashAPI
+===
+	
+ETL Pipeline class for the NBA API
+
+<hr>
+
+
+Walkthrough
+===
+
+## 1. Initialization
+**LeagueDashAPI** is initialized without any params and inherits the base Pipeline class
+
+
+
+
+<hr>
+
+    __      __ (type): Paramater and type
+
+
+Function Calls
+-------------
+<hr>
+
+*   **FunctionName()**
+    - BulletPoint
+
+
+Returns
+-------------
+<hr>
+
+    __      __ (type): Return value and type
+    '''
+    
+    def __init__(self):
         self.pipeline_name = f'nba-api'
         self.tag = 'nba-api'
         super().__init__(self.pipeline_name, self.tag, 'NBA API')
