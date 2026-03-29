@@ -13,7 +13,7 @@ class BoxscorePipeline(Pipeline[dict]):
 -  Transforms extracted data to dictionaries matching the format of nine tables in SQL db
     - **Team, Arena, Official, Player, Game, GameExt, TeamBox, PlayerBox, and StartingLineups**
 
-
+<hr>
 
 ## Functions
     ### ```def __init__```(self, pipeline_name: str, sc_data: dict, environment: str):
