@@ -184,6 +184,15 @@ class StintProcessor:
 
     #region Stint Changing
     def _switch_stint(self, action: dict, action_prior: dict):
+        '''_summary_
+
+        _extended_summary_
+
+        :param action: Data for the action in which the Stint switch occurs
+        :type action: dict
+        :param action_prior: Data for the action *before* the action in which the Stint switch occurs
+        :type action_prior: dict
+        '''
         stat_dict_list, do_home, do_away = self._create_stat_dict_list()
         self._stint_end(action, action_prior, stat_dict_list, 0)
 
@@ -248,7 +257,22 @@ class StintProcessor:
             self.team_stints.append(team_stint)
             self.tp_stints.append(stat_dict)
     
-    def _create_stat_dict_list(self):     
+    def _create_stat_dict_list(self):
+        '''`_create_stat_dict_list`(self)
+        ===
+        <hr>
+
+        Determines whether or not there's a Stint switch occuring for the home and/or away team
+        
+        :returns stat_dict_list:  
+        :rtype stat_dict_list: dict
+        
+        :returns do_home: 
+        :rtype do_home: bool
+        
+        :returns do_away: 
+        :rtype do_away: bool
+        '''    
         do_home = self.home != self.home_copy
         do_away = self.away != self.away_copy   
         stat_dict_list = [{
