@@ -46,13 +46,15 @@ ___
 
 
     def extract(self) -> dict:
-        '''Summary
-        -------------
+        '''`extract`(self)
+        ---
+        <hr>
+
         Fetches Scoreboard data from NBA's static data feed
 
         :return data_extract (dict): Dict containing 'meta' and **'scoreboard'** dicts
 
-    Example
+        Example
         ------------
         >>> {"meta": {},"scoreboard": {}}
         '''
@@ -66,18 +68,30 @@ ___
 
 
     def transform(self, data_extract: dict) -> list:
-        '''Summary
-        -------------
-        Returns a list of formatted Scoreboard dictionaries
-
-        :param data_extract: Output of fetch()/extract(). Contains game information for today's games
-        :type data: dict
-        :return data_transformed: List of games taking place today that are **In progress** or **Completed**
-        :rtype: list
+        '''`transform`(self, data_extract: *dict*)
+        ---
+        <hr>
         
-        Example
-        ------------
+        :meth:`~transforms.transform_data.Transform.scoreboard`
+
+
+        Returns a list of formatted Scoreboard dictionaries
+        
+        <hr>
+        
+        Parameters
+        ---
+        :param (*dict*) `data_extract`: Output of fetch()/extract(). Contains game information for today's games
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `data_transformed` (list): List of games taking place today that are **In progress** or **Completed**
+        
+        <h4>Example
         >>> [{'SeasonID': 2025, 'GameID': 22500831, 'GameIDStr': '0022500831', 'GameCode': '20260224/PHIIND', 'GameStatus': 3, 'GameStatusText': 'Final', 'Period': 4, 'GameClock': '', 'GameTimeUTC': '2026-02-25T00:00:00Z', 'GameEt': '2026-02-24T19:00:00Z', 'RegulationPeriods': 4, 'IfNecessary': False, 'SeriesGameNumber': '', 'GameLabel': '', 'GameSubLabel': '', 'SeriesText': '', 'SeriesConference': '', 'RoundDesc': '', 'GameSubtype': '', 'IsNeutral': False, 'HomeTeam': {'teamId': 1610612754, 'teamName': 'Pacers', 'teamCity': 'Indiana', 'teamTricode': 'IND', 'wins': 15, 'losses': 44, 'score': 114, 'seed': None, 'inBonus': None, 'timeoutsRemaining': 0, 'periods': [...]}, 'AwayTeam': {'teamId': 1610612755, 'teamName': '76ers', 'teamCity': 'Philadelphia', 'teamTricode': 'PHI', 'wins': 32, 'losses': 26, 'score': 135, 'seed': None, 'inBonus': None, 'timeoutsRemaining': 1, 'periods': [...]}},]
+                
         '''
         data_transformed = self.transformer.scoreboard(data_extract)
         return data_transformed

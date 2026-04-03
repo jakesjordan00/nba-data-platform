@@ -25,7 +25,9 @@ class Transform:
         :param (*dict*) `data`: Output of fetch(). Contains game information for today's games
         
         <hr>
-        
+
+
+
         Returns
         ---
         :return `scoreboard` (list): List of games taking place today that are **In progress** or **Completed**
