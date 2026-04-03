@@ -106,6 +106,36 @@ class SQLConnector:
 
 
     def checked_insert(self, table_name: str, data: list):
+        '''`checked_insert`(self, table_name: *str*, data: *list*)
+    ---
+    <hr>
+    
+    Given a table name and a list of rows to insert, performs a "checked" insert to the database
+
+
+    :param str `table_name`: The name of the table to update
+
+    :param list `data`: list of dictionaries that correspond to the values in config/settings.py
+
+        * Each dictionary must match the format of the table's keys (or lookup values), table's columns, the columns to be updated (if necc), and then the keys again
+            * This results fills out the *upsert_string* value
+            >>> upsert_string = f"""
+                if not exists(
+                select 1 
+                from {table_name}
+                where {' = ? and '.join(sql_table['keys'])} = ?
+                )
+                begin
+                insert into {table_name}({', '.join(sql_table['columns'])})
+                values({', '.join(['?'] * len(sql_table['columns']))})
+                end
+                else
+                begin
+                update {table_name} set {' = ?, '.join(col for col in sql_table['update_columns'])} = ?
+                where {' = ? and '.join(sql_table['keys'])} = ?
+                end
+            """
+        '''
         sql_table = self.tables[table_name]
         insert_string = f'''
 if not exists(
@@ -156,15 +186,16 @@ values({', '.join(['?'] * len(sql_table['columns']))})
 
     
     def checked_upsert(self, table_name: str, data: list):
-        '''checked_upsert(self, table_name, data)
-    ===
+        '''`checked_upsert`(self, table_name: *str*, data: *list*)
+    ---
+    <hr>
     
     Given a table name and a list of rows to insert, performs an upsert to database.
 
 
-    :param str table_name: The name of the table to update
+    :param str `table_name`: The name of the table to update
 
-    :param list data: list of dictionaries that correspond to the values in config/settings.py
+    :param list `data`: list of dictionaries that correspond to the values in config/settings.py
 
         * Each dictionary must match the format of the table's keys (or lookup values), table's columns, the columns to be updated (if necc), and then the keys again
             * This results fills out the *upsert_string* value
@@ -184,7 +215,6 @@ values({', '.join(['?'] * len(sql_table['columns']))})
                 where {' = ? and '.join(sql_table['keys'])} = ?
                 end
             """
-
         '''
         sql_table = self.tables[table_name]
         upsert_string = f'''
@@ -225,37 +255,32 @@ end
     ===
     Given a a SQL table name and a dictionary of keys, this function will execute that table's check_query value and output the results.    
 
-    :param str table_name: Name of table to lookup in config/settings.py
-    :param dict keys: These values will replace the placeholder key values in the table's check_query
-
-    table_name = PlayByPlay
-    ------
-    *   **When PlayByPlay is passed as table_name, a dictionary containing the *count of rows*, *last_action_number*, and the *stint_status* are returned.**
-
-    *Returns*
-    ....
+    :param str `table_name`: Name of table to lookup in config/settings.py
+    :param dict `keys`: These values will replace the placeholder key values in the table's check_query
     
-    * *{'actions': actions, 'last_action_number': last_action_number, 'stint_status': stint_status}*
+    <hr>
 
+    Returns
+    ===
+    
+    >>> table_name = 'PlayByPlay'
 
-    table_name = Schedule
-    ------
+     *   **When PlayByPlay is passed as table_name, a dictionary containing the *count of rows*, *last_action_number*, and the *stint_status* are returned.**
+    * returns **{'actions': actions, 'last_action_number': last_action_number, 'stint_status': stint_status}**
+
+    <br>
+
+    >>> table_name = 'Schedule'
+    
     *   **When Schedule is passed, a dictionary containing a list of all *Schedule* games is returned**
+    * returns **{'schedule': schedule_list}**
 
-    *Returns*
-    ....
+    <br>
+
+    >>> table_name not in ['PlayByPlay', 'Schedule']
     
-    * *{'schedule': schedule_list}*
-
-    Other
-    ------
     *   **Similar to Schedule, a dictionary containg a list of all rows fetched by the query is returned**
-
-    *Returns*
-    ....
-    
-    * *{'data': data_list}*
-        '''
+    * returns **{'data': data_list}**'''
         sql_table = self.tables[table_name]
         query = sql_table['check_query'].replace('season_id', keys['season_id']).replace('game_id', keys['game_id'])
         cursor = self.pyodbc_connection.cursor()
@@ -297,7 +322,10 @@ end
 
     def stint_cursor(self, stint_keys: dict):
         '''stint_cursor
-    ===
+    ---
+
+    <hr>
+
     Given keys for a game (SeasonID, GameID, HomeID, AwayID), queries the latest Stint/StintPlayer entries for each team.
         - If a game is in progress, this is how we determine who was on the court as of our last Pipeline execution.
         ### Team Stats

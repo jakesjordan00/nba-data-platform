@@ -12,13 +12,23 @@ class Transform:
 
 
     def scoreboard(self, data: dict) -> list:
-        '''
+        '''`scoreboard`(self, data: *dict*)
+        ---
+        <hr>
+        
         Returns a list of formatted Game dictionaries
-
-        :param data: Output of fetch(). Contains game information for today's games
-        :type data: dict
-        :return scoreboard: List of games taking place today that are **In progress** or **Completed**
-        :rtype: list
+        
+        <hr>
+        
+        Parameters
+        ---
+        :param (*dict*) `data`: Output of fetch(). Contains game information for today's games
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `scoreboard` (list): List of games taking place today that are **In progress** or **Completed**
         '''
         data = data['scoreboard']['games']
         scoreboard = [
@@ -71,14 +81,23 @@ class Transform:
 
 
     def schedule(self, data_extract: dict) -> list:
-        '''`schedule`(self, data_extract: dict)
+        '''`schedule`(self, data_extract: *dict*)
+        ---
+        <hr>
+        
         Returns a list of formatted Game dictionaries
-
-        :param data: Output of fetch(). Contains game information for all games (Excluding All-Star) that are
-        Completed or In-Progress as of the time of fetch
-        :type data: dict
-        :return schedule: List of games that are **In progress** or **Completed** this season
-        :rtype: list        
+        
+        <hr>
+        
+        Parameters
+        ---
+        :param (*dict*) `data_extract`: Output of fetch(). Contains game information for all games (Excluding All-Star) that are Completed or In-Progress as of the time of fetch
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `schedule` (list): List of games that are **In progress** or **Completed** this season
         '''
         data = data_extract['leagueSchedule']
         SeasonID = data['seasonYear'][:4]
@@ -154,26 +173,24 @@ class Transform:
         return schedule
 
     def schedule_backfill(self, data_extract_formatted: list, db_schedule: pl.DataFrame) -> list | list[dict]:
-        '''schedule_backfill
-    ===
+        '''`schedule_backfill`(data_extract_formatted: *list*, db_schedule: *pl.DataFrame*)
+        ---
         <hr>
         
-    Returns a list of dicts containing Game info for any games found to be out of date in the database
-
-    Parameters
-    -------------
-    <hr>
-
-        __data_extract_formatted__ (*list*): List of dicts containing Game info.
-        __db_schedule__ (*pl.DataFrame*): Polars DataFrame containing the results of the *sql/queries/source/**schedule_backfill.sql*** query's execution
-
-    Returns
-    -------------
-    <hr>
-
-        __data_transformed__ (*list*): List of dicts containing Game info, but only for those games not up to date in the database
+        Returns a list of dicts containing Game info for any games found to be out of date in the database
         
-            - Will be used as the source of games to extract data for when executing downstream pipelines
+        <hr>
+        
+        Parameters
+        ---        
+        :param (*list*) `data_extract_formatted`: List of dicts containing Game info
+        :param (*pl.DataFrame*) `db_schedule`: Polars DataFrame containing the results of the *sql/queries/source/**schedule_backfill.sql*** query's execution
+        
+        <hr>
+        
+        Returns
+        ---        
+        :return `data_transformed` (list | list[dict]): List of dicts containing Game info, but only for those games not up to date in the database. Will be used as the source of games to extract data for when executing downstream pipelines
         '''
         games = db_schedule['GameID'].to_list()
         self.logger.info('Now filtering out games that are up to date...')
@@ -183,25 +200,23 @@ class Transform:
 
 
     def schedule_db(self, data_extract: dict) -> list | list[dict]:
-        '''schedule_db
-    ===
+        '''`schedule_db`(self, data_extract: *dict*)
+        ---
         <hr>
         
-    Formats *data_extract* into list of dicts containing data formatted for upsert to the Schedule table in database
-
-    Parameters
-    -------------
-    <hr>
-
-        __data_extract__ (dict): Data extracted from the [scheduleLeagueV2_1 data feed](https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json)
-
-
-
-    Returns
-    -------------
-    <hr>
-
-        __db_schedule__ (list): list of dicts containing Game data. Formatted to fill the Schedule table in databse
+        *Formats **data_extract** into list of dicts containing data formatted for upsert to the Schedule table in database*
+        
+        <hr>
+        
+        Parameters
+        ---        
+        :param (*dict*) `data_extract`: Data extracted from the [scheduleLeagueV2_1 data feed](https://cdn.nba.com/static/json/staticData/scheduleLeagueV2_1.json)
+        
+        <hr>
+        
+        Returns
+        ---        
+        :return `db_schedule` (list | list[dict]): list of dicts containing Game data. Formatted to fill the Schedule table in databse
         '''
         data = data_extract['leagueSchedule']
         SeasonID = data['seasonYear'][:4]

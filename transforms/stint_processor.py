@@ -541,14 +541,35 @@ class StintProcessor:
     
     
     def _create_initial_stats_dict(self, home, away, home_stint: int, away_stint: int) -> tuple[dict, dict]:
-        '''
+        '''`_create_initial_stats_dict`(self, home: *_type_*, away: *_type_*, home_stint: *int*, away_stint: *int*)
+        ---
+        <hr>
+        
         If game has yet to be loaded, create an emtpy Team Stats dictionary for each team. Part of pre-processing function group
         
-        :returns home_stats, away_stats: Two-element tuple containing:
+        <hr>
+        
+        Parameters
+        ---
+        :param (*_type_*) `home`: _description_
+        :param (*_type_*) `away`: _description_
+        :param (*int*) `home_stint`: _description_
+        :param (*int*) `away_stint`: _description_
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `(home_stats, away_stats)` (tuple[dict, dict]): Two-element tuple containing:
 
             * **home_stats** (*list*): Stats dictionary for Home Team, containing all Home Players' stat dictionaries
-
             * **away_stats** (*list*): Stats dictionary for Away Team, containing all Away Players' stat dictionaries
+        '''
+        
+        '''
+        
+        
+        :returns home_stats, away_stats: Two-element tuple containing:
         '''
         team_stats = {
             'SeasonID': self.SeasonID,

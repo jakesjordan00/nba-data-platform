@@ -148,9 +148,12 @@ Function Calls
 
 
 def calculate_point_in_game(Clock: str, Period: int, Periods: int):
-    '''Summary
--------------
-Calculates the percent through the game 
+    '''`calculate_point_in_game`(Clock: *str*, Period: *int*, Periods: *int*)
+    ---
+    <hr>
+
+
+    Calculates the percent through the game 
     '''
     cMinutes = int(Clock[0:2])
     cSeconds = float(Clock[-5:])
