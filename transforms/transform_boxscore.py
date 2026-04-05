@@ -12,7 +12,31 @@ class Transform:
 
         pass
     
-    def box(self, data_extract):
+    def box(self, data_extract: dict):
+        '''`box`(data_extract: *dict*)
+        ---
+        <hr>
+        
+        Drives transformation of Boxscore data
+
+        Passes Boxscore data to the driving function of the process, TransformBox
+        
+        ### Downstream Function Calls 
+         #### :func:`~TransformBox`
+            - Orechestrates Boxscore data tansformation
+        
+        <hr>
+        
+        Parameters
+        ---
+        :param (*dict*) `data_extract`: Extracted raw Boxscore data
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `transformed_data` (*dict*): dict containing data formatted for SQL, `start_action_keys` and `lineup_keys`
+        '''
         box_data = data_extract['game']
         scoreboard_data = self.pipeline.Data
 
@@ -24,41 +48,37 @@ class Transform:
     
 
 def TransformBox(box_data: dict, scoreboard_data: dict) -> dict:
-    '''TransformBox
-==
-Transforms extracted Boxscore and Scoreboard data into 9 dicts formatted for SQL.<br>
-Also creates start_action_keys and lineup_keys, neccessary for PlayByPlay
+    '''`TransformBox`(box_data: *dict*, scoreboard_data: *dict*)
+    ---
+    <hr>    
+    
+    Transforms extracted Boxscore and Scoreboard data into 9 dicts formatted for SQL.<br>
+    Also creates `start_action_keys` and `lineup_keys`, neccessary for PlayByPlay
+    
+    ### Downstream Function Calls 
+     #### :func:`~PrepareTeam`
+        - Drives formatting of Team, TeamBox, Player, PlayerBox and StartingLineups dicts and lists of dicts
+     #### :func:`~FormatOfficial`
+        - Formats list of Official dictionaries
+     #### :func:`~FormatArena`
+        - Formats Arena dict
+     #### :func:`~FormatGame`
+        - Formats Game and GameExt dictionaries
+     #### :func:`~         `
+        - Description
 
-Parameters
--------------
-<hr>
-
-    __box_data__ (dict): Extracted Boxscore data
-    __scoreboard_data__ (dict): Transformed Scoreboard data
-
-
-Function Calls
--------------
-<hr>
-
-*   **PrepareTeam(teamBox, teamScoreboard, TeamID, MatchupID, selector, box_data)**
-    - Drives formatting of Team, TeamBox, Player, PlayerBox and StartingLineups dicts and lists of dicts
-
-*   **FormatOfficial(SeasonID, box_data['officials'])**
-    - Formats list of Official dictionaries
-
-*   **FormatArena(box_data['arena'], SeasonID, HomeID if not scoreboard_data['IsNeutral'] else None)**
-    - Formats Arena dict
-
-*   **FormatGame(box_data, scoreboard_data, formatted_officials, formatted_arena['ArenaID'])**
-    - Formats Game and GameExt dictionaries
-
-
-Returns
--------------
-<hr>
-
-    __prepared_box_data__ (dict): Transformed Box data ready to be inserted to 9 SQL tables and used in PlayByPlay pipeline 
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `box_data`: Extracted Boxscore data
+    :param (*dict*) `scoreboard_data`: Transformed Scoreboard data
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `prepared_box_data` (dict): Transformed Box data ready to be inserted to 9 SQL tables and used in PlayByPlay pipeline 
     '''
     SeasonID = scoreboard_data['SeasonID']
     box_data['SeasonID'] = SeasonID
@@ -210,32 +230,37 @@ Transforms Box data to data formatted for Game and GameExt SQL tables
 
 #region Team data
 def PrepareTeam(teamBox: dict, teamScoreboard: dict, TeamID: int, MatchupID: int, selector: str, box_data: dict) -> dict:
-    '''PrepareTeam
-========
-Called for each team participating in a game.
+    '''`PrepareTeam`(teamBox: *dict*, teamScoreboard: *dict*, TeamID: *int*, MatchupID: *int*, selector: *str*, box_data: *dict*)
+    ---
+    <hr>
+    
+    Called for each team participating in a game.
 
-Formats Team table for SQL. Retrieves formatted TeamBox, Player and PlayerBox tables from calls
-
-Function Calls
--------------
-*   **FormatTeamBox(teamBox, teamScoreboard, game_data_payload)**
-    - Formats teamBox['statistics'] dict to **TeamBox** SQL format
-
-*   **PreparePlayer(teamBox['players'], teamBox, game_data_payload)**
-    - Acts the same as **PrepareTeam**
-    - Each dict in teamBox['players'] formats derivative dicts for **Player**, **PlayerBox** and **StartingLineups** tables
-
-
-
-    :param dict teamBox: Team's data dictionary from Box data extract
-    :param dict teamScoreboard: Team's data dictionary from Scoreboard data extract
-    :param int TeamID: TeamID of Team
-    :param int MatchupID: TeamID of Matchup/Opponent Team
-    :param str selector: homeTeam or awayTeam
-    :param dict box_data: Full Box data dictionary extract
-    :return prepared_team: Prepared Team dictionary - Not formatted yet, but Team, TeamBox, Player and PlayerBox ready to be formatted once returned
-    :rtype: dict
-
+    Formats Team table for SQL. Retrieves formatted TeamBox, Player and PlayerBox tables from calls
+    
+    ### Downstream Function Calls 
+     #### :func:`~FormatTeamBox`
+        - Formats teamBox['statistics'] dict to **TeamBox** SQL format
+     #### :func:`~PreparePlayer`
+        - Acts the same as **PrepareTeam**
+        - Each dict in teamBox['players'] formats derivative dicts for **Player**, **PlayerBox** and **StartingLineups** tables
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `teamBox`: Team's data dictionary from Box data extract
+    :param (*dict*) `teamScoreboard`: Team's data dictionary from Scoreboard data extract
+    :param (*int*) `TeamID`: TeamID of Team
+    :param (*int*) `MatchupID`: TeamID of Matchup/Opponent Team
+    :param (*str*) `selector`: homeTeam or awayTeam
+    :param (*dict*) `box_data`: Full Box data dictionary extract
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `prepared_team` (dict): Prepared Team dictionary - Not formatted yet, but Team, TeamBox, Player and PlayerBox ready to be formatted once returned
     '''
     SeasonID = box_data['SeasonID']
     GameID = box_data['GameID']
@@ -289,15 +314,21 @@ Function Calls
 
 
 def FormatTeamBox(team_data: dict, team_scoreboard_data: dict, game_data_payload: dict) -> dict:
-    '''FormatTeamBox
-========
-Formats TeamBox dictionary for each team. Called from *PrepareTeam()*.
+    '''`FormatTeamBox`(team_data: *dict*, team_scoreboard_data: *dict*, game_data_payload: *dict*, )
+    ---
+    <hr>
     
-    :param dict team_data: teamBox from *PrepareTeam()*. Statistics dict for team
-    :param dict team_scoreboard_data: teamScoreboard from *PrepareTeam()*. Dict containing info found in Scoreboard but not Boxscore data about team
-    :param dict game_data_payload: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
+    Formats TeamBox dictionary for each team. Called from *PrepareTeam()*
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `team_data`: teamBox from *PrepareTeam()*. Statistics dict for team
+    :param (*dict*) `team_scoreboard_data`: teamScoreboard from *PrepareTeam()*. Dict containing info found in Scoreboard but not Boxscore data about team
+    :param (*dict*) `game_data_payload`: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
 
-            >>> game_data_payload = {
+    >>> game_data_payload = {
         'SeasonID': 2025,
         'GameID': 22500840,
         'TeamID': 1610612757,
@@ -305,9 +336,12 @@ Formats TeamBox dictionary for each team. Called from *PrepareTeam()*.
         'Home': 1
         'Win': 0
     }
-
-:return formatted_teambox: Dictionary ready for insert to **TeamBox**
-:rtype: dict
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `formatted_teambox` (dict): Dictionary ready for insert to **TeamBox**
     '''
     formatted_teambox = {
         'SeasonID': game_data_payload['SeasonID'],
@@ -385,62 +419,71 @@ Formats TeamBox dictionary for each team. Called from *PrepareTeam()*.
 
 #region Player data
 def PreparePlayer(players: list, team_data: dict, game_data_payload: dict) -> list:
-    '''PreparePlayer
-========
-Called once for each Team.<br> For each Player, calls are made to *FormatPlayer()*, *FormatPlayerBox()* and *FormatStartingLineups()* <br>
-Called from *PrepareTeam()*
+    '''`PreparePlayer`(players: *list*, team_data: *dict*, game_data_payload: *dict*)
+    ---
+    <hr>    
     
-    :param list players: List containing a data dictionary for each player on a Team.
-    :param dict team_data: teamBox from *PrepareTeam()*. Statistics dict for team
-    :param dict game_data_payload: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
+    Called once for each Team.<br> For each Player, calls are made to *FormatPlayer()*, *FormatPlayerBox()* and *FormatStartingLineups()* <br>
+    Called from *PrepareTeam()*
+    
+    ### Downstream Function Calls 
+     #### :func:`~FormatPlayer`
+        - Formats player dict to that of **Player** table in SQL db
+     #### :func:`~FormatPlayerBox`
+        - Formats player['statistics'] dict to format of **PlayerBox** table in SQL db
+     #### :func:`~FormatStartingLineups`
+        - Formats teamBox dict to that of **StartingLineups** table in SQL db
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*list*) `players`: List containing a data dictionary for each player on a Team.
+    :param (*dict*) `team_data`: teamBox from *PrepareTeam()*. Statistics dict for team
+    :param (*dict*) `game_data_payload`: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `prepared_players` (list): list of dicts containing data ready for insert to **Player**, **PlayerBox**, **StartingLineups** 
 
-            >>> game_data_payload = {
-        'SeasonID': 2025,
-        'GameID': 22500840,
-        'TeamID': 1610612757,
-        'MatchupID': 1610612750,
-        'Home': 1
-        'Win': 0
-    }
-
-Function Calls
--------------
-*   **FormatPlayer(player, SeasonID)**
-    - Formats player dict to that of **Player** table in SQL db
-<br>
-*   **FormatPlayerBox(player, game_data_payload, team_data)**
-    - Formats player['statistics'] dict to format of **PlayerBox** table in SQL db
-<br>
-*   **FormatStartingLineups(player, game_data_payload, team_data)**
-    - Formats teamBox dict to that of **StartingLineups** table in SQL db
-
-:return formatted_teambox: Dictionary ready for insert to **TeamBox**
-:rtype: dict
+    >>> {
+            'Player': FormatPlayer(player=player, SeasonID=game_data_payload['SeasonID']),
+            'PlayerBox': FormatPlayerBox(player=player, game_data_payload=game_data_payload, team_data=team_data),
+            'StartingLineups': FormatStartingLineups(player=player, game_data_payload=game_data_payload, team_data=team_data)
+        }
     '''
     prepared_players = []
     for player in players:
-        Player = FormatPlayer(player=player, SeasonID=game_data_payload['SeasonID'])
-        PlayerBox = FormatPlayerBox(player=player, game_data_payload=game_data_payload, team_data=team_data)
-        StartingLineup = FormatStartingLineups(player=player, game_data_payload=game_data_payload, team_data=team_data)
         prepared_players.append({
-            'Player': Player,
-            'PlayerBox': PlayerBox,
-            'StartingLineups': StartingLineup
+            'Player': FormatPlayer(player=player, SeasonID=game_data_payload['SeasonID']),
+            'PlayerBox': FormatPlayerBox(player=player, game_data_payload=game_data_payload, team_data=team_data),
+            'StartingLineups': FormatStartingLineups(player=player, game_data_payload=game_data_payload, team_data=team_data)
         })
 
     return prepared_players
 
 
 def FormatPlayer(player: dict, SeasonID: int) -> dict:
-    '''FormatPlayer
-========
-Formats Player dictionary for a each player on a team. <br>Called from *PreparePlayer()*.
+    '''`FormatPlayer`(player: *dict*, SeasonID: *int*, )
+    ---
+    <hr>
     
-    :param dict player: player dict from *PreparePlayer()*. Statistics and info dict for player
-    :param int SeasonID: Season in which this Game takes place
-
-:return prepared_player: Dictionary ready for insert to **Player**
-:rtype: dict
+    Formats Player dictionary for a each player on a team. <br>Called from *PreparePlayer()*.
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `player`: player dict from *PreparePlayer()*. Statistics and info dict for player
+    :param (*int*) `SeasonID`: Season in which this Game takes place
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `prepared_player` (dict): Dictionary ready for insert to **Player**
     '''
     prepared_player = {
         'SeasonID': SeasonID,
@@ -457,29 +500,27 @@ Formats Player dictionary for a each player on a team. <br>Called from *PrepareP
 
 
 def FormatPlayerBox(player: dict, team_data: dict, game_data_payload: dict) -> dict:
-    '''Summary
--------------
-Formats PlayerBox dictionary for each team. Called from *PreparePlayer()*.
+    '''`FormatPlayerBox`(player: *dict*, team_data: *dict*, game_data_payload: *dict*, )
+    ---
+    <hr>
     
-    :param dict player: player dict from *PreparePlayer()*. Statistics and info dict for player
-    :param dict team_data: team_data from *PreparePlayer()*. teamBox from *PrepareTeam()*. Statistics dict for team
-    :param dict game_data_payload: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
-
-            >>> game_data_payload = {
-        'SeasonID': 2025,
-        'GameID': 22500840,
-        'TeamID': 1610612757,
-        'MatchupID': 1610612750,
-        'Home': 1
-        'Win': 0
-    }
-
-:return prepared_playerbox: Dictionary ready for insert to **PlayerBox**
-:rtype: dict
+    Formats PlayerBox dictionary for each team. Called from *PreparePlayer()*.
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `player`: player dict from *PreparePlayer()*. Statistics and info dict for player
+    :param (*dict*) `team_data`: team_data from *PreparePlayer()*. teamBox from *PrepareTeam()*. Statistics dict for team
+    :param (*dict*) `game_data_payload`: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `prepared_playerbox` (dict): Dictionary ready for insert to **PlayerBox**
     '''
-
     atr = player['statistics']['assists'] / player['statistics']['turnovers'] if player['statistics']['turnovers'] != 0 else player['statistics']['assists']
-
     Minutes = player['statistics']['minutes'].replace('PT', '').replace('M', ':').replace('S', '')
     min_split = Minutes.split(':')
     m_calc = int(min_split[0])
@@ -535,28 +576,27 @@ Formats PlayerBox dictionary for each team. Called from *PreparePlayer()*.
     return prepared_playerbox
 
 
-def FormatStartingLineups(player: dict, team_data: dict, game_data_payload: dict):
-    '''Summary
--------------
-Formats StartingLineups dictionary for each team. Called from *PreparePlayer()*.
+def FormatStartingLineups(player: dict, team_data: dict, game_data_payload: dict) -> dict:
+    '''`FormatStartingLineups`(player: *dict*, team_data: *dict*, game_data_payload: *dict*, )
+    ---
+    <hr>
     
-    :param dict player: player dict from *PreparePlayer()*. Statistics and info dict for player
-    :param dict team_data: team_data from *PreparePlayer()*. teamBox from *PrepareTeam()*. Statistics dict for team
-    :param dict game_data_payload: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
-
-            >>> game_data_payload = {
-        'SeasonID': 2025,
-        'GameID': 22500840,
-        'TeamID': 1610612757,
-        'MatchupID': 1610612750,
-        'Home': 1
-        'Win': 0
-    }
-
-:return formatted_lineup: Dictionary ready for insert to **StartingLineups**
-:rtype: dict
+    Formats StartingLineups dictionary for each team. Called from *PreparePlayer()*.
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `player`: player dict from *PreparePlayer()*. Statistics and info dict for player
+    :param (*dict*) `team_data`: team_data from *PreparePlayer()*. teamBox from *PrepareTeam()*. Statistics dict for team
+    :param (*dict*) `game_data_payload`: dict containing: SeasonID, GameID, TeamID, MatchupID, Home (0/1), Win(0/1)
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `formatted_lineup` (dict): Dictionary ready for insert to **StartingLineups**
     '''
-    
     Unit = 'Starters' if player['starter'] == '1' else 'Bench'
     formatted_lineup = {
         'SeasonID': game_data_payload['SeasonID'],
@@ -575,16 +615,27 @@ Formats StartingLineups dictionary for each team. Called from *PreparePlayer()*.
 
 #region Arena data
 def FormatArena(arena: dict, SeasonID: int, HomeTeamID: int | None) -> dict:
-    '''Summary
--------------
-Formats Arena dictionary for a each official on assignment for a game. <br>Called from *TransformBox()*.
+    '''`FormatArena`(arena: *dict*, SeasonID: *int*, HomeTeamID: *int | None*, )
+    ---
+    <hr>
     
-    :param list arena: officials list from *box_data['officials']*. Info dict for arena
-    :param int SeasonID: Season in which this Game takes place
-    :param int HomeTeamID: TeamID of Home team
-
-:return formatted_arena: Dictionary ready for insert to **Arena**
-:rtype: dict
+    Formats Arena dictionary for a each official on assignment for a game
+    
+    Called from **TransformBox()**
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*dict*) `arena`:  Info dict for arena
+    :param (*int*) `SeasonID`: Season in which this Game takes place
+    :param (*int | None*) `HomeTeamID`: TeamID of Home team
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `formatted_arena` (dict): Dictionary ready for insert to **Arena**
     '''
     formatted_arena = {
         'SeasonID': SeasonID,
@@ -605,15 +656,28 @@ Formats Arena dictionary for a each official on assignment for a game. <br>Calle
 
 #region Official data
 def FormatOfficial(SeasonID: int, officials: list) -> list:
-    '''Summary
--------------
-Formats Official dictionary for a each official on assignment for a game. <br>Called from *TransformBox()*.
+    '''`FormatOfficial`(SeasonID: *int*, officials: *list*, )
+    ---
+    <hr>
     
-    :param int SeasonID: Season in which this Game takes place
-    :param list officials: officials list from *box_data['officials']*. Info dict for official
-
-:return prepared_officials: Dictionary ready for insert to **Official**
-:rtype: list
+    Formats Official dictionary for a each official on assignment for a game. <br>Called from *TransformBox()*.
+    
+    ### Downstream Function Calls 
+     #### :meth:`~folder.file.class.method`
+        - Description
+    
+    <hr>
+    
+    Parameters
+    ---
+    :param (*int*) `SeasonID`: Season in which this Game takes place
+    :param (*list*) `officials`: officials list from *box_data['officials']*. Info dict for official
+    
+    <hr>
+    
+    Returns
+    ---
+    :return `prepared_officials` (list): Dictionary ready for insert to **Official**
     '''
     prepared_officials = []
     for official in officials:

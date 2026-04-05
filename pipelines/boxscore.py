@@ -66,15 +66,58 @@ class BoxscorePipeline(Pipeline[dict]):
         self.file_source = f'.tests/box/{self.GameID}'
         
     def extract(self) -> dict:
-        '''Summary
-        -------------
+        '''`extract`(self)
+        ---
+        <hr>
+        
         Fetches data from NBA's static data feeds
-                
-        :return data (dict): Dict containing 'meta' and **'game'** dicts
-
-        Example
-        ------------
-        >>> {"meta": {}, "game":{}}
+        
+        ### Downstream Function Calls 
+         #### :meth:`~connectors.static_data.StaticDataConnector.fetch`
+            - Handles data extraction. Uses the url from `self.url`
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `data` (*dict*): Dict containing 'meta' and **'game'** dicts
+        
+        <h4>Example
+        >>> data_extract = {
+            "meta": {...}, 
+            "game": {
+                'gameId': '0022501129', 
+                'gameTimeLocal': '2026-04-04T15:00:00-04:00', 
+                'gameTimeUTC': '2026-04-04T19:00:00Z', 
+                'gameTimeHome': '2026-04-04T15:00:00-04:00', 
+                'gameTimeAway': '2026-04-04T15:00:00-04:00', 
+                'gameEt': '2026-04-04T15:00:00-04:00', 
+                'duration': 19, 
+                'gameCode': '20260404/WASMIA', 
+                'gameStatusText': 'Q1 3:32', 
+                'gameStatus': 2, 
+                'regulationPeriods': 4, 
+                'period': 1, 
+                'gameClock': 'PT03M32.00S', 
+                'attendance': 0, 
+                'sellout': '0', 
+                'arena': {...}, 
+                'officials': [{...}, {...}, {...}], 
+                'homeTeam': {
+                    'teamId': 1610612748, 
+                    'teamName': 'Heat', 
+                    'teamCity': 'Miami', 
+                    'teamTricode': 'MIA', 
+                    'score': 21, 
+                    'inBonus': '0', 
+                    'timeoutsRemaining': 6, 
+                    'periods': [...], 
+                    'players': [...], 
+                    'statistics': {...}
+                }, 
+                'awayTeam': {...}
+            }
+        }
         '''
         self.logger.info(f'Fetching {self.GameID} Box data from {self.url}')
         data_extract = self.source.fetch() if self.environment == 'Production' else self.source.fetch_file()
@@ -83,18 +126,31 @@ class BoxscorePipeline(Pipeline[dict]):
 
 
     def transform(self, data_extract: dict) -> dict:
-        '''Summary
-        -------------
+        '''`transform`(data_extract: *dict*, )
+        ---
+        <hr>
+        
         Transforms extracted Boxscore and Scoreboard/Schedule data into 9 dicts formatted for SQL.
 
         Also creates start_action_keys and lineup_keys, neccessary for PlayByPlay
+        
+        ### Downstream Function Calls 
+         #### :meth:`~transforms.transform_boxscore.Transform.box`
+            - Transforms boxscore data_extract to format that matches table structure of tables defined in the **sql/tables** folder
 
-        :param dict data_extract: Box data extract
-        :return data_transformed: Formatted Box data
-        :rtype: dict
+        <hr>
+        
+        Parameters
+        ---
+        :param (*dict*) `data_extract`: Boxscore data extract
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `data_transformed` (dict): Formatted Box data
 
-        Example
-        ------------
+        <h4>Example
         >>> data_transformed = {
             'SeasonID': 2025,
             'GameID': 2025,

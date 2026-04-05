@@ -16,6 +16,24 @@ class SchedulePipeline(Pipeline[list]):
 
     
     def extract(self):
+        '''`extract`()
+        ---
+        <hr>
+        
+        Fetches Schedule data from NBA's static data feed 
+        - 'meta', 'leagueSchedule'
+        
+        ### Downstream Function Calls 
+         #### :meth:`~connectors.static_data.StaticDataConnector.fetch`
+            - Handles data extraction
+         
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `data_extract` (*dict*): Data extracted from the scheduleLeagueV2_1 data feed
+        '''
         data_extract = self.source.fetch()
         return data_extract
 
