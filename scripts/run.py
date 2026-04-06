@@ -23,7 +23,7 @@ for scoreboard in scoreboard_data:
     completed_boxscore_pipeline = boxscore_pipeline.run()
     boxscore_data = completed_boxscore_pipeline['loaded']
     
-    start_action_info = boxscore_pipeline.destination.cursor_query('PlayByPlay', boxscore_data['start_action_keys'])
+    start_action_info = boxscore_pipeline.destination.cursor_query(table_name='PlayByPlay', keys=boxscore_data['start_action_keys'])
     db_actions = start_action_info['actions']
     db_last_action_number = start_action_info['last_action_number']
     stint_status = start_action_info['stint_status']

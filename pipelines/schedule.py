@@ -66,4 +66,4 @@ class DailyBackfillSchedulePipeline(SchedulePipeline):
             'data_transformed': data_transformed,
             'data_db': data_db
         }
-        return data_transformed
+        return data

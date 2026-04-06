@@ -54,7 +54,26 @@ class BoxscorePipeline(Pipeline[dict]):
 
 '''
 
-    def __init__(self, pipeline_name: str, sc_data: dict, environment: str):
+    def __init__(self, pipeline_name: str, sc_data: dict, environment: str = 'Production'):
+        '''`init`(pipeline_name: *str*, sc_data: *dict*, environment: *str*, )
+        ---
+        <hr>
+        
+        Initializes Boxscore pipeline for a particular game
+        
+        <hr>
+        
+        Parameters
+        ---
+        :param (*str*) `pipeline_name`: Name of the pipeline, **boxscore.{GameID}**
+        :param (*dict*) `sc_data`: Scoreboard data
+        :param (*str*) `environment`: either 'Production' or 'Development'. If the latter, uses the file found in .tests\\box
+        
+        <hr>
+        
+        Returns
+        ---
+        '''
         super().__init__(pipeline_name=pipeline_name, pipeline_tag='boxscore', source_tag='NBA static data feed')
         self.Data = sc_data
         self.GameID = self.Data['GameID']

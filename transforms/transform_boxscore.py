@@ -662,10 +662,6 @@ def FormatOfficial(SeasonID: int, officials: list) -> list:
     
     Formats Official dictionary for a each official on assignment for a game. <br>Called from *TransformBox()*.
     
-    ### Downstream Function Calls 
-     #### :meth:`~folder.file.class.method`
-        - Description
-    
     <hr>
     
     Parameters
