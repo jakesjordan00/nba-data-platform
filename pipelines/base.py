@@ -87,7 +87,7 @@ class Pipeline(ABC, Generic[T]):
         self.logger.info(f'Load complete in {elapsed} seconds')
         self.load_time += elapsed
         try:            
-            extract_len = len(data_extract['resultSets'][0])
+            extract_len = len(data_extract['resultSets'][0]) #type: ignore
         except:
             extract_len = len(data_extract) if data_extract else 0
         return {
