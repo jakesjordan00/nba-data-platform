@@ -7,59 +7,41 @@ from transforms.transform_boxscore import Transform
 
 
 class BoxscorePipeline(Pipeline[dict]):
-    '''BoxscorePipeline
-===
-- Given a game's details from the Scoreboard/Schedule pipeline result, fetches Boxscore data from NBA static data feed. <br>
--  Transforms extracted data to dictionaries matching the format of nine tables in SQL db
-    - **Team, Arena, Official, Player, Game, GameExt, TeamBox, PlayerBox, and StartingLineups**
+    '''`BoxscorePipeline`(Pipeline)
+    ---
+    <hr>
+    
+    - Given a game's details from the Scoreboard/Schedule pipeline result, fetches Boxscore data from NBA static data feed. <br>
+    - Transforms extracted data to dictionaries matching the format of nine tables in SQL db
+        - **Team, Arena, Official, Player, Game, GameExt, TeamBox, PlayerBox, and StartingLineups** here
+    
+    # Extraction
+    :meth:`~extract` -> :class:`~connectors.static_data.StaticDataConnector`.:meth:`~connectors.static_data.StaticDataConnector.fetch`
+    - Fetches a single game's Boxscore data from NBA's static data feeds
 
-<hr>
+    # Transformation
+    :meth:`~transform` -> :class:`~transforms.transform_boxscore.Transform`.:meth:`~transforms.transform_boxscore.Transform.box`
+     - Given the extracted box data, transforms data to dictionaries matching the format of nine tables in SQL db
 
-## Functions
-    ### ```def __init__```(self, pipeline_name: str, sc_data: dict, environment: str):
-        - Inherits logger, destination and run_timestamp from superclass.
-        - Sets self.Data equal to Scoreboard/Schedule data for that game.
-        - Sets GameID and GameIDStr
-        - Sets url, tag, source, transformer, environment and file_source
+    # Load
+     - Calls *initiate_insert()* which executes the SQL upsert process, but just returns transformed data.
+     - Upserts to **Team, Arena, Official, Player, Game, GameExt, TeamBox, PlayerBox, and StartingLineups**
 
-    ### ```extract```(self):
-        https://cdn.nba.com/static/json/liveData/boxscore/boxscore_0022500001.json
-        - Fetches game's Boxscore data from NBA static data feed.
+    # Downstream Pipelines
+     - :class:`~pipelines.playbyplay.PlayByPlayPipeline`
 
-    ### ```transform```(self, data_extract) -> dict:
-        - Given the extracted box data, transforms data to dictionaries matching the format of nine tables in SQL db
-
-
-    ### ```load```(self, data_transformed) -> dict:
-        - Upserts the trasformed data to SQL db.
-        ### Team
-            - Expected records: 2
-        ### Arena
-            - Expected records: 1
-        ### Official
-            - Expected records: 3-4
-        ### Player
-            - Expected records: 15-20ish (17.59 on avg)
-        ### Game
-            - Expected records: 1
-        ### GameExt
-            - Expected records: 1
-        ### TeamBox
-            - Expected records: 2
-        ### PlayerBox
-            - Expected records: 15-20ish (should match Player)
-        ### StartingLineups
-            - Expected records: 15-20ish (should match Player and PlayerBox)
-        
-
-'''
+    '''
 
     def __init__(self, pipeline_name: str, sc_data: dict, environment: str = 'Production'):
         '''`init`(pipeline_name: *str*, sc_data: *dict*, environment: *str*, )
         ---
         <hr>
         
-        Initializes Boxscore pipeline for a particular game
+        Initializes Boxscore pipeline for a particular **game**
+        - Inherits :attr:`~base.Pipeline.logger`, :attr:`~base.destination` and :attr:`~base.run_timestamp` from superclass (:class:`~pipelines.base.Pipeline`).
+        - Sets :attr:`~Data` equal to Scoreboard/Schedule data for that game.
+        - Sets :attr:`~GameID` and :attr:`~GameIDStr`
+        - Sets :attr:`~url`, :attr:`~source`, and :attr:`~transformer`
         
         <hr>
         
@@ -195,34 +177,43 @@ class BoxscorePipeline(Pipeline[dict]):
 
 
     def load(self, data_transformed: dict):
-        '''Summary
-    -------------
-    Calls *initiate_insert()* which executes the SQL upsert process, but just returns transformed data.
+        '''`load`(data_transformed: *dict*, )
+        ---
+        <hr>
+        
+        Calls *initiate_insert()* which executes the SQL upsert process, but just returns transformed data.
+        
+        Upserts to **Team, Arena, Official, Player, Game, GameExt, TeamBox, PlayerBox, and StartingLineups**
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param (*dict*) `data_transformed`: Transformed Boxscore data ready to be inserted to SQL db.
+        
+        >>> data_transformed = {
+            'SeasonID': 2025,
+            'GameID': 2025,
+            'sql_tables': {
+                'Team':[{}],
+                'Arena': {},
+                'Official': [{}],
+                'Player': [{}],
+                'Game': {},
+                'GameExt': {},
+                'TeamBox': [{}],
+                'PlayerBox': [{}],
+                'StartingLineups': [{}]
+                },
+            'start_action_keys': {},
+            'lineup_keys': {}
+        }
 
-    :param dict data_transformed: Transformed Boxscore data ready to be inserted to SQL db.
-    :return data_transformed: _description_
-    :rtype: _type_
-
-    Example
-    ------------
-    >>> data_transformed = {
-        'SeasonID': 2025,
-        'GameID': 2025,
-        'sql_tables': {
-            'Team':[{}],
-            'Arena': {},
-            'Official': [{}],
-            'Player': [{}],
-            'Game': {},
-            'GameExt': {},
-            'TeamBox': [{}],
-            'PlayerBox': [{}],
-            'StartingLineups': [{}]
-            },
-        'start_action_keys': {},
-        'lineup_keys': {}
-    }
-    '''
+        <hr>
+        
+        Returns
+        ---
+        :return `data_transformed` (dict): Same as data_transformed param
+        '''
         data_loaded = self.destination.initiate_insert(data_transformed['sql_tables'])
-
         return data_transformed

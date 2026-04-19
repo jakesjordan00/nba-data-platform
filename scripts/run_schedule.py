@@ -5,8 +5,12 @@ from pipelines import Pipeline, ScoreboardPipeline, BoxscorePipeline, PlayByPlay
 from connectors import SQLConnector
 import polars as pl
 
-from pipelines import DailyBackfillSchedulePipeline
-schedule_pipeline = DailyBackfillSchedulePipeline()
+from pipelines import SchedulePipeline
+schedule_pipeline = SchedulePipeline()
 completed_schedule_pipeline = schedule_pipeline.run()
 schedule_data = completed_schedule_pipeline['transformed']['data_transformed']
+data = completed_schedule_pipeline['loaded']
+
+test = len(schedule_data)
+test2 = len(data)
 bp = 'here'

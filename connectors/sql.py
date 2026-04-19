@@ -412,11 +412,39 @@ end
 
 
     def check_tables(self):
+        '''`check_tables`()
+        ---
+        <hr>
+        
+
+        For each table in :data:`~config.settings.TABLES` dict, run the create statement associated to create the table if it does not already exist
+        
+        ### Downstream Calls 
+         #### :meth:`~folder.file.class.method`
+            - Description
+        
+        ### Upstream Calls 
+         #### :meth:`~folder.file.class.method`
+            - Description
+            
+        <hr>
+         
+        Parameters
+        ---
+        
+        <hr>
+        
+        Returns
+        ---
+        '''
         cursor = self.pyodbc_connection.cursor()
         for table, config in self.tables.items():
             query = config['create']
-            result = cursor.execute(query)
-            cursor.commit()
+            try:
+                result = cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                self.logger.error(f'{table} state check failed!')
             bp = 'here'
             
     def check_specific_table(self, table: str):

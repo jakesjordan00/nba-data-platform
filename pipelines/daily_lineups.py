@@ -5,6 +5,36 @@ from transforms.transform_daily_lineups import Transform
 
 class DailyLineupsPipeline(Pipeline):
     def __init__(self, pipeline_name: str):
+        '''`init`(self, pipeline_name: *str*)
+        ---
+        <hr>
+        
+        
+        Initializes DailyLineups pipeline for a particular **date**
+        - Inherits :attr:`~base.Pipeline.logger`, :attr:`~base.destination` and :attr:`~base.run_timestamp` from superclass (:class:`~pipelines.base.Pipeline`).
+        - Sets :attr:`~date` equal to todays date, (yyyy/mm/dd)
+        - Sets :attr:`~GameID` and :attr:`~GameIDStr`
+        - Sets :attr:`~url`, :attr:`~source`, and :attr:`~transformer`
+        
+        ### Downstream Calls 
+         #### :meth:`~connectors.static_data.StaticDataConnector.check_tables`
+            - Description
+        
+        ### Upstream Calls 
+         #### :meth:`~folder.file.class.method`
+            - Description
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param (*str*) `pipeline_name`: _description_
+        
+        <hr>
+        
+        Returns
+        ---
+        '''
         date = datetime.now().date().strftime('%Y%m%d')
         display_date = datetime.now().strftime('%m/%d/%Y')
         display_datetime = datetime.now().strftime('%I:%M%p').lower()
