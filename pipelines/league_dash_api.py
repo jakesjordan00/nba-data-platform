@@ -7,10 +7,30 @@ import time
 
 
 class LeagueDashAPI(Pipeline):
+    '''`LeagueDashAPI`(Pipeline)
+    ---
+    <hr>
+    
+    Indempotent ETL Pipeline class for the NBA API
+    
+    # Extraction
+    :meth:`~extract` -> :class:`~connectors.api_data.APIDataConnector`.:meth:`~connectors.static_data.StaticDataConnector.fetch`
+     - a
+
+    # Transformation
+     - a
+
+    # Load
+     - a
+
+    # Downstream Pipelines
+     - :class:`~pipelines.playbyplay.PlayByPlayPipeline`
+    '''
+
     '''LeagueDashAPI
 ===
 	
-ETL Pipeline class for the NBA API
+
 
 <hr>
 
@@ -91,6 +111,41 @@ Returns
 
     def _re_init(self, schema: str, params: dict,  endpoint_friendly_name: str, table_base_name: str, player_team: str, 
                  log_tag: str | None = None, extract_tag: str | None = None):
+        '''`_re_init`(self, schema: *str*, params: *dict*, endpoint_friendly_name: *str*, table_base_name: *str*, player_team: *str*)
+        ---
+        <hr>
+        
+        Method that resets the NBA API Pipeline class to use the configuration specified in the parameters passed to :meth:`~_re_init`
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param (*str*) `schema`: Database Schema of the table the formatted data will be upserted to in the :meth:`~load` method
+
+        :param (*dict*) `params`: Parameter set that will be passed to NBA API to determine response. Defaults for each endpoint set in :data:`~config.api_map.nba_api_endpoints`
+        :param (*str*) `endpoint_friendly_name`: Corresponding map value of endpoint in :data:`~config.api_map.friendly_name_map`
+        :param (*str*) `table_base_name`: Half of the Table's name in SQLdb. For example, if table name is `PlayerHustle`, then table_base_name would be **Hustle**
+        :param (*str*) `player_team`: The other half of the Table's name. In the `PlayerHustle` example, player_team would be **Player**
+        
+        <hr>
+        
+        Sets
+        ---
+        - self.:attr:`~pipeline_name` 
+            >>> f'nba-api.{schema}{log_tag}'
+
+        - self.:attr:`~table_name`
+            >>> f'{player_team}{table_base_name}'
+            
+        - self.:attr:`~full_table_name`
+            >>> f'{schema}.{player_team}{table_base_name}'
+
+
+         , :attr:`~source`, and :attr:`~transformer`
+
+
+        '''
         self.pipeline_name = f'nba-api.{schema}{log_tag}'
         self.tag = 'nba-api'
         self.extract_tag = extract_tag

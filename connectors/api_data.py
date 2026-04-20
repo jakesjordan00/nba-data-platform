@@ -28,13 +28,34 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
 ### **DAG:** [dags/league_dash_hustle.py](https://github.com/jakesjordan00/nba-data-platform/blob/main/dags/league_dash_hustle.py)
     - **leaguehustlestatsplayer**
         - **leaguehustlestatsteam**
-
-
-
-
     '''
+    
     class Endpoint:
         def __init__(self, friendly_name: str, endpoint_name) -> None:
+            '''`init`(self, friendly_name: *str*, endpoint_name: *str*)
+            ---
+            <hr>
+            
+            Given the friendly_name and actual name of an Endpoint, get the configuration from :data:`~config.api_map.nba_api_endpoints` and set them for the Endpoint instance
+                
+            <hr>
+            
+            Parameters
+            ---
+            :param (*str*) `friendly_name`: Friendly name/nickname of endpoint
+            :param (*str*) `endpoint_name`: Name of the endpoint to be passed to NBA API
+            
+            <hr>
+            
+            Sets
+            ---
+            self.:attr:`~url` = config['url']
+
+            self.:attr:`~headers` = config['headers']      
+
+            self.:attr:`~params` = config['params']
+
+            '''
             self.name = friendly_name
             config = map.nba_api_endpoints[endpoint_name]
             self.url = config['url']
@@ -43,6 +64,32 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
             pass
 
     def __init__(self, pipeline):
+        '''`init`(self, pipeline)
+        ---
+        <hr>
+        
+        put_summary_here
+        
+        ### Downstream Calls 
+         #### :meth:`~_set_endpoints`
+            - Sets the default endpoints  (those mapped in :data:`~config.api_map.nba_api_endpoints`)
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param `pipeline`: Pipeline that the API connector belongs to
+        
+        <hr>
+        
+        Sets
+        ---
+        self.:attr:`~url` = config['url']
+
+        self.:attr:`~headers` = config['headers']      
+
+        self.:attr:`~params` = config['params']
+        '''
         self.pipeline = pipeline
         self.logger = logging.getLogger(f'{pipeline.pipeline_name}.api')
         self._set_endpoints()
@@ -51,6 +98,25 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
 
 
     def fetch(self, endpoint: Endpoint, params: dict = None, retries=2, backoff=5):
+        '''`fetch`(self, endpoint: *Endpoint*, params: *dict* )
+        ---
+        <hr>
+        
+        Method to hit the NBA API at the ***endpoint*** passed as a parameter and with the ***params*** passed
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param (*Endpoint*) `endpoint`: Given an instance of the :class:`~Endpoint` class,  
+        :param (*Endpoint*) `params`: _description_
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `variablename` (_type_): _description_
+        '''
         self.logger.info(self.pipeline.extract_tag)
         if params:
             endpoint.params = params
@@ -72,6 +138,24 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
     
 
     def get_endpoint(self, friendly_name: str) -> Endpoint:
+        '''`get_endpoint`(self, friendly_name: *str*, )
+        ---
+        <hr>
+        
+        Using the friendly endpoint name, get the endpoint's actual name from :data:`~config.api_map.friendly_name_map`
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param (*str*) `friendly_name`: Corresponding value to the endpoint's name in :data:`~config.api_map.friendly_name_map`
+        
+        <hr>
+        
+        Returns
+        ---
+        :return `self.Endpoint(friendly_name, endpoint_name)` (*Endpoint*): Instance of the Endpoint class (configuration of data sent to NBA api for a given endpoint)
+        '''
         endpoint_name = map.friendly_name_map[friendly_name.lower()]
         return self.Endpoint(friendly_name, endpoint_name)
 

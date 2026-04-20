@@ -4,6 +4,25 @@ from datetime import datetime
 from transforms.transform_daily_lineups import Transform
 
 class DailyLineupsPipeline(Pipeline):
+    '''`DailyLineupsPipeline`(Pipeline)
+    ---
+    <hr>
+    
+    - Given a date, extracts lineup information from the NBA's static data feed
+        - By default, runs today's date
+    
+    # Extraction
+    :meth:`~extract` -> :class:`~connectors.static_data.StaticDataConnector`.:meth:`~connectors.static_data.StaticDataConnector.fetch`
+    - Fetches a date's Lineup information for the teams partaking in that date's games
+
+    # Transformation
+    :meth:`~transform` -> :class:`~transforms.transform_boxscore.Transform`.:meth:`~transforms.transform_boxscore.Transform.box`
+     - Given the extracted daily lineups data, transforms data to a list of dictionaries that are formatted for the **DailyLineups** table in SQL db
+
+    # Load
+     - Calls *initiate_insert()* which executes the SQL upsert process, but just returns transformed data.
+     - Upserts to **DailyLineups**
+    '''
     def __init__(self, pipeline_name: str):
         '''`init`(self, pipeline_name: *str*)
         ---
@@ -18,11 +37,7 @@ class DailyLineupsPipeline(Pipeline):
         
         ### Downstream Calls 
          #### :meth:`~connectors.static_data.StaticDataConnector.check_tables`
-            - Description
-        
-        ### Upstream Calls 
-         #### :meth:`~folder.file.class.method`
-            - Description
+            - For each table in TABLES dict, run the create statement associated to create the table if it does not already exist
             
         <hr>
         
