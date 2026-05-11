@@ -208,7 +208,7 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
             test2 = item['SeasonID']
         self.date_seasontype_map = {item['SeasonID']: {} for item in game_map_extract.select(pl.col('SeasonID').unique()).to_dicts()}
         for item in game_map_extract.iter_rows(named = True):
-            self.date_seasontype_map[item['SeasonID']][item['GameType']] = {
+            self.date_seasontype_map[item['SeasonID']][item['SeasonType']] = {
                 'FirstGame': item['FirstGame'],
                 'LastGame': item['LastGame']
             }

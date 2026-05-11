@@ -18,7 +18,15 @@ from Game g
 group by g.SeasonID, g.GameType
 )
 select f.SeasonID
-	 , f.GameType	 
+	 , f.GameType
+     , case when f.GameType = 'PRE' then 'Pre Season'
+            when f.GameType = 'RS' then  'Regular Season'
+            when f.GameType = 'PS' then  'Playoffs'
+            when f.GameType = 'PI' then  'PlayIn'
+            when f.GameType = 'CUP' then  'IST'
+            when f.GameType = 'AS' then  'All Star'
+            else null 
+       end SeasonType
 	 , case when l.SchFirstGame is not null and l.SchFirstGame != f.FirstGame
 				then l.SchFirstGame
 			else f.FirstGame end FirstGame

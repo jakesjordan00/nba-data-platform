@@ -97,8 +97,20 @@ Returns
     def run(self, date_data: dict) -> dict:
         if self.schema != 'plays':
             self.date = date_data['date']
+            self.date_datetime = datetime.strptime(self.date, '%m/%d/%Y').date()
             self.data = date_data['games']
+            current_season_map = self.source.date_seasontype_map[int(self._params['Season'][:4])]
+            for key, date_range in current_season_map.items():
+                if self.date_datetime == date_range['FirstGame'] or self.date_datetime == date_range['LastGame']:
+                    self._params['SeasonType'] = key
+                    continue
+                elif self.date_datetime >= date_range['FirstGame'] and self.date_datetime <= date_range['LastGame']:
+                    self._params['SeasonType'] = key
+                    continue
+                else:
+                    continue
             self._params = {**self._params, 'DateFrom': self.date, 'DateTo': self.date}
+            bp = 'here'
         else:
             #If we're doing Playtypes and this isn't our first run, use new params. If it's our first run, use what we passed at init
             if self.runs > 0: 
@@ -154,13 +166,14 @@ Returns
         self.table_name = f'{player_team}{table_base_name}'
         self.full_table_name = f'{schema}.{player_team}{table_base_name}'
         self.player_team = player_team
-        self.params = params
+        # self.params['SeasonType'] = ''
         
         self._endpoint = self.source.get_endpoint(friendly_name=endpoint_friendly_name)
         self._params = {
             **self._endpoint.params,
             **params
         }
+        test = self._params
         self.runs = 0
         try:
             self.destination.check_specific_table(self.full_table_name)
