@@ -86,7 +86,7 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'Rank':             'N',                # 
             'Season':           '2025-26',          # '2025-26', '2024-25', cont..., '1996-97'
             'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
-            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'SeasonType':       'Playoffs',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
             'ShotClockRange':   '',                 # '24-22', '22-18 Very Early', '18-15 Early', '15-7 Average', '7-4 Late', '4-0 Very Late'
             'StarterBench':     '',                 # 'Starters', 'Bench'
             'TeamID':           0,                  # 
@@ -141,7 +141,7 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'Rank':             'N',                # 
             'Season':           '2025-26',          # '2025-26', '2024-25', cont..., '1996-97'
             'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
-            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'SeasonType':       'Playoffs',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
             'ShotClockRange':   '',                 # '24-22', '22-18 Very Early', '18-15 Early', '15-7 Average', '7-4 Late', '4-0 Very Late'
             'StarterBench':     '',                 # 'Starters', 'Bench'
             'TeamID':           0,                  # 
@@ -196,7 +196,7 @@ nba_api_endpoints: dict[str, Endpoint] = {
                                                     # 'Rebounding', 'Efficiency', 'SpeedDistance', 'ElbowTouch', 'PostTouch', 'PaintTouch'
             'Season':           '2025-26',          # '2025-26', '2024-25', cont..., '1996-97'
             'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
-            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'SeasonType':       'Playoffs',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
             'StarterBench':     '',                 # 'Starters', 'Bench'            
             'TeamID':           0,                  # 
             'VsConference':     '',                 # 
@@ -261,7 +261,7 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'Rank':             'N',                # 
             'Season':           '2025-26',          # '2025-26', '2024-25', cont..., '1996-97'
             'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
-            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'SeasonType':       'Playoffs',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
             'TeamID':           0,                  # 
             'VsConference':     '',                 # 
             'VsDivision':       '',                 # 
@@ -306,7 +306,7 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'Rank':             'N',                # 
             'Season':           '2025-26',          # '2025-26', '2024-25', cont..., '1996-97'
             'SeasonSegment':    '',                 # 'Pre All-Star', 'Post All-Star'
-            'SeasonType':       'Regular Season',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
+            'SeasonType':       'Playoffs',   # 'Pre Season', 'Regular Season', 'Playoffs', 'PlayIn', 'IST', 'All Star'
             'ShotClockRange':   '',                 #
             'TeamID':           0,                  # 
             'VsConference':     '',                 # 
@@ -330,7 +330,7 @@ nba_api_endpoints: dict[str, Endpoint] = {
             'PerMode':          'Totals',           # 'Pergame', 'Totals',
             'PlayType':         'Isolation',        # 'Isolation', 'Transition', 'PRBallHandler', 'PRRollman', 'Postup', 'Spotup', 'Handoff', 'Cut', 'OffScreen', 'OffRebound', 'Misc'
             'PlayerOrTeam':     'P',                # 'P', 'T'
-            'SeasonType':       'Regular Season',   # 'Regular Season', 'Playoffs',
+            'SeasonType':       'Playoffs',   # 'Regular Season', 'Playoffs',
             'SeasonYear':       '2025-26',          # '2025-26', '2024-25', cont..., '2015-16'
             'TypeGrouping':     'Offensive'         # 'Offensive', 'Defensive'
         },

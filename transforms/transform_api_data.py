@@ -1295,9 +1295,9 @@ end"""
                 col_string = f'{column}{spacer}int,'
             
             full_str += f'\n{col_string}'
-            print(col_string)
+            # print(col_string)
         full_str += f'\n{key_string}'
-        print(key_string)
+        # print(key_string)
         # pyperclip.copy(full_str)
 
         print("\n\n        'columns': [")
