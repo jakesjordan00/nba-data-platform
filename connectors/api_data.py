@@ -1,3 +1,7 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING,  Any, Iterator
+if TYPE_CHECKING:
+    from pipelines import LeagueDashAPI
 from urllib import response
 import config.api_map as map
 import requests
@@ -5,6 +9,7 @@ import json
 import time
 import logging
 from datetime import datetime
+import polars as pl
 
 
 class APIDataConnector:
@@ -63,7 +68,7 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
             self.params = config['params']
             pass
 
-    def __init__(self, pipeline):
+    def __init__(self, pipeline: LeagueDashAPI):
         '''`init`(self, pipeline)
         ---
         <hr>
@@ -93,6 +98,7 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
         self.pipeline = pipeline
         self.logger = logging.getLogger(f'{pipeline.pipeline_name}.api')
         self._set_endpoints()
+        self._determine_season_type()
         pass    
 
 
@@ -186,3 +192,24 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
             friendly_name = 'team_hustle',
             endpoint_name='leaguehustlestatsteam'
         )
+
+
+    def _determine_season_type(self):
+        '''`_determine_season_type`()
+        ---
+        <hr>
+        
+        Queries the database and using the **Schedule** and **Game** tables, and creates a map that will help us determine what SeasonType value should be passed to the API given the date found in the parameters
+        
+        '''
+        game_map_extract = self.pipeline.destination.query_to_dataframe(self.pipeline.destination.queries.game_type_date_map)
+        test = game_map_extract.select(pl.col('SeasonID').unique()).to_dicts()
+        for item in test:
+            test2 = item['SeasonID']
+        self.date_seasontype_map = {item['SeasonID']: {} for item in game_map_extract.select(pl.col('SeasonID').unique()).to_dicts()}
+        for item in game_map_extract.iter_rows(named = True):
+            self.date_seasontype_map[item['SeasonID']][item['GameType']] = {
+                'FirstGame': item['FirstGame'],
+                'LastGame': item['LastGame']
+            }
+        bp = 'here'

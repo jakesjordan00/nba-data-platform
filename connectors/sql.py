@@ -37,6 +37,10 @@ class SQLConnector:
             name = 'schedule_backfill',
             query = query('schedule_backfill')
         )
+        game_type_date_map: ClassVar[Query] = Query(
+            name = 'game_type_date_map',
+            query = query('game_type_date_map')
+        )
 
         placeholder: ClassVar[Query] = Query(
             name = '',
@@ -237,7 +241,6 @@ end
             params = [self._dict_to_params(data_dict, sql_table['keys'] + sql_table['columns'] + sql_table['update_columns'] + sql_table['keys']) for data_dict in data]
             cursor = self.pyodbc_connection.cursor()
             cursor.fast_executemany = True
-            # self._parse_pyodbc_query(upsert_string, params)
             cursor.executemany(upsert_string, params)
             self.logger.info(f'{table_name} ╍ Upserted {len(data)} rows')
             cursor.commit()
@@ -249,6 +252,135 @@ end
             bp ='here'
         if table_name == 'DailyLineups':
             return data
+        
+
+    def checked_upsert_paginated(self, table_name: str, data: list, page_size: int = 100):
+        '''
+        `checked_upsert`(self, table_name: *str*, data: *list*)
+        ---
+        <hr>
+
+        Given a table name and a list of rows (dicts) to insert, performs a paginated upsert to database.
+
+        #### USE :meth:`~connectors.sql.SQLConnector.checked_upsert` FOR UPSERTS OF LESS THAN 100 ROWS!!
+    
+        ### Downstream Calls 
+         #### :meth:`~_dict_to_params`
+            - Utility function to format table keys, columns and update_columns with their respective values to parameters
+
+        <hr>
+        
+        Parameters
+        ---
+        :param (*str*) `table_name`: The name of the table to update (schema qualified)
+
+         - **'misc.TeamBox'** or **'PlayerBox'**
+
+          - ***PlayerBox** doesn't need the schema since it belongs to the **dbo** schema, but you could pass **'dbo.PlayerBox'** if you wanted*
+
+        :param (*list*) `data`: A list of dictionaries that correspond to the values in :data:`~config.settings.TABLES`
+        
+            * Each dictionary should be formatted to contain the values that were mapped in the table configuration in :data:`~config.settings.TABLES`
+
+                * Take **misc.TeamBox** for example. Its definition looks as follows:
+                >>> 'misc.TeamBox':{
+                    'keys': [
+                        'SeasonID',
+                        'GameID',
+                        'TeamID',
+                        'MatchupID'
+                    ],
+                    'columns': [
+                        'SeasonID',
+                        'GameID',
+                        'TeamID',
+                        'MatchupID',
+                        'PtsTurnover',
+                        'PtsSecondChance',
+                        'PtsFastBreak',
+                        'PtsInThePaint',
+                        'OpPtsTurnover',
+                        'OpPtsSecondChance',
+                        'OpPtsFastBreak',
+                        'OpPtsInThePaint',
+                    ],
+                    'update_columns': [
+                        'PtsTurnover',
+                        'PtsSecondChance',
+                        'PtsFastBreak',
+                        'PtsInThePaint',
+                        'OpPtsTurnover',
+                        'OpPtsSecondChance',
+                        'OpPtsFastBreak',
+                        'OpPtsInThePaint',
+                    ],
+                },
+
+                * Using these values, we'll create **upsert_string**. Starting with the check first:
+
+                >>> if not exists(
+                select 1 
+                from {table_name}
+                where {' = ? and '.join(sql_table['keys'])} = ?
+                )
+
+                * Alrighty, replace `{table_name}` with `table_name`, or **misc.TeamBox** here. Then for each **key** in `keys`, we'll format the *where*
+                
+                >>> if not exists(
+                select 1 
+                from misc.TeamBox
+                where SeasonID = ? and GameID = ? and TeamID = ? and MatchupID = ?
+                )
+
+                * That pattern continues on for the full execution statement.
+        '''
+        self.tables = TABLES
+        sql_table = self.tables[table_name]
+        upsert_string = f'''
+if not exists(
+select 1 
+from {table_name}
+where {' = ? and '.join(sql_table['keys'])} = ?
+)
+begin
+insert into {table_name}({', '.join(sql_table['columns'])}  )
+values({', '.join(['?'] * len(sql_table['columns']))})
+end
+else
+begin
+update {table_name} set {' = ?, '.join(col for col in sql_table['update_columns'])} = ?
+where {' = ? and '.join(sql_table['keys'])} = ?
+end
+'''
+        total = len(data)
+        self.logger.info(f'{total} rows to upsert')
+        upserts = 0
+        total_upserts = int(total/page_size)
+        self.logger.info(f'Beginning upsert sequence...Upserting {total} rows in {total_upserts + 1} batches to {table_name}...')
+        for start in range(0, total, page_size):
+            page = data[start:start + page_size]
+            try:
+                params = [self._dict_to_params(data_dict, sql_table['keys'] + sql_table['columns'] + sql_table['update_columns'] + sql_table['keys']) for data_dict in page]
+                cursor = self.pyodbc_connection.cursor()
+                cursor.fast_executemany = True
+                cursor.executemany(upsert_string, params)
+                done = min(start + page_size, total)
+                self.logger.info(f'{done}/{total} rows upserted, {len(data) - done} remain. {upserts + 1} Upserts complete{f", {total_upserts - upserts} to go" if total_upserts - upserts != 0 else ""}')
+                upserts += 1
+            except Exception as e:
+                self.logger.error({
+                    'Table': table_name,
+                    'err_msg': e
+                })
+                bp = 'here'
+        self.logger.info('Upsert sequence complete!')
+        if table_name == 'DailyLineups':
+            return data
+
+
+
+
+
 
     def cursor_query(self, table_name: str, keys: dict) -> dict :
         '''cursor_query
@@ -517,6 +649,38 @@ Returns
         data = pl.read_database(query.query, self.engine)
         self.logger.info(f'{data.height} rows returned')
         return data
+    
+
+    def query_db(self, query: str, params=None, log_str=None):
+        '''`query_db`(self, query: *str*)
+        ---
+        <hr>
+            
+        Given a string of SQL text, execute and return a polars DataFrame.
+
+        <hr>
+
+        Parameters
+        -------------
+
+        :param (*str*) `query`: SQL query to execute
+        :param (*dict*) `params`: Parameters to pass to query if neccessary
+        :param (*dict*) `log_str`: String to pass to log output if neccessary
+
+        <hr>
+
+        Returns
+        -------------
+
+        :return `data_extract` (*pl.DataFrame*): polars DataFrame with results of query
+        '''
+        execute_options = {'parameters': params} if params else {}
+        log_str = log_str if log_str else ''
+        data_extract = pl.read_database(query=query, connection=self.engine, execute_options=execute_options, infer_schema_length=None)
+        if log_str == '':
+            self.logger.info(f'Extracted {data_extract.height} rows')
+        return data_extract
+    
 
 
 
