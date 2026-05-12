@@ -62,15 +62,15 @@ Used to extract data from NBA static data feeds
             if 'daily_lineups' in self.pipeline.url:
                 response = requests.get(url=self.pipeline.url,headers=self.headers)
             else:
-                response = requests.get(self.pipeline.url)
+                response = requests.get(self.pipeline.url, headers=self.scoreboard_headers)
             stop = datetime.now()
             data = response.json()
             duration = stop - start
             self.logger.info(f'Read and decoded JSON in {str(duration)[6:11]}s')
             bp = 'here'
         except Exception as e:
-            data = {}
             self.logger.error(f'No data available. Error msg: {e}')
+            data = {}
         self.logger.info(f'Extracted {', '.join(key.replace("'", "") for key in list(data.keys()))} dicts')
         
         return data
@@ -113,5 +113,23 @@ Used to extract data from NBA static data feeds
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0',
             'Priority': 'u=0, i',
             'Host': 'stats.nba.com',
+        }
+        
+        self.scoreboard_headers = {
+            'Host': 'cdn.nba.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0',
+            'Accept': '*/*',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br, zstd',
+            'Referer': 'https://www.nba.com/',
+            'Origin': 'https://www.nba.com',
+            'Connection': 'keep-alive',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-site',
+            'If-Modified-Since': 'Tue, 12 May 2026 19:19:26 GMT',
+            'If-None-Match': '"da30a7e74fd807acdc235d636f19cb61"',
+            'Priority': 'u=4',
+            'TE': 'trailers',
         }
         

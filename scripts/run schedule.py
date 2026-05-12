@@ -43,7 +43,6 @@ schedule_data = completed_schedule_pipeline['loaded']
 
 
 
-
 for schedule in schedule_data:
     GameID = schedule['GameID']
     print(f'\n                                                 {GameID}\n                                   -------------------------------------')
