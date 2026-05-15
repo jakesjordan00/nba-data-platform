@@ -127,8 +127,6 @@ Used to extract data from NBA static data feeds
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-site',
-            'If-Modified-Since': 'Tue, 12 May 2026 19:19:26 GMT',
-            'If-None-Match': '"da30a7e74fd807acdc235d636f19cb61"',
             'Priority': 'u=4',
             'TE': 'trailers',
         }
