@@ -9,3 +9,4 @@ from .schedule_api_usage import ScheduleForAPI
 from .league_dash_api import LeagueDashAPI
 
 from .playbyplay_lite import PlayByPlayLite
+from .historic import HistoricData
