@@ -7,26 +7,6 @@ import time
 
 
 class LeagueDashAPI(Pipeline):
-    '''`LeagueDashAPI`(Pipeline)
-    ---
-    <hr>
-    
-    Indempotent ETL Pipeline class for the NBA API
-    
-    # Extraction
-    :meth:`~extract` -> :class:`~connectors.api_data.APIDataConnector`.:meth:`~connectors.static_data.StaticDataConnector.fetch`
-     - a
-
-    # Transformation
-     - a
-
-    # Load
-     - a
-
-    # Downstream Pipelines
-     - :class:`~pipelines.playbyplay.PlayByPlayPipeline`
-    '''
-
     '''LeagueDashAPI
 ===
 	
