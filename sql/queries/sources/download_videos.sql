@@ -25,6 +25,6 @@ inner join Game g on pbp.SeasonID = g.SeasonID and pbp.GameID = g.GameID
 inner join GameExtTime e on pbp.SeasonID = e.SeasonID and pbp.GameID = e.GameID
 left join Player p on pbp.SeasonID = p.SeasonID and pbp.PlayerID = p.PlayerID
 where pbp.SeasonID = 2025
-and p.Name = 'Rudy Gobert' --and pbp.ActionType = 'freethrow' 
+and p.Name = 'Rudy Gobert' and pbp.ActionType = 'freethrow' 
 and ShotResult = 'Missed'
 order by Date desc
