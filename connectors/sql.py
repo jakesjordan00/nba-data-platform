@@ -41,6 +41,10 @@ class SQLConnector:
             name = 'game_type_date_map',
             query = query('game_type_date_map')
         )
+        download_videos: ClassVar[Query] = Query(
+            name = 'download_videos',
+            query = query('download_videos')
+        )
 
         placeholder: ClassVar[Query] = Query(
             name = '',

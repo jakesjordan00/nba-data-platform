@@ -23,9 +23,17 @@ video_headers = {
     'accept-language': "en-US,en;q=0.9",
     'connection': 'keep-alive',
     'host': 'videos.nba.com',
+    'origin': 'https://www.nba.com',
     'referer': 'https://www.nba.com/',
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+    # 'Sec-Fetch-Dest': 'empty',
+    # 'Sec-Fetch-Mode': 'cors',
+    # 'Sec-Fetch-Site': 'same-site',
 
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-site',
+    'Sec-Fetch-User': '?1',
 }
 
 common_box_params = {    

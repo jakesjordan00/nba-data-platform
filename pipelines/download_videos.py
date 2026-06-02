@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from connectors import FileSystem, APIDataConnector
+from connectors import FileSystem
 import config.api_map as map
 from pipelines import Pipeline
 import polars as pl
@@ -19,38 +19,11 @@ class DownloadVideos(Pipeline):
             "GameEventID": ''
         }
         self.filesys = FileSystem(self)
-        self.source = self.destination
-        
-        self.query = """
-with GameExtTime as(
-select *
-	 , case when e.Periods = 4 then 48 
-	   else	48 + (5 * (e.Periods - 4)) end GameTime
-	 , Periods - 4 OTs
-from GameExt e
-)
-select p.Name
-	 , pbp.*
-	 , cast((case when Qtr <= 4 
-				then 12 - CAST(LEFT(Clock, 2) + cast(Right(Clock, 5)as decimal(18, 2))/60 as decimal(18,2)) + ((Qtr - 1) * 12)
-			when Qtr >= 5
-				then (5 - CAST(LEFT(Clock, 2) + cast(Right(Clock, 5)as decimal(18, 2))/60 as decimal(18,2))) + ((((Qtr - 1) - 4) * 5) + 48)
-	   else null end / GameTime * 100) as decimal(18, 2)) PointInGame
-     , g.Date
-from PlayByPlay pbp
-left join Player p on pbp.SeasonID = p.SeasonID and pbp.PlayerID = p.PlayerID
-inner join Game g on pbp.SeasonID = g.SeasonID and pbp.GameID = g.GameID
-inner join GameExtTime e on pbp.SeasonID = e.SeasonID and pbp.GameID = e.GameID
-where pbp.SeasonID = 2025
-and p.Name = 'Rudy Gobert' --and pbp.ActionType = 'freethrow' 
-and ShotResult = 'Missed'
-order by Date desc
-
-""" if query == '' else query
+        self.sql = self.destination
 
 
     def extract(self):
-        data_extract = self.source.query_db(self.query)
+        data_extract = self.sql.query_to_dataframe(self.sql.queries.download_videos)
         return data_extract
     
 
@@ -63,6 +36,8 @@ order by Date desc
                 'PointInGame': row['PointInGame'],
                 'Qtr': row['Qtr'],
                 'Clock': row['Clock'],
+                'GamePageLink': row['GamePageLink'],
+                'VideoPageLink': row['VideoPageLink'],
                 'params': {
                     'GameID': f'00{row['GameID']}',
                     'GameEventID': row['ActionNumber']

@@ -4,6 +4,7 @@ import os
 import logging
 import requests
 from pathlib import Path
+from config.api_map import video_headers
 
 
 class FileSystem:
@@ -177,7 +178,8 @@ class FileSystem:
             suffix = f'{i+1}/{total}'
             try:
                 self.logger.info(f'{prefix}Retrieving video information...{suffix}')
-                response = requests.get(self.pipeline.base_url, params=data['params'], headers=self.pipeline.headers, timeout=30)
+                params = data['params']
+                response = requests.get(self.pipeline.base_url, params=params, headers=self.pipeline.headers, timeout=30)
                 data = response.json()
             except Exception as e:
                 self.logger.error(f'{prefix}Error parsing initial request json! {e}')
@@ -190,8 +192,8 @@ class FileSystem:
                 continue            
             try:
                 self.logger.info(f'{prefix}Successfully parsed video URL, attempting download...')
-                video_response = requests.get(video_url, stream=True)
-                video_response.raise_for_status()
+                referer = f"https://www.nba.com/stats/events?GameEventID={params['GameEventID']}&GameID={params['GameID']}"
+                video_response = requests.get(video_url, stream=True, headers={**video_headers, 'referer': referer}, cookies=response.cookies)
             except Exception as e:
                 self.logger.error(f'{prefix}Error downloading! {e}')
                 continue

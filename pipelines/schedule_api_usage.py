@@ -78,6 +78,7 @@ class ScheduleForAPI(Pipeline):
         elif self.player_team == 'Player':
             self.schema_query = self.source.queries.schedule_api_player_check.query.format(schema=self.schema, table=f'{self.table_name}', where_addition=where_addition)
             self.backfill_query = self.source.queries.schedule_api_player_backfill.query
+        bp = 'here'
 
 
 

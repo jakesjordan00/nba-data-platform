@@ -24,3 +24,9 @@ class SeleniumWebDriver():
 
     def go_to(self, url: str):
         page = self.driver.get(url)
+
+
+
+    def get_cookie(self, url: str):
+        page = self.driver.get(url)
+        bp = 'here'
