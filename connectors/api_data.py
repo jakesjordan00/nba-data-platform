@@ -68,7 +68,7 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
             self.params = config['params']
             pass
 
-    def __init__(self, pipeline: LeagueDashAPI):
+    def __init__(self, pipeline: LeagueDashAPI | str):
         '''`init`(self, pipeline)
         ---
         <hr>
@@ -96,7 +96,10 @@ Connector for NBA API, preconfigured for usage with the DAGS and endpoints liste
         self.:attr:`~params` = config['params']
         '''
         self.pipeline = pipeline
-        self.logger = logging.getLogger(f'{pipeline.pipeline_name}.api')
+        if type(pipeline) == str:
+            self.logger = logging.getLogger(f'{pipeline}.api')
+        else:
+            self.logger = logging.getLogger(f'{pipeline.pipeline_name}.api')
         self._set_endpoints()
         self._determine_season_type()
         pass    

@@ -17,6 +17,17 @@ stats_headers = {
     'From': 'jakesjordan00@gmail.com'
 }
 
+video_headers = {
+    'accept': "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    'accept-encoding': "gzip, deflate, br, zstd",
+    'accept-language': "en-US,en;q=0.9",
+    'connection': 'keep-alive',
+    'host': 'videos.nba.com',
+    'referer': 'https://www.nba.com/',
+    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36",
+
+}
+
 common_box_params = {    
     'StartPeriod': 1,
     'EndPeriod': 10,
