@@ -16,5 +16,9 @@ dependencies = [
     "python-dotenv",
 ]
 
+
 [tool.setuptools.packages.find]
-include = ["config*", "connectors*", "pipelines*", "transforms*", "sql*", "docs*"]
+include = ["nba_data_platform*"]
+
+[tool.setuptools.package-data]
+critter_crawler = ["sql/**/*.sql"]

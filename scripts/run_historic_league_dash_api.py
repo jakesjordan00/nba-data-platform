@@ -1,8 +1,8 @@
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from connectors import APIDataConnector, SQLConnector, StaticDataConnector
-from pipelines import ScheduleForAPI, LeagueDashAPI
+from nba_data_platform.connectors import APIDataConnector, SQLConnector, StaticDataConnector
+from nba_data_platform.pipelines import ScheduleForAPI, LeagueDashAPI
 
 
 pipeline_nba_api = LeagueDashAPI()

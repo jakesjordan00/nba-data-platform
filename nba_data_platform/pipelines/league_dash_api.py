@@ -1,0 +1,166 @@
+from nba_data_platform.pipelines import Pipeline
+from nba_data_platform.connectors import StaticDataConnector, APIDataConnector
+from nba_data_platform.transforms.transform_api_data import Transform
+from datetime import datetime
+import polars as pl
+import time
+
+
+class LeagueDashAPI(Pipeline):
+    '''LeagueDashAPI
+===
+	
+
+
+<hr>
+
+
+Walkthrough
+===
+
+## 1. Initialization
+**LeagueDashAPI** is initialized without any params and inherits the base Pipeline class
+
+
+
+
+<hr>
+
+    __      __ (type): Paramater and type
+
+
+Function Calls
+-------------
+<hr>
+
+*   **FunctionName()**
+    - BulletPoint
+
+
+Returns
+-------------
+<hr>
+
+    __      __ (type): Return value and type
+    '''
+    
+    def __init__(self):
+        self.pipeline_name = f'nba-api'
+        self.tag = 'nba-api'
+        super().__init__(self.pipeline_name, self.tag, 'NBA API')
+        self.source = APIDataConnector(self)
+        self.total_runs = 0
+
+
+
+    def extract(self):
+        data_extract = self.source.fetch(endpoint=self._endpoint, params = self._params)
+        return data_extract
+    
+
+    def transform(self, data_extract):
+        if not data_extract:
+            self.logger.warning('No data extracted, skipping transform')
+            return None
+        data_transformed = self.transformer.start_transform(data_extract)
+        return data_transformed
+
+    def load(self, data_transformed):
+        if not data_transformed:
+            self.logger.warning('No data transformed, skipping load')
+            return None
+        self.logger.info(f'Loading data via checked_upsert in sql.py')
+        data_loaded = self.destination.checked_upsert(table_name=self.full_table_name, data=data_transformed)
+        self.runs += 1
+        return data_loaded
+
+    def run(self, date_data: dict) -> dict:
+        if self.schema != 'plays':
+            self.date = date_data['date']
+            self.date_datetime = datetime.strptime(self.date, '%m/%d/%Y').date()
+            self.data = date_data['games']
+            current_season_map = self.source.date_seasontype_map[int(self._params['Season'][:4])]
+            for key, date_range in current_season_map.items():
+                if self.date_datetime == date_range['FirstGame'] or self.date_datetime == date_range['LastGame']:
+                    self._params['SeasonType'] = key
+                    continue
+                elif self.date_datetime >= date_range['FirstGame'] and self.date_datetime <= date_range['LastGame']:
+                    self._params['SeasonType'] = key
+                    continue
+                else:
+                    continue
+            self._params = {**self._params, 'DateFrom': self.date, 'DateTo': self.date}
+            bp = 'here'
+        else:
+            #If we're doing Playtypes and this isn't our first run, use new params. If it's our first run, use what we passed at init
+            if self.runs > 0: 
+                self._params = self._endpoint.params
+            self.date = None
+            self.data = None
+        self.transformer = Transform(self)
+        return super().run()
+
+
+    def _re_init(self, schema: str, params: dict,  endpoint_friendly_name: str, table_base_name: str, player_team: str, 
+                 log_tag: str | None = None, extract_tag: str | None = None):
+        '''`_re_init`(self, schema: *str*, params: *dict*, endpoint_friendly_name: *str*, table_base_name: *str*, player_team: *str*)
+        ---
+        <hr>
+        
+        Method that resets the NBA API Pipeline class to use the configuration specified in the parameters passed to :meth:`~_re_init`
+            
+        <hr>
+        
+        Parameters
+        ---
+        :param (*str*) `schema`: Database Schema of the table the formatted data will be upserted to in the :meth:`~load` method
+
+        :param (*dict*) `params`: Parameter set that will be passed to NBA API to determine response. Defaults for each endpoint set in :data:`~config.api_map.nba_api_endpoints`
+        :param (*str*) `endpoint_friendly_name`: Corresponding map value of endpoint in :data:`~config.api_map.friendly_name_map`
+        :param (*str*) `table_base_name`: Half of the Table's name in SQLdb. For example, if table name is `PlayerHustle`, then table_base_name would be **Hustle**
+        :param (*str*) `player_team`: The other half of the Table's name. In the `PlayerHustle` example, player_team would be **Player**
+        
+        <hr>
+        
+        Sets
+        ---
+        - self.:attr:`~pipeline_name` 
+            >>> f'nba-api.{schema}{log_tag}'
+
+        - self.:attr:`~table_name`
+            >>> f'{player_team}{table_base_name}'
+            
+        - self.:attr:`~full_table_name`
+            >>> f'{schema}.{player_team}{table_base_name}'
+
+
+         , :attr:`~source`, and :attr:`~transformer`
+
+
+        '''
+        self.pipeline_name = f'nba-api.{schema}{log_tag}'
+        self.tag = 'nba-api'
+        self.extract_tag = extract_tag
+        self.schema = schema
+        self.table_base_name = table_base_name
+        self.table_name = f'{player_team}{table_base_name}'
+        self.full_table_name = f'{schema}.{player_team}{table_base_name}'
+        self.player_team = player_team
+        # self.params['SeasonType'] = ''
+        
+        self._endpoint = self.source.get_endpoint(friendly_name=endpoint_friendly_name)
+        self._params = {
+            **self._endpoint.params,
+            **params
+        }
+        test = self._params
+        self.runs = 0
+        try:
+            self.destination.check_specific_table(self.full_table_name)
+        except Exception as e:
+            test = e
+            self.logger.critical(f"Table doesn't exist in config/settings.py! Continuing to allow for debugging, but nothing will be inserted.")
+
+        
+        bp = 'here'
+
