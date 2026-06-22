@@ -3,7 +3,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import json
 import pyperclip
-from connectors.sql import SQLConnector
+from nba_data_platform.connectors.sql import SQLConnector
 connector = SQLConnector('generate_unit_test_data', 'JJsNBA')
 
 print("cwd:", os.getcwd())
