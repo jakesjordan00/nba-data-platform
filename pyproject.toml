@@ -21,4 +21,4 @@ dependencies = [
 include = ["nba_data_platform*"]
 
 [tool.setuptools.package-data]
-critter_crawler = ["sql/**/*.sql"]
+nba_data_platform  = ["sql/**/*.sql"]
