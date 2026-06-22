@@ -15,7 +15,6 @@ DATABASES = {
 }
 
 TABLES = {
-
 #region schema: dbo
     'Team':{
         'keys': ['SeasonID', 'TeamID',],
@@ -2343,6 +2342,7 @@ where s.SeasonID = season_id and s.GameID in(game_id)
         ],
         'create': table('plays.PlayerPlays')
     },
+}
 
 #endregion schema: plays
 
@@ -2413,4 +2413,3 @@ where s.SeasonID = season_id and s.GameID in(game_id)
     #     ],
     #     'create': table('tracking.Player')
     # },
-}

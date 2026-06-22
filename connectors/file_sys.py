@@ -224,6 +224,7 @@ class FileSystem:
 
     def download(self, media: list[dict], do_upsert: bool = False):
         '''NOT FOR USE IN THIS PROJECT YET, USE :meth:`~download_videos`
+        
         Downloads every new image referenced in `media`, converting HEIC/HEIF to PNG en route.
         '''
         sql_list = []
